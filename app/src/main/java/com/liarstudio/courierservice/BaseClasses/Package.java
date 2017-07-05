@@ -1,6 +1,8 @@
 package com.liarstudio.courierservice.BaseClasses;
 
 
+import java.text.Format;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Package {
@@ -24,5 +26,15 @@ public class Package {
         this.recipient = recipient;
         this.name = name;
         this.date = date;
+    }
+
+    public String getDate() {
+        return getDate("dd/MM/yyyy");
+    }
+    public String getDate(String format)
+    {
+        Format formatter = new SimpleDateFormat(format);
+        return formatter.format(date);
+
     }
 }

@@ -1,10 +1,12 @@
 package com.liarstudio.courierservice;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.liarstudio.courierservice.BaseClasses.Package;
@@ -55,8 +57,12 @@ public class ListAdapter extends BaseAdapter {
         tvAddress.setText(pkg.recipient.address);
 
         TextView tvDate = (TextView)view.findViewById(R.id.twDate);
-        tvDate.setText(pkg.date.toString());
+        tvDate.setText(pkg.getDate());
 
+        if (pkg.status>0) {
+            RelativeLayout rl = (RelativeLayout)view.findViewById(R.id.lvCell);
+            rl.setBackgroundColor(Color.LTGRAY);
+        }
 
 
 
