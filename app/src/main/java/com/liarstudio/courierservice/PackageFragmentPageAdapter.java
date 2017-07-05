@@ -8,6 +8,8 @@ import com.liarstudio.courierservice.BaseClasses.Package;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 
 public class PackageFragmentPageAdapter extends FragmentPagerAdapter {
 
@@ -39,6 +41,8 @@ public class PackageFragmentPageAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
 
         PackageFragment packageFragment = new PackageFragment();
+
+        packages.sort ( (p1, p2) -> p2.date.compareTo(p1.date));
 
         ArrayList<Package> filtered = (ArrayList<Package>) packages.clone();
 

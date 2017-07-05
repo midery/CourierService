@@ -41,10 +41,12 @@ public class MainActivity extends AppCompatActivity {
     void loadPackages() {
 
         packages = new ArrayList<Package>();
-        Package pkg = new Package(0, new Person("Kuk", "920", "m@m.m", "Lorum Ipsum street"), new Person("Kuk", "920", "m@m.m", "Lorum Ipsum street"), "Pkg 1", new Date(System.currentTimeMillis()));
+        Package pkg = new Package(0, new Person("Kuk", "920", "m@m.m", "Lorum Ipsum street"), new Person("Kuk", "920", "m@m.m", "Lorum Ipsum street"), "Pkg 1", new Date(25));
 
         packages.add(pkg);
         pkg = new Package(1, new Person("Kuk", "920", "m@m.m", "Lorum Ipsum street"), new Person("Kuk", "14156", "m@m.m", "Dorum av."), "Pkg 2", new Date(System.currentTimeMillis()));
+        packages.add(pkg);
+        pkg = new Package(0, new Person("Kuk", "920", "m@m.m", "Lorum Ipsum street"), new Person("Kuk", "14156", "m@m.m", "Dorum av."), "Pkg 3", new Date(10600));
         packages.add(pkg);
 
 

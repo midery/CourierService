@@ -1,3 +1,9 @@
 <resources>
-    <string name="app_name">Courier Service</string>
+    <string name="app_name">Курьерская служба</string>
+
+    <string-array name="person_type">
+        <item>Компания</item>
+        <item>Частное лицо</item>
+    </string-array>
+
 </resources>
