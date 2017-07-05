@@ -19,12 +19,22 @@ import java.util.ArrayList;
 public class PackageFragment extends Fragment {
     private static final int layout = R.layout.activity_list_package;
 
+    private ArrayList<Package> packages;
     private View view;
 
+    public PackageFragment() {
+        //this.packages = packages;
+
+    }
+
+
+    public void setPackages(ArrayList<Package> packages) {
+        this.packages = packages;
+    }
     public static PackageFragment getInstance() {
-        Bundle args = new Bundle();
+        //Bundle args = new Bundle();
         PackageFragment fragment = new PackageFragment();
-        fragment.setArguments(args);
+        //fragment.setArguments(args);
 
         return fragment;
     }
@@ -35,15 +45,6 @@ public class PackageFragment extends Fragment {
         view = inflater.inflate(layout, container, false);
 
         ListView listView = (ListView)view.findViewById(R.id.lwShipmentList);
-
-        ArrayList<Package> packages = new ArrayList<Package>();
-
-
-        Package pkg = new Package();
-        pkg.name = "good boy";
-        pkg.recipient = new Person("John", "9204", "midery@ya.ru");
-        pkg.date = new Date(System.currentTimeMillis());
-        packages.add(pkg);
 
 
 

@@ -10,18 +10,19 @@ public class Person {
     public String companyName;
     //координаты
 
-    public Person(int aType, String aName, String aPhone, String aEmail, String aCompanyName) {
-        name = aName;
-        type = aType;
-        email = aEmail;
-        phone = aPhone;
-        companyName = aCompanyName;
+    public Person(int type, String name, String phone, String email, String address, String companyName) {
+        this.name = name;
+        this.type = type;
+        this.email = email;
+        this.phone = phone;
+        this.address = address;
+        this.companyName = companyName;
     }
-    public Person(int aType, String aName, String aPhone, String aEmail) {
-        this(aType,aName,aPhone,aEmail, "");
+    public Person(int type, String name, String phone, String email, String address) {
+        this(type,name,phone,email, address, "");
     }
-    public Person(String aName, String aPhone, String aEmail) {
-        this(0, aName, aPhone, aEmail);
+    public Person(String name, String phone, String email, String address) {
+        this(0, name, phone, email, address);
     }
 
 
