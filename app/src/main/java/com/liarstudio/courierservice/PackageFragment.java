@@ -59,6 +59,7 @@ public class PackageFragment extends Fragment {
 
             Intent intent = new Intent(getContext(), PackageEdit.class);
             intent.putExtra("jsonPackage", jsonPackage);
+            intent.putExtra("packagePosition", position);
             startActivity(intent);
         });
 

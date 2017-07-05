@@ -10,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.google.gson.Gson;
 import com.liarstudio.courierservice.BaseClasses.Package;
 import com.liarstudio.courierservice.BaseClasses.Person;
 
@@ -68,6 +69,18 @@ public class MainActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK ) {
+            if (data.hasExtra("jsonPackageChild") && data.hasExtra("packageChildPosition")) {
+                int position = data.getIntExtra("packageChildPosition", -1);
+                String jsonPackage = data.getStringExtra("jsonPackage");
+                Package pkg = new Gson().fromJson(jsonPackage, Package.class);
+            }
+        }
+    }
+
 
         void loadPackages() {
 

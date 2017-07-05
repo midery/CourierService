@@ -264,6 +264,7 @@
             android:textSize="18sp"
             android:textStyle="bold"/>
         <Button
+            android:id="@+id/buttonConfirm"
             android:layout_centerInParent="true"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
