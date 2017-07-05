@@ -7,18 +7,35 @@ import android.os.Bundle;
 
 public class MainActivity extends AppCompatActivity {
 
+
+    TabLayout tabLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewPager);
-        ShipmentFragmentApadter manager = new ShipmentFragmentApadter(getSupportFragmentManager());
+        ShipmentFragmentPagerAdapter manager = new ShipmentFragmentPagerAdapter(getSupportFragmentManager());
 
         viewPager.setAdapter(manager);
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayout);
+        //viewPager.addView(findViewById(R.id.trShipments));
+        tabLayout = (TabLayout) findViewById(R.id.tabLayout);
+
         tabLayout.setupWithViewPager(viewPager);
 
+
+        //initRows();
+
+    }
+
+    void initRows() {
+
+
+
+        //TableRow tr = (TableRow) findViewById(R.id.tr
+        //TabLayout.Tab tab = tabLayout.newTab();
+        //tab.setText("Активные");
+        //tabLayout.addTab(tab);
     }
 }

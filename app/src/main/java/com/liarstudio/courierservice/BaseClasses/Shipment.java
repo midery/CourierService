@@ -9,4 +9,8 @@ public class Shipment {
     Package pkg;
 
     int price;
+
+    public Shipment()  {
+
+    }
 }
