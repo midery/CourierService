@@ -48,8 +48,19 @@ public class ListAdapter extends BaseAdapter {
             view = layoutInflater.inflate(R.layout.activity_list_element, parent, false);
         Package pkg = packages.get(position);
 
-        TextView twName = (TextView)view.findViewById(R.id.twName);
-        twName.setText(pkg.name);
+        TextView tvName = (TextView)view.findViewById(R.id.twName);
+        tvName.setText(pkg.name);
+
+        TextView tvAddress = (TextView)view.findViewById(R.id.twAddress);
+        tvAddress.setText(pkg.recipient.address);
+
+        TextView tvDate = (TextView)view.findViewById(R.id.twDate);
+        tvDate.setText(pkg.date.toString());
+
+
+
+
+
         return view;
     }
 }

@@ -1,5 +1,6 @@
 package com.liarstudio.courierservice;
 
+import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,7 +10,9 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.liarstudio.courierservice.BaseClasses.Package;
+import com.liarstudio.courierservice.BaseClasses.Person;
 
+import java.sql.Date;
 import java.util.ArrayList;
 
 
@@ -38,7 +41,10 @@ public class PackageFragment extends Fragment {
 
         Package pkg = new Package();
         pkg.name = "good boy";
+        pkg.recipient = new Person("John", "9204", "midery@ya.ru");
+        pkg.date = new Date(System.currentTimeMillis());
         packages.add(pkg);
+
 
 
         ListAdapter la = new ListAdapter(getContext(), packages);

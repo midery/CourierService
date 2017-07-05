@@ -3,10 +3,11 @@ package com.liarstudio.courierservice.BaseClasses;
 
 public class Person {
     int type;
-    String name;
-    String email;
-    String phone;
-    String companyName;
+    public String address;
+    public String name;
+    public String email;
+    public String phone;
+    public String companyName;
     //координаты
 
     public Person(int aType, String aName, String aPhone, String aEmail, String aCompanyName) {
