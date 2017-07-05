@@ -6,23 +6,21 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.liarstudio.courierservice.BaseClasses.Shipment;
+import com.liarstudio.courierservice.BaseClasses.Package;
 
 import java.util.ArrayList;
 
 
-public class ShipmentFragment extends Fragment {
-    private static final int layout = R.layout.shipments_list_activity;
+public class PackageFragment extends Fragment {
+    private static final int layout = R.layout.activity_list_package;
 
     private View view;
-    Shipment shipment;
 
-    public static ShipmentFragment getInstance() {
+    public static PackageFragment getInstance() {
         Bundle args = new Bundle();
-        ShipmentFragment fragment = new ShipmentFragment();
+        PackageFragment fragment = new PackageFragment();
         fragment.setArguments(args);
 
         return fragment;
@@ -35,11 +33,15 @@ public class ShipmentFragment extends Fragment {
 
         ListView listView = (ListView)view.findViewById(R.id.lwShipmentList);
 
-        ArrayList<String> kuk = new ArrayList<String>();
-        kuk.add("kek");
-        kuk.add("kak");
+        ArrayList<Package> packages = new ArrayList<Package>();
 
-        ListAdapter la = new ListAdapter(getContext(), kuk);
+
+        Package pkg = new Package();
+        pkg.name = "good boy";
+        packages.add(pkg);
+
+
+        ListAdapter la = new ListAdapter(getContext(), packages);
         listView.setAdapter(la);
 
         return view;//super.onCreateView(inflater, container, savedInstanceState);

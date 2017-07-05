@@ -3,13 +3,12 @@ package com.liarstudio.courierservice;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.view.LayoutInflater;
 
-public class ShipmentFragmentPagerAdapter extends FragmentPagerAdapter {
+public class PackageFragmentPageAdapter extends FragmentPagerAdapter {
 
     String[] tabs;
 
-    public ShipmentFragmentPagerAdapter(FragmentManager fm) {
+    public PackageFragmentPageAdapter(FragmentManager fm) {
         super(fm);
         tabs = new String[] {
                 "Активные",
@@ -30,12 +29,12 @@ public class ShipmentFragmentPagerAdapter extends FragmentPagerAdapter {
 
         switch (position) {
             case 0:
-                return ShipmentFragment.getInstance();
+                return PackageFragment.getInstance();
             case 1:
 
-                return ShipmentFragment.getInstance();
+                return PackageFragment.getInstance();
             case 2:
-                return ShipmentFragment.getInstance();
+                return PackageFragment.getInstance();
             default:
                 break;
         }

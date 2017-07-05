@@ -5,8 +5,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.TextView;
 
-import com.liarstudio.courierservice.BaseClasses.Shipment;
+import com.liarstudio.courierservice.BaseClasses.Package;
 
 import java.util.ArrayList;
 
@@ -18,21 +19,21 @@ public class ListAdapter extends BaseAdapter {
 
     Context ctx;
     LayoutInflater layoutInflater;
-    ArrayList<String> shipments;
-    ListAdapter(Context context, ArrayList<String> shipments) {
+    ArrayList<Package> packages;
+    ListAdapter(Context context, ArrayList<Package> aPackages) {
         ctx = context;
-        this.shipments = shipments;
+        this.packages = aPackages;
         layoutInflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     @Override
     public int getCount() {
-        return shipments.size();
+        return packages.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return shipments.get(position);
+        return packages.get(position);
     }
 
     @Override
@@ -44,8 +45,11 @@ public class ListAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         View view = convertView;
         if (view == null)
-            view = layoutInflater.inflate(R.layout.shipments_list_element, parent, false);
+            view = layoutInflater.inflate(R.layout.activity_list_element, parent, false);
+        Package pkg = packages.get(position);
 
+        TextView twName = (TextView)view.findViewById(R.id.twName);
+        twName.setText(pkg.name);
         return view;
     }
 }

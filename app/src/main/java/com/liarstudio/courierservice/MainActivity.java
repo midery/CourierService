@@ -15,7 +15,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewPager);
-        ShipmentFragmentPagerAdapter manager = new ShipmentFragmentPagerAdapter(getSupportFragmentManager());
+        PackageFragmentPageAdapter manager = new PackageFragmentPageAdapter(getSupportFragmentManager());
 
         viewPager.setAdapter(manager);
 
