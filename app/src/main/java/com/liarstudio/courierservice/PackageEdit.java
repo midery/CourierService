@@ -59,14 +59,15 @@ public class PackageEdit extends AppCompatActivity {
     EditText editTextPackD;
     EditText editTextPackWeight;
     TextView textViewPackDate;
-    Button buttonConfirm;
+    TextView textViewPackPrice;
     Spinner spinner;
     Spinner spinnerRecipient;
     TextView textViewFinal;
     EditText editTextFinalCommentary;
     Spinner spinnerFinalStatus;
 
-
+    Button buttonConfirm;
+    Button buttonCalculatePrice;
 
 
     @Override
@@ -121,16 +122,17 @@ public class PackageEdit extends AppCompatActivity {
         editTextPackD = (EditText) findViewById(R.id.editTextPackD);
         editTextPackWeight = (EditText) findViewById(R.id.editTextPackWeight);
         textViewPackDate = (TextView) findViewById(R.id.textViewPackDate);
+        textViewPackPrice = (TextView) findViewById(R.id.textViewPackPrice);
+
 
         textViewFinal = (TextView) findViewById(R.id.textViewFinal);
         editTextFinalCommentary = (EditText) findViewById(R.id.editTextFinalCommentary);
 
 
-        buttonConfirm = (Button) findViewById(R.id.buttonConfirm);
-        buttonConfirm.setOnClickListener(buttonConfirmPressed());
 
         initSpinners();
         initDatePicker();
+        initButtons();
     }
 
     void initSpinners() {
@@ -259,6 +261,30 @@ public class PackageEdit extends AppCompatActivity {
 }
 
 
+    void initButtons() {
+        buttonConfirm = (Button) findViewById(R.id.buttonConfirm);
+        buttonConfirm.setOnClickListener(v -> {
+            if (validate()) {
+                pkg = loadPackage();
+
+                if (pkg.status == 1)
+                    dialogBuilder();
+                else
+                    passAndFinish();
+            }
+            });
+        buttonCalculatePrice = (Button)findViewById(R.id.buttonCalculatePrice);
+        buttonCalculatePrice.setOnClickListener(v -> {
+            if (validateDimensions())
+                textViewPackPrice.setText(Double.toString(Package.calculatePrice(
+                        Integer.parseInt(editTextPackW.getText().toString()),
+                        Integer.parseInt(editTextPackH.getText().toString()),
+                        Integer.parseInt(editTextPackD.getText().toString()),
+                        Double.parseDouble(editTextPackWeight.getText().toString()))));
+        });
+    }
+
+
     boolean validate() {
 
         boolean valid = true;
@@ -327,7 +353,19 @@ public class PackageEdit extends AppCompatActivity {
             editTextPackName.setError("Введен некорректный номер телефона.");
         }
 
-        checkString = editTextPackWeight.getText().toString();
+        valid = validateDimensions() ? valid : false;
+
+        if (status > 0 && editTextFinalCommentary.getText().toString().isEmpty()) {
+            valid = false;
+            editTextFinalCommentary.setError("Неверный комментарий.");
+        }
+
+        return valid;
+    }
+
+    boolean validateDimensions() {
+        boolean valid = true;
+        String checkString = editTextPackWeight.getText().toString();
         double numericValue = checkString.isEmpty() ? 0 : Double.parseDouble(checkString);
 
         if (numericValue <= 0 || numericValue > 10000)
@@ -357,13 +395,8 @@ public class PackageEdit extends AppCompatActivity {
             valid = false;
             editTextPackD.setError("Некорректные размеры посылки.");
         }
-
-        if (status > 0 && editTextFinalCommentary.getText().toString().isEmpty()) {
-            valid = false;
-            editTextFinalCommentary.setError("Неверный комментарий.");
-        }
-
         return valid;
+
     }
 
     Package loadPackage() {
@@ -380,21 +413,6 @@ public class PackageEdit extends AppCompatActivity {
                 Integer.parseInt(editTextPackW.getText().toString())};
         return new Package(status, sender, recipient, editTextPackName.getText().toString(), c, dimensions,
                 Double.parseDouble(editTextPackWeight.getText().toString()));
-    }
-
-
-    private View.OnClickListener buttonConfirmPressed() {
-        return (View v)  -> {
-            if (validate())
-            {
-                pkg = loadPackage();
-
-                if (pkg.status==1)
-                    dialogBuilder();
-                else
-                    passAndFinish();
-            }
-        };
     }
 
     void dialogBuilder() {

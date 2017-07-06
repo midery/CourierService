@@ -4,7 +4,6 @@ package com.liarstudio.courierservice.BaseClasses;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 
 public class Package {
     public int status;
@@ -16,7 +15,14 @@ public class Package {
     public double weight;
     public Calendar date;
 
-    public int price;
+    public static double tariff = 200;
+
+    //http://www.bagagesdumonde.com/en/lost-and-found/faq/79
+    public static double cargoRate = 250;
+
+
+
+    public double price = 0;
     public String commentary;
 
     public Package()  {
@@ -74,8 +80,23 @@ public class Package {
         this.weight = weight;
     }
 
-    public double calculatePrice() {
-        double v = dimensions[1]*dimensions[2]*dimensions[3]/1000000;
-        return v;
+    public void calculatePrice() {
+        double v = dimensions[1]*dimensions[2]*dimensions[3]/(double)1000000;
+        double g = weight/v;
+        if (g > 250)
+            price = weight* tariff;
+        else
+            price = v*250* tariff;
+    }
+
+    public static double calculatePrice(int width, int height, int depth, double weight) {
+        double v = width*height*depth/(double)1000000;
+        double g = weight/v;
+
+        //1m3 = 250kg
+        if (g > cargoRate)
+            return weight*tariff;
+        else
+            return v*cargoRate*tariff;
     }
 }
