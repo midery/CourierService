@@ -81,22 +81,42 @@ public class Package {
     }
 
     public void calculatePrice() {
-        double v = dimensions[1]*dimensions[2]*dimensions[3]/(double)1000000;
+
+        double v = dimensions[0]*dimensions[1]*dimensions[2]/(double)1000000;
         double g = weight/v;
+
+        double fastShippingMultiplier = 1;
+
+        //Доставка за 2 дня
+        Calendar day = Calendar.getInstance();
+        if (day.get(Calendar.YEAR) == date.get(Calendar.YEAR)) {
+            if (date.get(Calendar.DAY_OF_YEAR) - day.get(Calendar.DAY_OF_YEAR) < 2)
+                fastShippingMultiplier *= 2;
+        }
+
+
         if (g > 250)
-            price = weight* tariff;
+            price = weight * tariff * fastShippingMultiplier;
         else
-            price = v*250* tariff;
+            price = v * 250 * tariff * fastShippingMultiplier;
     }
 
-    public static double calculatePrice(int width, int height, int depth, double weight) {
+    public static double calculatePrice(int width, int height, int depth, double weight, Calendar date) {
         double v = width*height*depth/(double)1000000;
         double g = weight/v;
+        double fastShippingMultiplier = 1;
+
+        //Доставка за 2 дня
+        Calendar day = Calendar.getInstance();
+        if (day.get(Calendar.YEAR) == date.get(Calendar.YEAR)) {
+            if (date.get(Calendar.DAY_OF_YEAR) - day.get(Calendar.DAY_OF_YEAR) < 2)
+                fastShippingMultiplier *= 2;
+        }
 
         //1m3 = 250kg
         if (g > cargoRate)
-            return weight*tariff;
+            return weight * tariff * fastShippingMultiplier;
         else
-            return v*cargoRate*tariff;
+            return v * cargoRate * tariff * fastShippingMultiplier;
     }
 }

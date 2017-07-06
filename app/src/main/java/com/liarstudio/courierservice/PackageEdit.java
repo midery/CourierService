@@ -34,7 +34,6 @@ public class PackageEdit extends AppCompatActivity {
 
 
     Calendar c;
-    Package pkg;
     int position = -1;
     int status = 0;
 
@@ -60,12 +59,13 @@ public class PackageEdit extends AppCompatActivity {
     EditText editTextPackWeight;
     TextView textViewPackDate;
     TextView textViewPackPrice;
-    Spinner spinner;
-    Spinner spinnerRecipient;
     TextView textViewFinal;
     EditText editTextFinalCommentary;
+    //Spinners
+    Spinner spinner;
+    Spinner spinnerRecipient;
     Spinner spinnerFinalStatus;
-
+    //Buttons
     Button buttonConfirm;
     Button buttonCalculatePrice;
 
@@ -84,10 +84,10 @@ public class PackageEdit extends AppCompatActivity {
         if (intent.hasExtra("jsonPackage") && intent.hasExtra("packagePosition"))
         {
             String jsonPackage = intent.getStringExtra("jsonPackage");
-            pkg = new Gson().fromJson(jsonPackage, Package.class);
+            Package pkg = new Gson().fromJson(jsonPackage, Package.class);
             position = intent.getIntExtra("packagePosition", -1);
 
-            initFieldsForEdit();
+            initFieldsForEdit(pkg);
         }
         else {
             c = Calendar.getInstance();
@@ -98,7 +98,9 @@ public class PackageEdit extends AppCompatActivity {
         }
     }
 
-
+    /*
+    ****** INITIALIZE ZONE ******
+    */
     void initView() {
         editTextSenderAddress = (EditText) findViewById(R.id.editTextSenderAddress);
         editTextSenderName = (EditText) findViewById(R.id.editTextSenderName);
@@ -200,7 +202,28 @@ public class PackageEdit extends AppCompatActivity {
 
     }
 
-    void initFieldsForEdit() {
+    void initButtons() {
+        buttonConfirm = (Button) findViewById(R.id.buttonConfirm);
+        buttonConfirm.setOnClickListener(v -> {
+            if (validate()) {
+                if (status == 1)
+                    dialogBuilder();
+                else
+                    passAndFinish();
+            }
+            });
+        buttonCalculatePrice = (Button)findViewById(R.id.buttonCalculatePrice);
+        buttonCalculatePrice.setOnClickListener(v -> {
+            if (validateDimensions())
+                textViewPackPrice.setText(Double.toString(Package.calculatePrice(
+                        Integer.parseInt(editTextPackW.getText().toString()),
+                        Integer.parseInt(editTextPackH.getText().toString()),
+                        Integer.parseInt(editTextPackD.getText().toString()),
+                        Double.parseDouble(editTextPackWeight.getText().toString()), c)));
+        });
+    }
+
+    void initFieldsForEdit(Package pkg) {
         editTextSenderAddress.setText(pkg.sender.address);
         editTextSenderName.setText(pkg.sender.name);
         editTextSenderEmail.setText(pkg.sender.email);
@@ -236,54 +259,34 @@ public class PackageEdit extends AppCompatActivity {
 
         spinnerFinalStatus.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
-        @Override
-        public void onItemSelected(AdapterView<?> adapter, View v,int position, long id) {
-            // On selecting a spinner item
-            status = position;
+            @Override
+            public void onItemSelected(AdapterView<?> adapter, View v,int position, long id) {
+                // On selecting a spinner item
+                status = position;
 
-            if (position == 0){
-                editTextFinalCommentary.setVisibility(View.INVISIBLE);
-                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) buttonConfirm.getLayoutParams();
-                params.addRule(RelativeLayout.BELOW, R.id.spinnerFinalStatus);
-                buttonConfirm.setLayoutParams(params);
-            } else {
-                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) buttonConfirm.getLayoutParams();
-                params.addRule(RelativeLayout.BELOW, R.id.editTextFinalCommentary);
-                buttonConfirm.setLayoutParams(params);
-                editTextFinalCommentary.setVisibility(View.VISIBLE);
+                if (position == 0){
+                    editTextFinalCommentary.setVisibility(View.INVISIBLE);
+                    RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) buttonConfirm.getLayoutParams();
+                    params.addRule(RelativeLayout.BELOW, R.id.spinnerFinalStatus);
+                    buttonConfirm.setLayoutParams(params);
+                } else {
+                    RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) buttonConfirm.getLayoutParams();
+                    params.addRule(RelativeLayout.BELOW, R.id.editTextFinalCommentary);
+                    buttonConfirm.setLayoutParams(params);
+                    editTextFinalCommentary.setVisibility(View.VISIBLE);
+                }
             }
-        }
 
-        @Override
-        public void onNothingSelected(AdapterView<?> arg0) {}});
-
-
-}
+            @Override
+            public void onNothingSelected(AdapterView<?> arg0) {}});
 
 
-    void initButtons() {
-        buttonConfirm = (Button) findViewById(R.id.buttonConfirm);
-        buttonConfirm.setOnClickListener(v -> {
-            if (validate()) {
-                pkg = loadPackage();
-
-                if (pkg.status == 1)
-                    dialogBuilder();
-                else
-                    passAndFinish();
-            }
-            });
-        buttonCalculatePrice = (Button)findViewById(R.id.buttonCalculatePrice);
-        buttonCalculatePrice.setOnClickListener(v -> {
-            if (validateDimensions())
-                textViewPackPrice.setText(Double.toString(Package.calculatePrice(
-                        Integer.parseInt(editTextPackW.getText().toString()),
-                        Integer.parseInt(editTextPackH.getText().toString()),
-                        Integer.parseInt(editTextPackD.getText().toString()),
-                        Double.parseDouble(editTextPackWeight.getText().toString()))));
-        });
     }
 
+
+    /*
+    ****** VALIDATION ZONE ******
+    */
 
     boolean validate() {
 
@@ -399,6 +402,11 @@ public class PackageEdit extends AppCompatActivity {
 
     }
 
+    /*
+    ****** SUPPORT ZONE ******
+    */
+
+
     Package loadPackage() {
         Person sender = new Person(spinner.getSelectedItemPosition(), editTextSenderName.getText().toString(),
                 editTextSenderPhone.getText().toString(), editTextSenderEmail.getText().toString(),
@@ -411,8 +419,11 @@ public class PackageEdit extends AppCompatActivity {
                 Integer.parseInt(editTextPackW.getText().toString()),
                 Integer.parseInt(editTextPackW.getText().toString()),
                 Integer.parseInt(editTextPackW.getText().toString())};
-        return new Package(status, sender, recipient, editTextPackName.getText().toString(), c, dimensions,
+        Package pack = new Package(status, sender, recipient, editTextPackName.getText().toString(), c, dimensions,
                 Double.parseDouble(editTextPackWeight.getText().toString()));
+        pack.calculatePrice();
+
+        return pack;
     }
 
     void dialogBuilder() {
@@ -421,15 +432,15 @@ public class PackageEdit extends AppCompatActivity {
                 .setMessage("Как вы желаете оповестить заказчика?")
                 .setNegativeButton("Телефон", (dialog, which) -> {
 
-                    Intent intentPhone = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + pkg.sender.phone));
+                    Intent intentPhone = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + editTextSenderPhone.getText().toString()));
                     startActivity(intentPhone);
 
                     passAndFinish();
                 })
                 .setPositiveButton("Не уведомлять", (dialog, which) -> passAndFinish());
-        if (!pkg.sender.email.isEmpty())
+        if (!editTextSenderPhone.getText().toString().isEmpty())
             builder.setNeutralButton("E-mail", (dialog, which) -> {
-                Intent intentEmail = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", pkg.sender.email, null));
+                Intent intentEmail = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", editTextSenderEmail.getText().toString(), null));
                 startActivity(intentEmail);
                 passAndFinish();
             });
@@ -438,6 +449,8 @@ public class PackageEdit extends AppCompatActivity {
     }
 
     private void passAndFinish() {
+
+        Package pkg = loadPackage();
         Intent processData = new Intent();
 
         processData.putExtra("jsonPackageChild", new Gson().toJson(pkg));
