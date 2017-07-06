@@ -24,7 +24,7 @@ public class  MainActivity extends AppCompatActivity {
 
     Toolbar toolbar;
     TabLayout tabLayout;
-    ArrayList<Package> packages;
+    PackageFragmentPageAdapter manager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,9 +35,9 @@ public class  MainActivity extends AppCompatActivity {
 
 
 
-        loadPackages();
+        ArrayList<Package> packages = loadPackages();
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewPager);
-        PackageFragmentPageAdapter manager = new PackageFragmentPageAdapter(getSupportFragmentManager(), packages);
+        manager = new PackageFragmentPageAdapter(getSupportFragmentManager(), packages);
 
         viewPager.setAdapter(manager);
 
@@ -78,14 +78,15 @@ public class  MainActivity extends AppCompatActivity {
                 int position = data.getIntExtra("packageChildPosition", -1);
                 String jsonPackage = data.getStringExtra("jsonPackageChild");
                 Package pkg = new Gson().fromJson(jsonPackage, Package.class);
+                manager.add(position, pkg);
             }
         }
     }
 
 
-        void loadPackages() {
+        private ArrayList<Package> loadPackages() {
 
-        packages = new ArrayList<Package>();
+        ArrayList<Package> packages = new ArrayList<>();
         Package pkg = new Package(0,
                 new Person("Kuk", "9204595911", "m@m.m", "Lorum Ipsum street"),
                 new Person("Kuk", "9204505931", "m@m.m", "Lorum Ipsum street"), "Pkg 1",
@@ -97,5 +98,6 @@ public class  MainActivity extends AppCompatActivity {
         pkg = new Package(0, new Person("Kuk", "920", "m@m.m", "Lorum Ipsum street"), new Person("Kuk", "14156", "m@m.m", "Dorum av."), "Pkg 3", new GregorianCalendar(2017, 05, 12),
                 new int[]{200,35,615}, 20);
         packages.add(pkg);
+        return packages;
     }
 }
