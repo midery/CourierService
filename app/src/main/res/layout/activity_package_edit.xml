@@ -266,21 +266,57 @@
 
         <TextView
             android:id="@+id/textViewPackPrice"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="14dp"
             android:paddingLeft="5dp"
+            android:layout_marginBottom="14dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@id/buttonPickDate"
             android:text="Цена: "
             android:textSize="18sp"
             android:textStyle="bold"/>
+
+
+        <TextView
+            android:paddingLeft="5dp"
+            android:id="@+id/textViewFinal"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textViewPackPrice"
+            android:text="Статус"
+            android:textSize="18sp"
+            android:visibility="invisible"/>
+
+        <Spinner
+            android:id="@+id/spinnerFinalStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:entries="@array/status_type"
+            android:layout_toEndOf="@+id/textViewFinal"
+            android:layout_below="@+id/textViewPackPrice"
+            android:visibility="invisible"/>
+
+
+
+        <EditText
+            android:id="@+id/editTextFinalCommentary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/spinnerFinalStatus"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:hint="Комментарий*"
+            android:visibility="invisible"/>
+
         <Button
             android:id="@+id/buttonConfirm"
             android:layout_centerInParent="true"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:text="Изменить"
-            android:layout_below="@+id/textViewPackPrice"/>
+            android:text="Подтвердить"
+            android:layout_below="@+id/textViewPackPrice"
+            />
+
 
     </RelativeLayout>
 

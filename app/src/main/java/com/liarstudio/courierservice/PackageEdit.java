@@ -29,9 +29,10 @@ public class PackageEdit extends AppCompatActivity {
     Calendar c;
     Package pkg;
     int position = -1;
+    int status = 0;
 
     //Sender Fields
-    EditText editTextSenderAddress ;
+    EditText editTextSenderAddress;
     EditText editTextSenderName;
     EditText editTextSenderEmail;
     EditText editTextSenderPhone;
@@ -54,6 +55,11 @@ public class PackageEdit extends AppCompatActivity {
     Button buttonConfirm;
     Spinner spinner;
     Spinner spinnerRecipient;
+    TextView textViewFinal;
+    EditText editTextFinalCommentary;
+    Spinner spinnerFinalStatus;
+
+
 
 
     @Override
@@ -63,7 +69,9 @@ public class PackageEdit extends AppCompatActivity {
         setContentView(R.layout.activity_package_edit);
 
         initView();
+
         Intent intent = getIntent();
+
 
         if (intent.hasExtra("jsonPackage") && intent.hasExtra("packagePosition"))
         {
@@ -80,9 +88,6 @@ public class PackageEdit extends AppCompatActivity {
             TextView textViewPackDate = (TextView)findViewById(R.id.textViewPackDate);
             textViewPackDate.setText(Package.getStringDate(c));
         }
-
-        initView();
-
     }
 
 
@@ -102,7 +107,6 @@ public class PackageEdit extends AppCompatActivity {
         editTextRecipientPhone.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
         editTextRecipientCompanyName = (EditText) findViewById(R.id.editTextRecipientCompanyName);
 
-
         textViewPack = (TextView) findViewById(R.id.textViewPack);
         editTextPackName = (EditText) findViewById(R.id.editTextPackName);
         editTextPackW = (EditText) findViewById(R.id.editTextPackW);
@@ -110,6 +114,10 @@ public class PackageEdit extends AppCompatActivity {
         editTextPackD = (EditText) findViewById(R.id.editTextPackD);
         editTextPackWeight = (EditText) findViewById(R.id.editTextPackWeight);
         textViewPackDate = (TextView) findViewById(R.id.textViewPackDate);
+
+        textViewFinal = (TextView) findViewById(R.id.textViewFinal);
+        editTextFinalCommentary = (EditText) findViewById(R.id.editTextFinalCommentary);
+
 
         buttonConfirm = (Button) findViewById(R.id.buttonConfirm);
         buttonConfirm.setOnClickListener(buttonConfirmPressed());
@@ -139,9 +147,7 @@ public class PackageEdit extends AppCompatActivity {
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> arg0) {
-                // TODO Auto-generated method stub
-            }});
+            public void onNothingSelected(AdapterView<?> arg0) {}});
 
         spinnerRecipient = (Spinner) findViewById(R.id.spinnerRecipient);
         spinnerRecipient.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -163,10 +169,7 @@ public class PackageEdit extends AppCompatActivity {
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> arg0) {
-                // TODO Auto-generated method stub
-            }});
-
+            public void onNothingSelected(AdapterView<?> arg0) {}});
     }
 
     void initDatePicker() {
@@ -208,7 +211,45 @@ public class PackageEdit extends AppCompatActivity {
         editTextPackH.setText(Integer.toString(pkg.dimensions[1]));
         editTextPackD.setText(Integer.toString(pkg.dimensions[2]));
         editTextPackWeight.setText(Double.toString(pkg.weight));
-    }
+        buttonConfirm.setText("Изменить");
+
+
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) buttonConfirm.getLayoutParams();
+        params.addRule(RelativeLayout.BELOW, R.id.spinnerFinalStatus);
+        buttonConfirm.setLayoutParams(params);
+
+
+
+        spinnerFinalStatus = (Spinner) findViewById(R.id.spinnerFinalStatus);
+
+        textViewFinal.setVisibility(View.VISIBLE);
+        spinnerFinalStatus.setVisibility(View.VISIBLE);
+
+        spinnerFinalStatus.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+        @Override
+        public void onItemSelected(AdapterView<?> adapter, View v,int position, long id) {
+            // On selecting a spinner item
+            status = position;
+
+            if (position == 0){
+                editTextFinalCommentary.setVisibility(View.INVISIBLE);
+                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) buttonConfirm.getLayoutParams();
+                params.addRule(RelativeLayout.BELOW, R.id.spinnerFinalStatus);
+                buttonConfirm.setLayoutParams(params);
+            } else {
+                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) buttonConfirm.getLayoutParams();
+                params.addRule(RelativeLayout.BELOW, R.id.editTextFinalCommentary);
+                buttonConfirm.setLayoutParams(params);
+                editTextFinalCommentary.setVisibility(View.VISIBLE);
+            }
+        }
+
+        @Override
+        public void onNothingSelected(AdapterView<?> arg0) {}});
+
+
+}
 
 
     private View.OnClickListener buttonConfirmPressed() {
@@ -241,7 +282,7 @@ public class PackageEdit extends AppCompatActivity {
                 Integer.parseInt(editTextPackW.getText().toString()),
                 Integer.parseInt(editTextPackW.getText().toString()),
                 Integer.parseInt(editTextPackW.getText().toString())};
-        return new Package(0, sender, recipient, editTextPackName.getText().toString(), c, dimensions,
+        return new Package(status, sender, recipient, editTextPackName.getText().toString(), c, dimensions,
                 Double.parseDouble(editTextPackWeight.getText().toString()));
     }
 
@@ -344,6 +385,11 @@ public class PackageEdit extends AppCompatActivity {
         if (numericIntValue == 0  || numericIntValue > 10000) {
             valid = false;
             editTextPackD.setError("Некорректные размеры посылки.");
+        }
+
+        if (status > 0 && editTextFinalCommentary.getText().toString().isEmpty()) {
+            valid = false;
+            editTextFinalCommentary.setError("Неверный комментарий.");
         }
 
         return valid;

@@ -17,6 +17,7 @@ public class Package {
     public Calendar date;
 
     public int price;
+    public String commentary;
 
     public Package()  {
 

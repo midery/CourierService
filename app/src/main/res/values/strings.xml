@@ -5,6 +5,11 @@
         <item>Компания</item>
         <item>Частное лицо</item>
     </string-array>
-    <string name="title_activity_kektivity">kektivity</string>
+
+    <string-array name="status_type">
+        <item>Активная</item>
+        <item>Завершенная</item>
+    </string-array>
+
 
 </resources>
