@@ -3,7 +3,6 @@ package com.liarstudio.courierservice;
 import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -15,11 +14,13 @@ import com.liarstudio.courierservice.BaseClasses.Package;
 import com.liarstudio.courierservice.BaseClasses.Person;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
-public class MainActivity extends AppCompatActivity {
+public class  MainActivity extends AppCompatActivity {
 
+
+    public static final int REQUEST_CODE = 555;
 
     Toolbar toolbar;
     TabLayout tabLayout;
@@ -75,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
         if (resultCode == RESULT_OK ) {
             if (data.hasExtra("jsonPackageChild") && data.hasExtra("packageChildPosition")) {
                 int position = data.getIntExtra("packageChildPosition", -1);
-                String jsonPackage = data.getStringExtra("jsonPackage");
+                String jsonPackage = data.getStringExtra("jsonPackageChild");
                 Package pkg = new Gson().fromJson(jsonPackage, Package.class);
             }
         }
@@ -85,12 +86,16 @@ public class MainActivity extends AppCompatActivity {
         void loadPackages() {
 
         packages = new ArrayList<Package>();
-        Package pkg = new Package(0, new Person("Kuk", "920", "m@m.m", "Lorum Ipsum street"), new Person("Kuk", "920", "m@m.m", "Lorum Ipsum street"), "Pkg 1", new Date(25));
+        Package pkg = new Package(0,
+                new Person("Kuk", "9204595911", "m@m.m", "Lorum Ipsum street"),
+                new Person("Kuk", "9204505931", "m@m.m", "Lorum Ipsum street"), "Pkg 1",
+                new GregorianCalendar(2017, 07, 06), new int[]{5,1,6}, 5);
 
         packages.add(pkg);
-        pkg = new Package(1, new Person("Kuk", "920", "m@m.m", "Lorum Ipsum street"), new Person("Kuk", "14156", "m@m.m", "Dorum av."), "Pkg 2", new Date(System.currentTimeMillis()));
+        pkg = new Package(1, new Person("Kuk", "920", "m@m.m", "Lorum Ipsum street"), new Person("Kuk", "14156", "m@m.m", "Dorum av."), "Pkg 2", Calendar.getInstance());
         packages.add(pkg);
-        pkg = new Package(0, new Person("Kuk", "920", "m@m.m", "Lorum Ipsum street"), new Person("Kuk", "14156", "m@m.m", "Dorum av."), "Pkg 3", new Date(10600));
+        pkg = new Package(0, new Person("Kuk", "920", "m@m.m", "Lorum Ipsum street"), new Person("Kuk", "14156", "m@m.m", "Dorum av."), "Pkg 3", new GregorianCalendar(2017, 05, 12),
+                new int[]{200,35,615}, 20);
         packages.add(pkg);
     }
 }

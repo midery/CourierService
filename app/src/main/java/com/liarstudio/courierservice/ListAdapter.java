@@ -57,12 +57,17 @@ public class ListAdapter extends BaseAdapter {
         tvAddress.setText(pkg.recipient.address);
 
         TextView tvDate = (TextView)view.findViewById(R.id.twDate);
-        tvDate.setText(pkg.getDate());
+        tvDate.setText(pkg.getStringDate());
 
+        RelativeLayout rl = (RelativeLayout)view.findViewById(R.id.lvCell);
         if (pkg.status>0) {
-            RelativeLayout rl = (RelativeLayout)view.findViewById(R.id.lvCell);
             rl.setBackgroundColor(Color.LTGRAY);
         }
+        else
+        {
+            rl.setBackgroundColor(Color.WHITE);
+        }
+
 
 
 

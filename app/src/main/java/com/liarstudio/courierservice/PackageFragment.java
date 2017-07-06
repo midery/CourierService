@@ -53,14 +53,15 @@ public class PackageFragment extends Fragment {
 
         ListAdapter la = new ListAdapter(getContext(), packages);
         listView.setOnItemClickListener((parent, v, position, id) -> {
-                Toast.makeText(getContext(), "working", Toast.LENGTH_SHORT).show();
-            Gson gson = new GsonBuilder().create();
-            String jsonPackage = gson.toJson(packages.get(position));
+            if (packages.get(position).status == 0) {
+                Gson gson = new GsonBuilder().create();
+                String jsonPackage = gson.toJson(packages.get(position));
 
-            Intent intent = new Intent(getContext(), PackageEdit.class);
-            intent.putExtra("jsonPackage", jsonPackage);
-            intent.putExtra("packagePosition", position);
-            startActivity(intent);
+                Intent intent = new Intent(getContext(), PackageEdit.class);
+                intent.putExtra("jsonPackage", jsonPackage);
+                intent.putExtra("packagePosition", position);
+                startActivityForResult(intent, MainActivity.REQUEST_CODE);
+            }
         });
 
         listView.setAdapter(la);
