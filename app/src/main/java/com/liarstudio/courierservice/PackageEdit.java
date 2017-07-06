@@ -1,10 +1,16 @@
 package com.liarstudio.courierservice;
 
+import android.Manifest;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.telephony.PhoneNumberFormattingTextWatcher;
@@ -17,6 +23,7 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.liarstudio.courierservice.BaseClasses.Package;
@@ -252,42 +259,6 @@ public class PackageEdit extends AppCompatActivity {
 }
 
 
-    private View.OnClickListener buttonConfirmPressed() {
-        return (View v)  -> {
-            if (validate())
-            {
-                pkg = loadPackage();
-                Intent processData = new Intent();
-
-                processData.putExtra("jsonPackageChild", new Gson().toJson(pkg));
-                processData.putExtra("packageChildPosition", position);
-
-                setResult(RESULT_OK, processData);
-                finish();
-            }
-        };
-    }
-
-
-
-    Package loadPackage() {
-        Person sender = new Person(spinner.getSelectedItemPosition(), editTextSenderName.getText().toString(),
-                editTextSenderPhone.getText().toString(), editTextSenderEmail.getText().toString(),
-                editTextSenderAddress.getText().toString(), editTextSenderCompanyName.getText().toString());
-
-        Person recipient = new Person(spinnerRecipient.getSelectedItemPosition(), editTextRecipientName.getText().toString(),
-                editTextRecipientPhone.getText().toString(), editTextRecipientEmail.getText().toString(),
-                editTextRecipientAddress.getText().toString(), editTextRecipientCompanyName.getText().toString());
-        int[] dimensions = {
-                Integer.parseInt(editTextPackW.getText().toString()),
-                Integer.parseInt(editTextPackW.getText().toString()),
-                Integer.parseInt(editTextPackW.getText().toString())};
-        return new Package(status, sender, recipient, editTextPackName.getText().toString(), c, dimensions,
-                Double.parseDouble(editTextPackWeight.getText().toString()));
-    }
-
-
-
     boolean validate() {
 
         boolean valid = true;
@@ -394,6 +365,70 @@ public class PackageEdit extends AppCompatActivity {
 
         return valid;
     }
+
+    Package loadPackage() {
+        Person sender = new Person(spinner.getSelectedItemPosition(), editTextSenderName.getText().toString(),
+                editTextSenderPhone.getText().toString(), editTextSenderEmail.getText().toString(),
+                editTextSenderAddress.getText().toString(), editTextSenderCompanyName.getText().toString());
+
+        Person recipient = new Person(spinnerRecipient.getSelectedItemPosition(), editTextRecipientName.getText().toString(),
+                editTextRecipientPhone.getText().toString(), editTextRecipientEmail.getText().toString(),
+                editTextRecipientAddress.getText().toString(), editTextRecipientCompanyName.getText().toString());
+        int[] dimensions = {
+                Integer.parseInt(editTextPackW.getText().toString()),
+                Integer.parseInt(editTextPackW.getText().toString()),
+                Integer.parseInt(editTextPackW.getText().toString())};
+        return new Package(status, sender, recipient, editTextPackName.getText().toString(), c, dimensions,
+                Double.parseDouble(editTextPackWeight.getText().toString()));
+    }
+
+
+    private View.OnClickListener buttonConfirmPressed() {
+        return (View v)  -> {
+            if (validate())
+            {
+                pkg = loadPackage();
+
+                if (pkg.status==1)
+                    dialogBuilder();
+                else
+                    passAndFinish();
+            }
+        };
+    }
+
+    void dialogBuilder() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Уведомление")
+                .setMessage("Как вы желаете оповестить заказчика?")
+                .setNegativeButton("Телефон", (dialog, which) -> {
+
+                    Intent intentPhone = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + pkg.sender.phone));
+                    startActivity(intentPhone);
+
+                    passAndFinish();
+                })
+                .setPositiveButton("Не уведомлять", (dialog, which) -> passAndFinish());
+        if (!pkg.sender.email.isEmpty())
+            builder.setNeutralButton("E-mail", (dialog, which) -> {
+                Intent intentEmail = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", pkg.sender.email, null));
+                startActivity(intentEmail);
+                passAndFinish();
+            });
+
+        builder.create().show();
+    }
+
+    private void passAndFinish() {
+        Intent processData = new Intent();
+
+        processData.putExtra("jsonPackageChild", new Gson().toJson(pkg));
+        processData.putExtra("packageChildPosition", position);
+
+        setResult(RESULT_OK, processData);
+        finish();
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);

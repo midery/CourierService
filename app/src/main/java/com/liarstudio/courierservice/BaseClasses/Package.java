@@ -73,4 +73,9 @@ public class Package {
         this.dimensions = dimensions;
         this.weight = weight;
     }
+
+    public double calculatePrice() {
+        double v = dimensions[1]*dimensions[2]*dimensions[3]/1000000;
+        return v;
+    }
 }
