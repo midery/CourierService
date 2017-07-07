@@ -1,17 +1,23 @@
 package com.liarstudio.courierservice;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.liarstudio.courierservice.Activities.MainActivity;
+import com.liarstudio.courierservice.Activities.MapsActivity;
 import com.liarstudio.courierservice.BaseClasses.Package;
 
 import java.util.ArrayList;
+
+import static android.support.v4.app.ActivityCompat.startActivityForResult;
 
 /**
  * Created by M1DERY on 05.07.2017.
@@ -60,12 +66,23 @@ public class ListAdapter extends BaseAdapter {
         tvDate.setText(pkg.getStringDate());
 
         RelativeLayout rl = (RelativeLayout)view.findViewById(R.id.lvCell);
+        Button buttonShowOnMap = (Button)view.findViewById(R.id.buttonShowOnMap);
+        buttonShowOnMap.setEnabled(false);
+
         if (pkg.status>0) {
             rl.setBackgroundColor(Color.LTGRAY);
-        }
-        else
-        {
+        }   else    {
             rl.setBackgroundColor(Color.WHITE);
+            double[] coordinates = pkg.recipient.coordinates;
+            if (coordinates[0] != 0 && coordinates[1] !=0) {
+                buttonShowOnMap.setEnabled(true);
+                buttonShowOnMap.setOnClickListener(l -> {
+                    Intent mapIntent = new Intent(parent.getContext(), MapsActivity.class);
+                    mapIntent.putExtra("coordinates", coordinates);
+                    parent.getContext().startActivity(mapIntent);
+
+                });
+            }
         }
 
 

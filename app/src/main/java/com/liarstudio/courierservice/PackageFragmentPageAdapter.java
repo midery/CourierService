@@ -39,6 +39,7 @@ public class PackageFragmentPageAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
 
         PackageFragment packageFragment = new PackageFragment();
+        packageFragment.setAdapter(this);
 
         ArrayList<Package> filtered = (ArrayList<Package>) packages.clone();
 
@@ -74,6 +75,10 @@ public class PackageFragmentPageAdapter extends FragmentStatePagerAdapter {
     @Override
     public int getItemPosition(Object object) {
         return POSITION_NONE;
+    }
+
+    public int getAbsolutePosition(Package pkg) {
+        return packages.indexOf(pkg);
     }
 
     @Override

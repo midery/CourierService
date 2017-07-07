@@ -1,15 +1,11 @@
 package com.liarstudio.courierservice.Activities;
 
-import android.Manifest;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -23,7 +19,6 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.liarstudio.courierservice.BaseClasses.Package;
@@ -33,10 +28,12 @@ import com.liarstudio.courierservice.R;
 
 public class PackageEdit extends AppCompatActivity {
 
+    public static final int REQUEST_MAP = 2;
 
     Calendar c;
     int position = -1;
     int status = 0;
+    double[] coordinates;
 
     //Sender Fields
     EditText editTextSenderAddress;
@@ -88,13 +85,14 @@ public class PackageEdit extends AppCompatActivity {
             String jsonPackage = intent.getStringExtra("jsonPackage");
             Package pkg = new Gson().fromJson(jsonPackage, Package.class);
             position = intent.getIntExtra("packagePosition", -1);
-
+            coordinates = pkg.recipient.coordinates;
             initFieldsForEdit(pkg);
         }
         else {
             c = Calendar.getInstance();
             c.add(Calendar.DAY_OF_YEAR, 1);
 
+            coordinates = new double[] {0,0};
             TextView textViewPackDate = (TextView)findViewById(R.id.textViewPackDate);
             textViewPackDate.setText(Package.getStringDate(c));
         }
@@ -207,13 +205,12 @@ public class PackageEdit extends AppCompatActivity {
     void initButtons() {
         buttonConfirm = (Button) findViewById(R.id.buttonConfirm);
         buttonConfirm.setOnClickListener(v -> {
-            if (validate()) {
+            if (true){//validate()) {
                 if (status == 1)
-                    dialogBuilder();
+                    packageCloseCheckDialog();
                 else
-                    passAndFinish();
-            }
-            });
+                    coordinateCheckDialog();}
+        });
         buttonCalculatePrice = (Button)findViewById(R.id.buttonCalculatePrice);
         buttonCalculatePrice.setOnClickListener(v -> {
             if (validateDimensions())
@@ -227,7 +224,7 @@ public class PackageEdit extends AppCompatActivity {
         buttonSetCoordinates = (Button)findViewById(R.id.buttonSetCoordinates);
         buttonSetCoordinates.setOnClickListener(v -> {
             Intent mapIntent = new Intent(this, MapsActivity.class);
-            startActivityForResult(mapIntent, 1);
+            startActivityForResult(mapIntent, REQUEST_MAP);
         });
 
     }
@@ -423,7 +420,7 @@ public class PackageEdit extends AppCompatActivity {
 
         Person recipient = new Person(spinnerRecipient.getSelectedItemPosition(), editTextRecipientName.getText().toString(),
                 editTextRecipientPhone.getText().toString(), editTextRecipientEmail.getText().toString(),
-                editTextRecipientAddress.getText().toString(), editTextRecipientCompanyName.getText().toString());
+                editTextRecipientAddress.getText().toString(), editTextRecipientCompanyName.getText().toString(), coordinates);
         int[] dimensions = {
                 Integer.parseInt(editTextPackW.getText().toString()),
                 Integer.parseInt(editTextPackW.getText().toString()),
@@ -435,7 +432,7 @@ public class PackageEdit extends AppCompatActivity {
         return pack;
     }
 
-    void dialogBuilder() {
+    void packageCloseCheckDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Уведомление")
                 .setMessage("Как вы желаете оповестить заказчика?")
@@ -457,16 +454,40 @@ public class PackageEdit extends AppCompatActivity {
         builder.create().show();
     }
 
+    void coordinateCheckDialog() {
+        if (coordinates[0] != 0 && coordinates[1] != 0) {
+            passAndFinish();
+            return;
+        }
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Уведомление")
+                .setMessage("Вы не указали координаты. Желаете продолжить без них?")
+                .setPositiveButton("Продолжить", (dialog, which) -> {
+                    passAndFinish();
+                })
+                .setNegativeButton("Вернуться", (dialog, which) -> {
+
+                });
+        builder.create().show();
+    }
     private void passAndFinish() {
 
         Package pkg = loadPackage();
-        Intent processData = new Intent();
+        Intent data = new Intent();
 
-        processData.putExtra("jsonPackageChild", new Gson().toJson(pkg));
-        processData.putExtra("packageChildPosition", position);
+        data.putExtra("jsonPackageChild", new Gson().toJson(pkg));
+        data.putExtra("packageChildPosition", position);
 
-        setResult(RESULT_OK, processData);
+        setResult(RESULT_OK, data);
         finish();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK && requestCode == REQUEST_MAP) {
+            coordinates = data.getDoubleArrayExtra("coordinates");
+        }
+
     }
 
     @Override

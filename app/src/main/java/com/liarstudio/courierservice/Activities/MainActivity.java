@@ -22,7 +22,8 @@ import java.util.GregorianCalendar;
 public class  MainActivity extends AppCompatActivity {
 
 
-    public static final int REQUEST_CODE = 555;
+    public static final int REQUEST_ADD_OR_EDIT = 1;
+    public static final int REQUEST_MAP = 2;
 
     Toolbar toolbar;
     TabLayout tabLayout;
@@ -63,8 +64,8 @@ public class  MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.itemAdd:
-                Intent intent = new Intent(getApplicationContext(), PackageEdit.class);
-                startActivity(intent);
+                Intent intent = new Intent(this, PackageEdit.class);
+                startActivityForResult(intent, REQUEST_ADD_OR_EDIT);
                 return true;
             case R.id.itemSettings:
                 return true;
@@ -75,15 +76,16 @@ public class  MainActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_OK ) {
-            if (data.hasExtra("jsonPackageChild") && data.hasExtra("packageChildPosition")) {
-                int position = data.getIntExtra("packageChildPosition", -1);
-                String jsonPackage = data.getStringExtra("jsonPackageChild");
-                Package pkg = new Gson().fromJson(jsonPackage, Package.class);
-                manager.add(position, pkg);
-            }
+        if (resultCode == RESULT_OK && requestCode == REQUEST_ADD_OR_EDIT &&
+                data.hasExtra("jsonPackageChild") && data.hasExtra("packageChildPosition")) {
+            int position = data.getIntExtra("packageChildPosition", -1);
+            String jsonPackage = data.getStringExtra("jsonPackageChild");
+            Package pkg = new Gson().fromJson(jsonPackage, Package.class);
+            manager.add(position, pkg);
         }
     }
+
+
 
 
         private ArrayList<Package> loadPackages() {

@@ -25,6 +25,8 @@ public class Package {
     public double price = 0;
     public String commentary;
 
+
+
     public Package()  {
 
     }

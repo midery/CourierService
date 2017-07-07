@@ -24,22 +24,19 @@ public class PackageFragment extends Fragment {
     private ArrayList<Package> packages;
     private View view;
 
+    PackageFragmentPageAdapter adapter;
+
     public PackageFragment() {
         //this.packages = packages;
 
     }
 
 
+
     public void setPackages(ArrayList<Package> packages) {
         this.packages = packages;
     }
-    public static PackageFragment getInstance() {
-        //Bundle args = new Bundle();
-        PackageFragment fragment = new PackageFragment();
-        //fragment.setArguments(args);
-
-        return fragment;
-    }
+    public void setAdapter(PackageFragmentPageAdapter adapter) { this.adapter = adapter;}
 
     @Nullable
     @Override
@@ -50,14 +47,16 @@ public class PackageFragment extends Fragment {
 
         ListAdapter la = new ListAdapter(getContext(), packages);
         listView.setOnItemClickListener((parent, v, position, id) -> {
-            if (packages.get(position).status == 0) {
-                Gson gson = new GsonBuilder().create();
-                String jsonPackage = gson.toJson(packages.get(position));
+            Package pkg = packages.get(position);
+            if (pkg.status == 0) {
+                Gson gson =  new GsonBuilder().create();
+                String jsonPackage = gson.toJson(pkg);
+
 
                 Intent intent = new Intent(getContext(), PackageEdit.class);
                 intent.putExtra("jsonPackage", jsonPackage);
-                intent.putExtra("packagePosition", position);
-                startActivityForResult(intent, MainActivity.REQUEST_CODE);
+                intent.putExtra("packagePosition", adapter.getAbsolutePosition(pkg));
+                getActivity().startActivityForResult(intent, MainActivity.REQUEST_ADD_OR_EDIT);
             }
         });
 
