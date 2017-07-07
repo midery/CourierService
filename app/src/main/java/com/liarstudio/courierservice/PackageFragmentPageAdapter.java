@@ -14,6 +14,8 @@ public class PackageFragmentPageAdapter extends FragmentStatePagerAdapter {
 
     ArrayList<Package> packages;
 
+
+    //Инициализируем табы
     public PackageFragmentPageAdapter(FragmentManager fm) {
         super(fm);
         tabs = new String[] {
@@ -25,10 +27,11 @@ public class PackageFragmentPageAdapter extends FragmentStatePagerAdapter {
 
     }
 
+    //Передаем список посылок и сортируем его по дате
     public PackageFragmentPageAdapter(FragmentManager fm, ArrayList<Package> packages) {
         this(fm);
         this.packages = packages;
-        packages.sort ( (p1, p2) -> p2.date.compareTo(p1.date));
+        packages.sort ( (p1, p2) -> p1.date.compareTo(p2.date));
     }
     @Override
     public CharSequence getPageTitle(int position) {
@@ -40,6 +43,8 @@ public class PackageFragmentPageAdapter extends FragmentStatePagerAdapter {
 
         PackageFragment packageFragment = new PackageFragment();
         packageFragment.setAdapter(this);
+
+        //Фильтруем посылки по заданному критерию и возвращаем фрагмент с отфильтрованным списком
 
         ArrayList<Package> filtered = (ArrayList<Package>) packages.clone();
 
@@ -62,21 +67,25 @@ public class PackageFragmentPageAdapter extends FragmentStatePagerAdapter {
         return null;
     }
 
+    //Процедура добавления посылки. Если позиция -1, то добавляем в конец.
+    //Если нет - то на свою позицию
     public void add(int position, Package pkg) {
         if (position == -1)
             packages.add(pkg);
         else
             packages.set(position, pkg);
-        packages.sort ( (p1, p2) -> p2.date.compareTo(p1.date));
+        packages.sort ( (p1, p2) -> p1.date.compareTo(p2.date));
         notifyDataSetChanged();
 
     }
 
+    //Для корректного отображения при обновлении
     @Override
     public int getItemPosition(Object object) {
         return POSITION_NONE;
     }
 
+    //Возвращает индекс заданной посылки из списка всех посылок
     public int getAbsolutePosition(Package pkg) {
         return packages.indexOf(pkg);
     }

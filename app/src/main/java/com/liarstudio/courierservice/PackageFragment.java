@@ -21,13 +21,15 @@ import java.util.ArrayList;
 public class PackageFragment extends Fragment {
     private static final int layout = R.layout.activity_list_package;
 
-    private ArrayList<Package> packages;
-    private View view;
 
+    private View view;
+    //Количество посылок в текущем фрагменте
+    private ArrayList<Package> packages;
+
+    //Экземпляр adapter для поиска абсолютного положения
     PackageFragmentPageAdapter adapter;
 
     public PackageFragment() {
-        //this.packages = packages;
 
     }
 
@@ -45,16 +47,26 @@ public class PackageFragment extends Fragment {
 
         ListView listView = (ListView)view.findViewById(R.id.lwShipmentList);
 
+
+        //Устанавливаем
         ListAdapter la = new ListAdapter(getContext(), packages);
+
         listView.setOnItemClickListener((parent, v, position, id) -> {
+
+            //работаем с выбранной посылкой
             Package pkg = packages.get(position);
+
+            //можно редактировать, если статус - "Активна"
             if (pkg.status == 0) {
+                //Проводим JSON-сериализацию для передачи в другую Activity
                 Gson gson =  new GsonBuilder().create();
                 String jsonPackage = gson.toJson(pkg);
 
 
                 Intent intent = new Intent(getContext(), PackageEdit.class);
                 intent.putExtra("jsonPackage", jsonPackage);
+                //Кладем не position, а AbsolutePosition, так как после завершения обновлять будем
+                //посылку не из списка этого фрагмента, а из списка посылок целиком.
                 intent.putExtra("packagePosition", adapter.getAbsolutePosition(pkg));
                 getActivity().startActivityForResult(intent, MainActivity.REQUEST_ADD_OR_EDIT);
             }
