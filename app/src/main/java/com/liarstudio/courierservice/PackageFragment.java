@@ -1,23 +1,20 @@
 package com.liarstudio.courierservice;
 
 import android.content.Intent;
-import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.liarstudio.courierservice.Activities.MainActivity;
+import com.liarstudio.courierservice.Activities.PackageEdit;
 import com.liarstudio.courierservice.BaseClasses.Package;
-import com.liarstudio.courierservice.BaseClasses.Person;
 
-import java.sql.Date;
 import java.util.ArrayList;
 
 

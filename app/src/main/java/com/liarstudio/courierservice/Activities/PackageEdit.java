@@ -1,4 +1,4 @@
-package com.liarstudio.courierservice;
+package com.liarstudio.courierservice.Activities;
 
 import android.Manifest;
 import android.app.DatePickerDialog;
@@ -28,6 +28,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.liarstudio.courierservice.BaseClasses.Package;
 import com.liarstudio.courierservice.BaseClasses.Person;
+import com.liarstudio.courierservice.R;
 
 
 public class PackageEdit extends AppCompatActivity {
@@ -66,8 +67,9 @@ public class PackageEdit extends AppCompatActivity {
     Spinner spinnerRecipient;
     Spinner spinnerFinalStatus;
     //Buttons
-    Button buttonConfirm;
+    Button buttonSetCoordinates;
     Button buttonCalculatePrice;
+    Button buttonConfirm;
 
 
     @Override
@@ -168,13 +170,13 @@ public class PackageEdit extends AppCompatActivity {
                 // On selecting a spinner item
                 if (position > 0){
                     editTextRecipientCompanyName.setVisibility(View.INVISIBLE);
-                    RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) textViewPack.getLayoutParams();
+                    RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) buttonSetCoordinates.getLayoutParams();
                     params.addRule(RelativeLayout.BELOW, R.id.spinnerRecipient);
-                    textViewPack.setLayoutParams(params);
+                    buttonSetCoordinates.setLayoutParams(params);
                 } else {
-                    RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) textViewPack.getLayoutParams();
+                    RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) buttonSetCoordinates.getLayoutParams();
                     params.addRule(RelativeLayout.BELOW, R.id.editTextRecipientCompanyName);
-                    textViewPack.setLayoutParams(params);
+                    buttonSetCoordinates.setLayoutParams(params);
                     editTextRecipientCompanyName.setVisibility(View.VISIBLE);
                 }
             }
@@ -221,6 +223,13 @@ public class PackageEdit extends AppCompatActivity {
                         Integer.parseInt(editTextPackD.getText().toString()),
                         Double.parseDouble(editTextPackWeight.getText().toString()), c)));
         });
+
+        buttonSetCoordinates = (Button)findViewById(R.id.buttonSetCoordinates);
+        buttonSetCoordinates.setOnClickListener(v -> {
+            Intent mapIntent = new Intent(this, MapsActivity.class);
+            startActivityForResult(mapIntent, 1);
+        });
+
     }
 
     void initFieldsForEdit(Package pkg) {

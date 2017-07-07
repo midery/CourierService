@@ -2,15 +2,11 @@ package com.liarstudio.courierservice;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.liarstudio.courierservice.BaseClasses.Package;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
 
 public class PackageFragmentPageAdapter extends FragmentStatePagerAdapter {
 

@@ -1,4 +1,4 @@
-package com.liarstudio.courierservice;
+package com.liarstudio.courierservice.Activities;
 
 import android.content.Intent;
 import android.support.design.widget.TabLayout;
@@ -12,6 +12,8 @@ import android.view.MenuItem;
 import com.google.gson.Gson;
 import com.liarstudio.courierservice.BaseClasses.Package;
 import com.liarstudio.courierservice.BaseClasses.Person;
+import com.liarstudio.courierservice.PackageFragmentPageAdapter;
+import com.liarstudio.courierservice.R;
 
 import java.util.ArrayList;
 import java.util.Calendar;
