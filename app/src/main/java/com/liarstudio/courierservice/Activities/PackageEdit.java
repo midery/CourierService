@@ -19,6 +19,7 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.liarstudio.courierservice.BaseClasses.Package;
@@ -198,6 +199,8 @@ public class PackageEdit extends AppCompatActivity {
                 pkg.setDate(chosenDate);
                 textViewPackDate.setText(Package.getStringDate(pkg.getDate()));
             }
+            else
+                Toast.makeText(this,"Невозможно установить дату раньше сегодняшней.", Toast.LENGTH_LONG).show();
         };
 
         buttonPickDate.setOnClickListener(e -> {
@@ -517,11 +520,5 @@ public class PackageEdit extends AppCompatActivity {
         if (resultCode == RESULT_OK && requestCode == REQUEST_MAP) {
             coordinates = data.getDoubleArrayExtra("coordinates");
         }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
     }
 }
