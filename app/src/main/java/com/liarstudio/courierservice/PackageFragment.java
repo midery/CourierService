@@ -57,7 +57,7 @@ public class PackageFragment extends Fragment {
             Package pkg = packages.get(position);
 
             //можно редактировать, если статус - "Активна"
-            if (pkg.status == 0) {
+            if (pkg.getStatus() == 0) {
                 //Проводим JSON-сериализацию для передачи в другую Activity
                 Gson gson =  new GsonBuilder().create();
                 String jsonPackage = gson.toJson(pkg);

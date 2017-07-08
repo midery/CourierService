@@ -30,10 +30,11 @@ public class PackageEdit extends AppCompatActivity {
 
     public static final int REQUEST_MAP = 2;
 
-    Calendar c;
     int position = -1;
     int status = 0;
     double[] coordinates;
+
+    Package pkg;
 
     //Sender Fields
     EditText editTextSenderAddress;
@@ -83,14 +84,18 @@ public class PackageEdit extends AppCompatActivity {
         if (intent.hasExtra("jsonPackage") && intent.hasExtra("packagePosition"))
         {
             String jsonPackage = intent.getStringExtra("jsonPackage");
-            Package pkg = new Gson().fromJson(jsonPackage, Package.class);
+            pkg = new Gson().fromJson(jsonPackage, Package.class);
             position = intent.getIntExtra("packagePosition", -1);
-            coordinates = pkg.recipient.coordinates;
-            initFieldsForEdit(pkg);
+            coordinates = pkg.getCoordinates();
+            initFieldsForEdit();
         }
         else {
-            c = Calendar.getInstance();
+            Package pkg = new Package();
+
+            Calendar c = Calendar.getInstance();
             c.add(Calendar.DAY_OF_YEAR, 1);
+
+            pkg.setDate(c);
 
             coordinates = new double[] {0,0};
             TextView textViewPackDate = (TextView)findViewById(R.id.textViewPackDate);
@@ -190,13 +195,14 @@ public class PackageEdit extends AppCompatActivity {
             Calendar chosenDate = new GregorianCalendar(year, month, dayOfMonth);
             if (chosenDate.compareTo(Calendar.getInstance()) > 0)
             {
-                c = chosenDate;
-                textViewPackDate.setText(Package.getStringDate(c));
+                pkg.setDate(chosenDate);
+                textViewPackDate.setText(Package.getStringDate(pkg.getDate()));
             }
         };
 
         buttonPickDate.setOnClickListener(e -> {
-            DatePickerDialog dpd = new DatePickerDialog(this, listener, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));
+            DatePickerDialog dpd = new DatePickerDialog(this, listener, pkg.getDate().get(Calendar.YEAR),
+                    pkg.getDate().get(Calendar.MONTH), pkg.getDate().get(Calendar.DAY_OF_MONTH));
             dpd.show();
         });
 
@@ -205,7 +211,7 @@ public class PackageEdit extends AppCompatActivity {
     void initButtons() {
         buttonConfirm = (Button) findViewById(R.id.buttonConfirm);
         buttonConfirm.setOnClickListener(v -> {
-            if (true){//validate()) {
+            if (validate()) {
                 if (status == 1)
                     packageCloseCheckDialog();
                 else
@@ -214,11 +220,7 @@ public class PackageEdit extends AppCompatActivity {
         buttonCalculatePrice = (Button)findViewById(R.id.buttonCalculatePrice);
         buttonCalculatePrice.setOnClickListener(v -> {
             if (validateDimensions())
-                textViewPackPrice.setText(Double.toString(Package.calculatePrice(
-                        Integer.parseInt(editTextPackW.getText().toString()),
-                        Integer.parseInt(editTextPackH.getText().toString()),
-                        Integer.parseInt(editTextPackD.getText().toString()),
-                        Double.parseDouble(editTextPackWeight.getText().toString()), c)));
+                textViewPackPrice.setText(Double.toString(pkg.getPrice()));
         });
 
         buttonSetCoordinates = (Button)findViewById(R.id.buttonSetCoordinates);
@@ -229,26 +231,32 @@ public class PackageEdit extends AppCompatActivity {
 
     }
 
-    void initFieldsForEdit(Package pkg) {
-        editTextSenderAddress.setText(pkg.sender.address);
-        editTextSenderName.setText(pkg.sender.name);
-        editTextSenderEmail.setText(pkg.sender.email);
-        editTextSenderPhone.setText(pkg.sender.phone);
+    void initFieldsForEdit() {
+        Person sender = pkg.getSender();
 
-        editTextRecipientAddress.setText(pkg.recipient.address);
-        editTextRecipientName.setText(pkg.recipient.name);
-        editTextRecipientEmail.setText(pkg.recipient.email);
-        editTextRecipientPhone.setText(pkg.recipient.phone);
+        editTextSenderAddress.setText(sender.getAddress());
+        editTextSenderName.setText(sender.getName());
+        editTextSenderEmail.setText(sender.getEmail());
+        editTextSenderPhone.setText(sender.getPhone());
+        editTextSenderCompanyName.setText(sender.getCompanyName());
+
+        Person recipient = pkg.getRecipient();
+        editTextRecipientAddress.setText(recipient.getAddress());
+        editTextRecipientName.setText(recipient.getName());
+        editTextRecipientEmail.setText(recipient.getEmail());
+        editTextRecipientPhone.setText(recipient.getPhone());
+        editTextRecipientCompanyName.setText(recipient.getCompanyName());
 
 
-        c = new GregorianCalendar(pkg.date.get(Calendar.YEAR), pkg.date.get(Calendar.MONTH), pkg.date.get(Calendar.DAY_OF_MONTH));
-        textViewPackDate.setText(Package.getStringDate(c));
+        //c = new GregorianCalendar(pkg.getDate().get(Calendar.YEAR), pkg.getDate().get(Calendar.MONTH), pkg.getDate().get(Calendar.DAY_OF_MONTH));
+        textViewPackDate.setText(pkg.getStringDate());
 
-        editTextPackName.setText(pkg.name);
-        editTextPackW.setText(Integer.toString(pkg.dimensions[0]));
-        editTextPackH.setText(Integer.toString(pkg.dimensions[1]));
-        editTextPackD.setText(Integer.toString(pkg.dimensions[2]));
-        editTextPackWeight.setText(Double.toString(pkg.weight));
+        editTextPackName.setText(pkg.getName());
+        double[] dimensions = pkg.getSizes();
+        editTextPackW.setText(Double.toString(dimensions[0]));
+        editTextPackH.setText(Double.toString(dimensions[1]));
+        editTextPackD.setText(Double.toString(dimensions[2]));
+        editTextPackWeight.setText(Double.toString(pkg.getWeight()));
         buttonConfirm.setText("Изменить");
 
 
@@ -304,6 +312,8 @@ public class PackageEdit extends AppCompatActivity {
             valid = false;
             editTextSenderAddress.setError("Адрес не может быть пустым.");
         }
+        else
+            pkg.getSender().setAddress(checkString);
 
         checkString = editTextSenderName.getText().toString();
         if (checkString.isEmpty())
@@ -311,6 +321,8 @@ public class PackageEdit extends AppCompatActivity {
             valid = false;
             editTextSenderName.setError("Имя не может быть пустым.");
         }
+        else
+            pkg.getSender().setName(checkString);
 
         checkString = editTextSenderEmail.getText().toString();
 
@@ -319,6 +331,9 @@ public class PackageEdit extends AppCompatActivity {
             valid = false;
             editTextSenderEmail.setError("Введен неверный e-mail.");
         }
+        else
+            pkg.getSender().setEmail(checkString);
+
 
         checkString = editTextSenderPhone.getText().toString();
         if (checkString.length() != 14)
@@ -326,20 +341,26 @@ public class PackageEdit extends AppCompatActivity {
             valid = false;
             editTextSenderPhone.setError("Введен некорректный номер телефона.");
         }
+        else
+            pkg.getSender().setPhone(checkString);
 
         checkString = editTextRecipientAddress.getText().toString();
         if (checkString.isEmpty())
         {
             valid = false;
             editTextRecipientAddress.setError("Адрес не может быть пустым.");
-        }
+        } else
+            pkg.getRecipient().setAddress(checkString);
+
 
         checkString = editTextRecipientName.getText().toString();
         if (checkString.isEmpty())
         {
             valid = false;
             editTextRecipientName.setError("Имя не может быть пустым.");
-        }
+        } else
+            pkg.getRecipient().setName(checkString);
+
 
         checkString = editTextRecipientEmail.getText().toString();
 
@@ -347,20 +368,24 @@ public class PackageEdit extends AppCompatActivity {
                 checkString.matches("^[a-z0-9._%+-]+@[a-z0-9.-]+\\\\.[a-z]{2,6}$")) {
             valid = false;
             editTextRecipientEmail.setError("Введен неверный e-mail.");
-        }
+        } else
+            pkg.getRecipient().setEmail(checkString);
+
 
         checkString = editTextRecipientPhone.getText().toString();
         if (checkString.length() != 14)
         {
             valid = false;
             editTextRecipientPhone.setError("Введен некорректный номер телефона.");
-        }
+        } else
+            pkg.getRecipient().setPhone(checkString);
 
         checkString = editTextPackName.getText().toString();
         if (checkString.isEmpty()) {
             valid = false;
             editTextPackName.setError("Введен некорректный номер телефона.");
-        }
+        } else
+            pkg.setName(checkString);
 
         valid = validateDimensions() ? valid : false;
 
@@ -381,29 +406,37 @@ public class PackageEdit extends AppCompatActivity {
         {
             editTextPackWeight.setError("Некорректный вес.");
             valid = false;
-        }
+        } else
+            pkg.setWeight(numericValue);
 
-        int numericIntValue;
+        double[] dimensions = new double[3];
 
         checkString = editTextPackW.getText().toString();
-        numericIntValue = checkString.isEmpty() ? 0 : Integer.parseInt(checkString);
-        if (numericIntValue == 0  || numericIntValue > 10000) {
+        numericValue = checkString.isEmpty() ? 0 : Double.parseDouble(checkString);
+        if (numericValue == 0  || numericValue > 10000) {
             valid = false;
             editTextPackW.setError("Некорректные размеры посылки.");
         }
+            else dimensions[0] = numericValue;
         checkString = editTextPackH.getText().toString();
-        numericIntValue = checkString.isEmpty() ? 0 : Integer.parseInt(checkString);
-        if (numericIntValue == 0  || numericIntValue > 10000) {
+        numericValue = checkString.isEmpty() ? 0 : Double.parseDouble(checkString);
+        if (numericValue == 0  || numericValue > 10000) {
             valid = false;
             editTextPackH.setError("Некорректные размеры посылки.");
-        }
+        } else dimensions[1] = numericValue;
+
 
         checkString = editTextPackD.getText().toString();
-        numericIntValue = checkString.isEmpty() ? 0 : Integer.parseInt(checkString);
-        if (numericIntValue == 0  || numericIntValue > 10000) {
+        numericValue = checkString.isEmpty() ? 0 : Double.parseDouble(checkString);
+        if (numericValue == 0  || numericValue > 10000) {
             valid = false;
             editTextPackD.setError("Некорректные размеры посылки.");
+        } else dimensions[2] = numericValue;
+        if (valid) {
+            pkg.setSizes(dimensions);
+            pkg.setPrice();
         }
+
         return valid;
 
     }
@@ -413,7 +446,7 @@ public class PackageEdit extends AppCompatActivity {
     */
 
 
-    Package loadPackage() {
+    /*Package loadPackage() {
         Person sender = new Person(spinner.getSelectedItemPosition(), editTextSenderName.getText().toString(),
                 editTextSenderPhone.getText().toString(), editTextSenderEmail.getText().toString(),
                 editTextSenderAddress.getText().toString(), editTextSenderCompanyName.getText().toString());
@@ -421,16 +454,13 @@ public class PackageEdit extends AppCompatActivity {
         Person recipient = new Person(spinnerRecipient.getSelectedItemPosition(), editTextRecipientName.getText().toString(),
                 editTextRecipientPhone.getText().toString(), editTextRecipientEmail.getText().toString(),
                 editTextRecipientAddress.getText().toString(), editTextRecipientCompanyName.getText().toString(), coordinates);
-        int[] dimensions = {
-                Integer.parseInt(editTextPackW.getText().toString()),
-                Integer.parseInt(editTextPackW.getText().toString()),
-                Integer.parseInt(editTextPackW.getText().toString())};
-        Package pack = new Package(status, sender, recipient, editTextPackName.getText().toString(), c, dimensions,
+        double[] dimensions = {
+                Double.parseDouble(editTextPackW.getText().toString()),
+                Double.parseDouble(editTextPackW.getText().toString()),
+                Double.parseDouble(editTextPackW.getText().toString())};
+         return new Package(status, sender, recipient, editTextPackName.getText().toString(), c, dimensions,
                 Double.parseDouble(editTextPackWeight.getText().toString()));
-        pack.calculatePrice();
-
-        return pack;
-    }
+    }*/
 
     void packageCloseCheckDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -472,7 +502,7 @@ public class PackageEdit extends AppCompatActivity {
     }
     private void passAndFinish() {
 
-        Package pkg = loadPackage();
+       //Package pkg = loadPackage();
         Intent data = new Intent();
 
         data.putExtra("jsonPackageChild", new Gson().toJson(pkg));
@@ -487,7 +517,6 @@ public class PackageEdit extends AppCompatActivity {
         if (resultCode == RESULT_OK && requestCode == REQUEST_MAP) {
             coordinates = data.getDoubleArrayExtra("coordinates");
         }
-
     }
 
     @Override

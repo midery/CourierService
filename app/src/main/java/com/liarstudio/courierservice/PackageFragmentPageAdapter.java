@@ -31,7 +31,7 @@ public class PackageFragmentPageAdapter extends FragmentStatePagerAdapter {
     public PackageFragmentPageAdapter(FragmentManager fm, ArrayList<Package> packages) {
         this(fm);
         this.packages = packages;
-        packages.sort ( (p1, p2) -> p1.date.compareTo(p2.date));
+        packages.sort ( (p1, p2) -> p1.getDate().compareTo(p2.getDate()));
     }
     @Override
     public CharSequence getPageTitle(int position) {
@@ -50,11 +50,11 @@ public class PackageFragmentPageAdapter extends FragmentStatePagerAdapter {
 
         switch (position) {
             case 0:
-                filtered.removeIf(s -> !(s.status==0));
+                filtered.removeIf(s -> !(s.getStatus()==0));
                 packageFragment.setPackages(filtered);
                 return packageFragment;//PackageFragment.getInstance();
             case 1:
-                filtered.removeIf(s -> !(s.status==1));
+                filtered.removeIf(s -> !(s.getStatus()==1));
                 packageFragment.setPackages(filtered);
                 return packageFragment;
             case 2:
@@ -74,7 +74,7 @@ public class PackageFragmentPageAdapter extends FragmentStatePagerAdapter {
             packages.add(pkg);
         else
             packages.set(position, pkg);
-        packages.sort ( (p1, p2) -> p1.date.compareTo(p2.date));
+        packages.sort ( (p1, p2) -> p1.getDate().compareTo(p2.getDate()));
         notifyDataSetChanged();
 
     }

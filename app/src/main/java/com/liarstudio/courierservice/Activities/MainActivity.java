@@ -1,6 +1,7 @@
 package com.liarstudio.courierservice.Activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -25,6 +26,10 @@ public class  MainActivity extends AppCompatActivity {
     public static final int REQUEST_ADD_OR_EDIT = 1;
     public static final int REQUEST_MAP = 2;
 
+    public static final String VOL_COEFFICIENT = "vol_coefficient";
+    public static final String WEIGHT_COEFFICIENT = "weight_coefficient";
+    public static final String PREFERENCES_FILENAME = "preferences_data";
+
     Toolbar toolbar;
     TabLayout tabLayout;
     PackageFragmentPageAdapter manager;
@@ -36,6 +41,7 @@ public class  MainActivity extends AppCompatActivity {
         //Toolbar toolBar = (Toolbar) findViewById(R.id.toolBar);
         //setSupportActionBar(toolBar);
 
+        loadCoefficients();
 
 
         ArrayList<Package> packages = loadPackages();
@@ -64,10 +70,12 @@ public class  MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.itemAdd:
-                Intent intent = new Intent(this, PackageEdit.class);
-                startActivityForResult(intent, REQUEST_ADD_OR_EDIT);
+                Intent addIntent = new Intent(this, PackageEdit.class);
+                startActivityForResult(addIntent, REQUEST_ADD_OR_EDIT);
                 return true;
             case R.id.itemSettings:
+                Intent settingsIntent  = new Intent(this, SettingsActivity.class);
+                startActivity(settingsIntent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -94,14 +102,20 @@ public class  MainActivity extends AppCompatActivity {
         Package pkg = new Package(0,
                 new Person("Kuk", "9204595911", "m@m.m", "Lorum Ipsum street"),
                 new Person("Kuk", "9204505931", "m@m.m", "Lorum Ipsum street"), "Pkg 1",
-                new GregorianCalendar(2017, 07, 06), new int[]{5,1,6}, 5);
+                new GregorianCalendar(2017, 07, 06), new double[]{5,1,6}, 5);
 
         packages.add(pkg);
         pkg = new Package(1, new Person("Kuk", "920", "m@m.m", "Lorum Ipsum street"), new Person("Kuk", "14156", "m@m.m", "Dorum av."), "Pkg 2", Calendar.getInstance());
         packages.add(pkg);
         pkg = new Package(0, new Person("Kuk", "920", "m@m.m", "Lorum Ipsum street"), new Person("Kuk", "14156", "m@m.m", "Dorum av."), "Pkg 3", new GregorianCalendar(2017, 05, 12),
-                new int[]{200,35,615}, 20);
+                new double[]{200,35,615}, 20);
         packages.add(pkg);
         return packages;
+    }
+
+    void loadCoefficients() {
+        SharedPreferences sharedPref = getSharedPreferences(PREFERENCES_FILENAME, MODE_PRIVATE);
+        Package.WEIGHT_PROGRAM_STATE = sharedPref.getInt(WEIGHT_COEFFICIENT, 1);
+        Package.SIZE_PROGRAM_STATE = sharedPref.getInt(VOL_COEFFICIENT, 1);
     }
 }

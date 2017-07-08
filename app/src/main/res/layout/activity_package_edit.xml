@@ -181,21 +181,22 @@
             android:inputType="textPersonName" />
 
         <TextView
-            android:layout_marginTop="8dp"
             android:paddingLeft="5dp"
             android:id="@+id/textViewPackSizes"
-            android:layout_width="210dp"
+            android:layout_width="170dp"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/editTextPackName"
-            android:text="Размеры посылки(см):"
-            android:textSize="18sp" />
+            android:text="Размеры посылки:"
+            android:textSize="18sp"
+            android:layout_alignBaseline="@+id/editTextPackW"
+            android:layout_alignBottom="@+id/editTextPackW"
+            android:layout_alignParentStart="true" />
 
         <EditText
             android:id="@+id/editTextPackW"
             android:layout_width="60dp"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:inputType="number"
+            android:inputType="numberDecimal"
             android:layout_toEndOf="@+id/textViewPackSizes"
             android:layout_below="@id/editTextPackName"
             android:hint="Ш"
@@ -206,7 +207,7 @@
             android:layout_width="60dp"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:inputType="number"
+            android:inputType="numberDecimal"
             android:layout_toEndOf="@+id/editTextPackW"
             android:layout_below="@id/editTextPackName"
             android:hint="В"
@@ -216,11 +217,23 @@
             android:layout_width="60dp"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:inputType="number"
+            android:inputType="numberDecimal"
             android:layout_toEndOf="@+id/editTextPackH"
             android:layout_below="@id/editTextPackName"
             android:hint="Г"
             android:textAlignment="center"/>
+
+        <TextView
+            android:layout_marginTop="9dp"
+            android:paddingLeft="3dp"
+            android:id="@+id/textViewPackSizeDimension"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="см"
+            android:textSize="18sp"
+            android:layout_toEndOf="@+id/editTextPackD"
+            android:layout_below="@id/editTextPackName" />
+
 
         <TextView
             android:id="@+id/textViewPackWeight"
@@ -242,6 +255,16 @@
             android:layout_toEndOf="@+id/textViewPackWeight"
             android:layout_below="@id/editTextPackD"
             android:textAlignment="center"/>
+        <TextView
+            android:layout_marginTop="9dp"
+            android:paddingLeft="3dp"
+            android:id="@+id/textViewPackWeightDimension"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="кг"
+            android:textSize="18sp"
+            android:layout_toEndOf="@+id/editTextPackWeight"
+            android:layout_below="@id/editTextPackD" />
 
 
         <TextView

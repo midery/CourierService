@@ -57,10 +57,10 @@ public class ListAdapter extends BaseAdapter {
         Package pkg = packages.get(position);
 
         TextView tvName = (TextView)view.findViewById(R.id.twName);
-        tvName.setText(pkg.name);
+        tvName.setText(pkg.getName());
 
         TextView tvAddress = (TextView)view.findViewById(R.id.twAddress);
-        tvAddress.setText(pkg.recipient.address);
+        tvAddress.setText(pkg.getRecipient().getAddress());
 
         TextView tvDate = (TextView)view.findViewById(R.id.twDate);
         tvDate.setText(pkg.getStringDate());
@@ -69,11 +69,11 @@ public class ListAdapter extends BaseAdapter {
         Button buttonShowOnMap = (Button)view.findViewById(R.id.buttonShowOnMap);
         buttonShowOnMap.setEnabled(false);
 
-        if (pkg.status>0) {
+        if (pkg.getStatus()>0) {
             rl.setBackgroundColor(Color.LTGRAY);
         }   else    {
             rl.setBackgroundColor(Color.WHITE);
-            double[] coordinates = pkg.recipient.coordinates;
+            double[] coordinates = pkg.getCoordinates();
             if (coordinates[0] != 0 && coordinates[1] !=0) {
                 buttonShowOnMap.setEnabled(true);
                 buttonShowOnMap.setOnClickListener(l -> {

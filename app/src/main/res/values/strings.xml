@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Курьерская служба</string>
+    <string name="package_activity_name">Посылка</string>
+    <string name="settings_activity_name">Настройки</string>
 
     <string-array name="person_type">
         <item>Компания</item>

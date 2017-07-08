@@ -20,12 +20,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_maps_key"></meta-data>
+            android:value="@string/google_maps_key" />
 
-        <activity android:name=".Activities.MainActivity"
+        <activity
+            android:name=".Activities.MainActivity"
             android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -35,7 +35,7 @@
         </activity>
         <activity
             android:name=".Activities.PackageEdit"
-            android:label="Посылка"
+            android:label="@string/package_activity_name"
             android:parentActivityName=".Activities.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -55,7 +55,15 @@
 
         <activity
             android:name=".Activities.MapsActivity"
-            android:label="@string/title_activity_maps"></activity>
+            android:label="@string/title_activity_maps" />
+        <activity
+            android:name=".Activities.SettingsActivity"
+            android:label="@string/settings_activity_name"
+            android:parentActivityName=".Activities.MainActivity">>
+        <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value=".Activities.MainActivity" />
+            </activity>
     </application>
 
 </manifest>
