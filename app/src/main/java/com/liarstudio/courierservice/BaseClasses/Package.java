@@ -11,26 +11,26 @@ public class Package {
     */
 
 
-    private int status;
-    private Person sender;
-    private Person recipient;
+    protected int status;
+    protected Person sender;
+    protected Person recipient;
 
 
-    private String name;
-    private double[] sizes;
-    private double weight;
-    private Calendar date;
+    protected String name;
+    protected double[] sizes;
+    protected double weight;
+    protected Calendar date;
 
 
 
-    private double price = 0;
-    private String commentary;
+    protected double price = 0;
+    protected String commentary;
 
 
-    int weightOnCreationState;
-    int sizeOnCreationState;
-    private double sizeCoefficient = 0.3937;
-    private double weightCoefficient = 2.2;
+    protected int weightOnCreationState;
+    protected int sizeOnCreationState;
+    protected double sizeCoefficient = 0.3937;
+    protected double weightCoefficient = 2.2;
 
     /*
     ****** CONSTRUCTOR AREA ******

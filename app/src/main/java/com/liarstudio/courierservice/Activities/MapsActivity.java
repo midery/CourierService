@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import android.location.LocationListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -23,7 +24,7 @@ import com.liarstudio.courierservice.R;
 
 
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, LocationListener {
 
     private GoogleMap mMap;
 
@@ -53,7 +54,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_REQUEST_CODE);
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_REQUEST_CODE);
 
         if (getCallingActivity() == null) {
             iconCenterMap.setVisibility(View.INVISIBLE);
@@ -85,21 +87,73 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+        boolean valid = true;
+        for (int perms : grantResults) {
+            valid = perms == PackageManager.PERMISSION_GRANTED ? valid : false;
+        }
+        LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        // getting GPS status
+        boolean isGPSEnabled = locationManager
+                .isProviderEnabled(LocationManager.GPS_PROVIDER);
 
-           mMap.setMyLocationEnabled(true);
+        // getting network status
+        boolean isNetworkEnabled = locationManager
+                .isProviderEnabled(LocationManager.NETWORK_PROVIDER);
 
-           LocationManager service = (LocationManager) getSystemService(LOCATION_SERVICE);
-           Location location = service.getLastKnownLocation(service.getBestProvider(new Criteria(), false));
-           LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-           mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15.0f));
+        valid = valid && (isGPSEnabled || isNetworkEnabled);
+        if (requestCode == PERMISSION_REQUEST_CODE && valid) {
 
-        } else {
-            LatLng DSR = new LatLng(51.662805, 39.184641 );
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(DSR, 15.0f));
+            try {
+                //mMap.setMyLocationEnabled(true);
+                Location location;
+                if (isNetworkEnabled)
+                    locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000 * 60, 10, this);
+
+                if (isGPSEnabled)
+                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000 * 60, 10, this);
+
+                location = locationManager.getLastKnownLocation(locationManager.getBestProvider(new Criteria(), false));
+
+                if (location == null)
+                    loadDefault();
+                else {
+                    LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15.0f));
+                }
+            }catch (SecurityException se) {
+                se.printStackTrace();
+                loadDefault();
+            }
+        }else {
+            loadDefault();
             // Permission was denied. Display an error message.
         }
         textViewCoordinates.setText(mMap.getCameraPosition().target.toString());
     }
+
+    void loadDefault() {
+        LatLng DSR = new LatLng(51.662805, 39.184641);
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(DSR, 15.0f));
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
+    }
+
 }

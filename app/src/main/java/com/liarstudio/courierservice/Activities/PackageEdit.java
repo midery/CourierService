@@ -61,6 +61,9 @@ public class PackageEdit extends AppCompatActivity {
     TextView textViewPackPrice;
     TextView textViewFinal;
     EditText editTextFinalCommentary;
+    TextView textViewPackSizeDimension;
+    TextView textViewPackWeightDimension;
+
     //Spinners
     Spinner spinner;
     Spinner spinnerRecipient;
@@ -128,7 +131,9 @@ public class PackageEdit extends AppCompatActivity {
         editTextPackW = (EditText) findViewById(R.id.editTextPackW);
         editTextPackH = (EditText) findViewById(R.id.editTextPackH);
         editTextPackD = (EditText) findViewById(R.id.editTextPackD);
+        textViewPackSizeDimension = (TextView) findViewById(R.id.textViewPackSizeDimension);
         editTextPackWeight = (EditText) findViewById(R.id.editTextPackWeight);
+        textViewPackWeightDimension = (TextView) findViewById(R.id.textViewPackWeightDimension);
         textViewPackDate = (TextView) findViewById(R.id.textViewPackDate);
         textViewPackPrice = (TextView) findViewById(R.id.textViewPackPrice);
 
@@ -136,7 +141,27 @@ public class PackageEdit extends AppCompatActivity {
         textViewFinal = (TextView) findViewById(R.id.textViewFinal);
         editTextFinalCommentary = (EditText) findViewById(R.id.editTextFinalCommentary);
 
+        switch (Package.WEIGHT_PROGRAM_STATE) {
+            case 0:
+                textViewPackWeightDimension.setText(R.string.weight_kg);
+                break;
+            case 1:
+                textViewPackWeightDimension.setText(R.string.weight_lb);
+                break;
+            default:
+                break;
+        }
 
+        switch (Package.SIZE_PROGRAM_STATE) {
+            case 0:
+                textViewPackSizeDimension.setText(R.string.size_sm);
+                break;
+            case 1:
+                textViewPackSizeDimension.setText(R.string.size_inch);
+                break;
+            default:
+                break;
+        }
 
         initSpinners();
         initDatePicker();
@@ -251,6 +276,7 @@ public class PackageEdit extends AppCompatActivity {
         editTextRecipientCompanyName.setText(recipient.getCompanyName());
 
 
+
         //c = new GregorianCalendar(pkg.getDate().get(Calendar.YEAR), pkg.getDate().get(Calendar.MONTH), pkg.getDate().get(Calendar.DAY_OF_MONTH));
         textViewPackDate.setText(pkg.getStringDate());
 
@@ -260,7 +286,7 @@ public class PackageEdit extends AppCompatActivity {
         editTextPackH.setText(Double.toString(dimensions[1]));
         editTextPackD.setText(Double.toString(dimensions[2]));
         editTextPackWeight.setText(Double.toString(pkg.getWeight()));
-        buttonConfirm.setText("Изменить");
+        buttonConfirm.setText("Обновить");
 
 
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) buttonConfirm.getLayoutParams();

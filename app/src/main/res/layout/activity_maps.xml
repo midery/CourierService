@@ -17,7 +17,8 @@
         android:text="Готово"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="15dp" />
+        android:layout_marginBottom="15dp"
+        android:background="#AAFFFFFF"/>
 
     <Button
         android:id="@+id/iconCenterMap"

@@ -13,6 +13,10 @@
         <item>Завершенная</item>
     </string-array>
     <string name="title_activity_maps">Map</string>
+    <string name="weight_kg">кг</string>
+    <string name="weight_lb">фунт(ов)</string>
+    <string name="size_sm">см</string>
+    <string name="size_inch">д</string>
 
 
 </resources>

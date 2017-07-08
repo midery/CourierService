@@ -158,7 +158,8 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:layout_below="@id/editTextRecipientCompanyName"
-            android:text="Указать координаты" />
+            android:text="Указать координаты"
+            />
 
 
         <!--PACKAGE-->
@@ -256,9 +257,9 @@
             android:layout_below="@id/editTextPackD"
             android:textAlignment="center"/>
         <TextView
+            android:id="@+id/textViewPackWeightDimension"
             android:layout_marginTop="9dp"
             android:paddingLeft="3dp"
-            android:id="@+id/textViewPackWeightDimension"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="кг"
@@ -271,7 +272,7 @@
             android:paddingTop="8dp"
             android:paddingLeft="5dp"
             android:id="@+id/textViewPackDateName"
-            android:layout_width="wrap_content"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:text="Дата доставки:"
             android:textSize="18sp"
@@ -281,7 +282,7 @@
             android:paddingTop="8dp"
             android:paddingLeft="5dp"
             android:id="@+id/textViewPackDate"
-            android:layout_width="120dp"
+            android:layout_width="110dp"
             android:layout_height="wrap_content"
             android:textSize="18sp"
             android:layout_below="@+id/editTextPackWeight"
@@ -300,7 +301,7 @@
             android:layout_marginTop="14dp"
             android:paddingLeft="5dp"
             android:layout_marginBottom="14dp"
-            android:layout_width="wrap_content"
+            android:layout_width="60dp"
             android:layout_height="match_parent"
             android:layout_below="@id/buttonPickDate"
             android:text="Цена: "
