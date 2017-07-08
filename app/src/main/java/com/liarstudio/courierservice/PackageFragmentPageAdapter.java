@@ -70,11 +70,24 @@ public class PackageFragmentPageAdapter extends FragmentStatePagerAdapter {
     //Процедура добавления посылки. Если позиция -1, то добавляем в конец.
     //Если нет - то на свою позицию
     public void add(int position, Package pkg) {
-        if (position == -1)
-            packages.add(pkg);
+        if (position == -1) {
+            for (Package pack : packages)
+            {
+                position++;
+                if (pkg.getDate().compareTo(pack.getDate()) < 0){
+                    break;
+                }
+
+            }
+            if ((position == packages.size()-1) && (pkg.getDate().compareTo(packages.get(position).getDate()) > 0))
+                packages.add(pkg);
+            else
+                packages.add(position, pkg);
+            //packages.add(pkg);
+        }
         else
             packages.set(position, pkg);
-        packages.sort ( (p1, p2) -> p1.getDate().compareTo(p2.getDate()));
+        //packages.sort ( (p1, p2) -> p1.getDate().compareTo(p2.getDate()));
         notifyDataSetChanged();
 
     }

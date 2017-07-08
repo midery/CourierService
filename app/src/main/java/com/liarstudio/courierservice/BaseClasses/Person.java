@@ -11,6 +11,7 @@ public class Person {
     private double[] coordinates;
 
 
+    public Person() { coordinates = new double[] {0,0};}
     public Person(int type, String name, String phone, String email, String address, String companyName) {
         this(type,name,phone,email, address, companyName, new double[]{0,0});
     }

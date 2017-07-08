@@ -40,9 +40,12 @@ public class Package {
     public Package()  {
         weightOnCreationState = WEIGHT_PROGRAM_STATE == 0 ? 0 : 1;
         sizeOnCreationState = SIZE_PROGRAM_STATE == 0 ? 0 : 1;
+        sender = new Person();
+        recipient = new Person();
     }
     public Package(int status, Person sender, Person recipient, String name, Calendar date){
-        this();
+        weightOnCreationState = WEIGHT_PROGRAM_STATE == 0 ? 0 : 1;
+        sizeOnCreationState = SIZE_PROGRAM_STATE == 0 ? 0 : 1;
         this.status = status;
         this.sender = sender;
         this.recipient = recipient;

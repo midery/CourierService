@@ -90,7 +90,7 @@ public class PackageEdit extends AppCompatActivity {
             initFieldsForEdit();
         }
         else {
-            Package pkg = new Package();
+            pkg = new Package();
 
             Calendar c = Calendar.getInstance();
             c.add(Calendar.DAY_OF_YEAR, 1);
@@ -326,7 +326,7 @@ public class PackageEdit extends AppCompatActivity {
 
         checkString = editTextSenderEmail.getText().toString();
 
-        if (!checkString.isEmpty() &&
+        if (checkString.isEmpty() ||
                 checkString.matches("^[a-z0-9._%+-]+@[a-z0-9.-]+\\\\.[a-z]{2,6}$")) {
             valid = false;
             editTextSenderEmail.setError("Введен неверный e-mail.");
@@ -364,7 +364,7 @@ public class PackageEdit extends AppCompatActivity {
 
         checkString = editTextRecipientEmail.getText().toString();
 
-        if (!checkString.isEmpty() &&
+        if (checkString.isEmpty() ||
                 checkString.matches("^[a-z0-9._%+-]+@[a-z0-9.-]+\\\\.[a-z]{2,6}$")) {
             valid = false;
             editTextRecipientEmail.setError("Введен неверный e-mail.");
