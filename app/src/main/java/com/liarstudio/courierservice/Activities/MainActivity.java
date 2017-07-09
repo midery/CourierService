@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import com.google.gson.Gson;
 import com.liarstudio.courierservice.BaseClasses.Package;
 import com.liarstudio.courierservice.BaseClasses.Person;
+import com.liarstudio.courierservice.Database.DBHelper;
 import com.liarstudio.courierservice.PackageFragmentPageAdapter;
 import com.liarstudio.courierservice.R;
 
@@ -42,8 +43,6 @@ public class  MainActivity extends AppCompatActivity {
         //setSupportActionBar(toolBar);
 
         loadCoefficients();
-
-
         ArrayList<Package> packages = loadPackages();
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewPager);
         manager = new PackageFragmentPageAdapter(getSupportFragmentManager(), packages);
@@ -55,6 +54,7 @@ public class  MainActivity extends AppCompatActivity {
 
         tabLayout.setupWithViewPager(viewPager);
 
+        DBHelper dbh = new DBHelper(this);
 
         //initRows();
 

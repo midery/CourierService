@@ -2,13 +2,13 @@ package com.liarstudio.courierservice.BaseClasses;
 
 
 public class Person {
-    int type;
-    private String address;
-    private String name;
-    private String email;
-    private String phone;
-    private String companyName;
-    private double[] coordinates;
+    protected int type;
+    protected String address;
+    protected String name;
+    protected String email;
+    protected String phone;
+    protected String companyName;
+    protected double[] coordinates;
 
 
     public Person() { coordinates = new double[] {0,0};}

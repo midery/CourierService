@@ -40,6 +40,12 @@ public class PackageFragment extends Fragment {
     }
     public void setAdapter(PackageFragmentPageAdapter adapter) { this.adapter = adapter;}
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setRetainInstance(true);
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -67,6 +73,7 @@ public class PackageFragment extends Fragment {
                 intent.putExtra("jsonPackage", jsonPackage);
                 //Кладем не position, а AbsolutePosition, так как после завершения обновлять будем
                 //посылку не из списка этого фрагмента, а из списка посылок целиком.
+
                 intent.putExtra("packagePosition", adapter.getAbsolutePosition(pkg));
                 getActivity().startActivityForResult(intent, MainActivity.REQUEST_ADD_OR_EDIT);
             }
