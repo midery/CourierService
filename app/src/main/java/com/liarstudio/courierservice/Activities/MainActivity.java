@@ -37,6 +37,8 @@ public class  MainActivity extends AppCompatActivity {
     public static final String VOL_COEFFICIENT = "vol_coefficient";
     public static final String WEIGHT_COEFFICIENT = "weight_coefficient";
     public static final String PREFERENCES_FILENAME = "preferences_data";
+    public static final String ON_FIRST_LAUNCH = "first_launch";
+
 
     DBHelper dbHelper;
     TabLayout tabLayout;
@@ -50,10 +52,7 @@ public class  MainActivity extends AppCompatActivity {
 
         dbHelper = new DBHelper(this);
 
-
-        //addToDB();
-        //readPersonData();
-        //readPackageData();
+        onFirstLaunch();
 
 
 
@@ -107,7 +106,6 @@ public class  MainActivity extends AppCompatActivity {
 
     //Наполнение базы данных несколькими посылками
     void addToDB() {
-        PackageDB pkg = new PackageDB();
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
 
@@ -225,10 +223,17 @@ public class  MainActivity extends AppCompatActivity {
     }
 
 
+    void onFirstLaunch() {
+        SharedPreferences pref = getPreferences(MODE_PRIVATE);
+        if (!pref.getBoolean(ON_FIRST_LAUNCH, false)) {
+            addToDB();
+            pref.edit().putBoolean(ON_FIRST_LAUNCH, true).commit();
+        }
+    }
     //Считываем коэффициенты из Preferences
     void loadCoefficients() {
         SharedPreferences sharedPref = getSharedPreferences(PREFERENCES_FILENAME, MODE_PRIVATE);
-        Package.WEIGHT_PROGRAM_STATE = sharedPref.getInt(WEIGHT_COEFFICIENT, 1);
-        Package.SIZE_PROGRAM_STATE = sharedPref.getInt(VOL_COEFFICIENT, 1);
+        Package.WEIGHT_PROGRAM_STATE = sharedPref.getInt(WEIGHT_COEFFICIENT, 0);
+        Package.SIZE_PROGRAM_STATE = sharedPref.getInt(VOL_COEFFICIENT, 0);
     }
 }

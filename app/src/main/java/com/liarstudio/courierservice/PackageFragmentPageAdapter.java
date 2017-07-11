@@ -134,7 +134,7 @@ public class PackageFragmentPageAdapter extends FragmentStatePagerAdapter {
         for(PackageDB packageDB : packages)
         {
             if(packageDB.getStatus() == status)
-                filtered.insert(packageDB);
+                filtered.addWithoutDB(packageDB);
         }
         return filtered;
 

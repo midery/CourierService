@@ -34,7 +34,7 @@ public class PackageList extends ArrayList<PackageDB> {
         return super.add(aPackage);
     }
 
-    public boolean insert(PackageDB aPackage) {
+    public boolean addWithoutDB(PackageDB aPackage) {
         return super.add(aPackage);
     }
 
