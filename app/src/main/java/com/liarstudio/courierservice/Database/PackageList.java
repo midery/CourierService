@@ -5,7 +5,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import com.liarstudio.courierservice.BaseClasses.Package;
 import com.liarstudio.courierservice.BaseClasses.Person;
 
 import java.util.ArrayList;

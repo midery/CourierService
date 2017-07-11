@@ -15,7 +15,6 @@ import android.view.MenuItem;
 
 import com.google.gson.Gson;
 import com.liarstudio.courierservice.BaseClasses.Package;
-import com.liarstudio.courierservice.BaseClasses.Person;
 import com.liarstudio.courierservice.Database.ConstantsPackage;
 import com.liarstudio.courierservice.Database.ConstantsPerson;
 import com.liarstudio.courierservice.Database.DBHelper;
@@ -24,7 +23,6 @@ import com.liarstudio.courierservice.Database.PackageList;
 import com.liarstudio.courierservice.PackageFragmentPageAdapter;
 import com.liarstudio.courierservice.R;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
@@ -56,6 +54,7 @@ public class  MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         loadCoefficients();
         dbHelper = new DBHelper(this);
@@ -129,8 +128,8 @@ public class  MainActivity extends AppCompatActivity {
             cv.put(ConstantsPerson.PHONE, "(920)-555-593" + i);
             cv.put(ConstantsPerson.TYPE, 1);
             cv.put(ConstantsPerson.COMPANY_NAME, "");
-            cv.put(ConstantsPerson.COORDINATE_X, 127);
-            cv.put(ConstantsPerson.COORDINATE_Y, 35.1246);
+            cv.put(ConstantsPerson.COORDINATE_X, 51.65712);
+            cv.put(ConstantsPerson.COORDINATE_Y, 39.18995);
             db.insert(ConstantsPerson.TABLE_NAME, null, cv);
         }
 

@@ -481,22 +481,6 @@ public class PackageEdit extends AppCompatActivity {
     */
 
 
-    /*Package loadPackage() {
-        Person sender = new Person(spinner.getSelectedItemPosition(), editTextSenderName.getText().toString(),
-                editTextSenderPhone.getText().toString(), editTextSenderEmail.getText().toString(),
-                editTextSenderAddress.getText().toString(), editTextSenderCompanyName.getText().toString());
-
-        Person recipient = new Person(spinnerRecipient.getSelectedItemPosition(), editTextRecipientName.getText().toString(),
-                editTextRecipientPhone.getText().toString(), editTextRecipientEmail.getText().toString(),
-                editTextRecipientAddress.getText().toString(), editTextRecipientCompanyName.getText().toString(), coordinates);
-        double[] dimensions = {
-                Double.parseDouble(editTextPackW.getText().toString()),
-                Double.parseDouble(editTextPackW.getText().toString()),
-                Double.parseDouble(editTextPackW.getText().toString())};
-         return new Package(status, sender, recipient, editTextPackName.getText().toString(), c, dimensions,
-                Double.parseDouble(editTextPackWeight.getText().toString()));
-    }*/
-
     void packageCloseCheckDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Уведомление")

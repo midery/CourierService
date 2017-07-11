@@ -11,18 +11,9 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.liarstudio.courierservice.Activities.MainActivity;
 import com.liarstudio.courierservice.Activities.MapsActivity;
 import com.liarstudio.courierservice.BaseClasses.Package;
 import com.liarstudio.courierservice.Database.PackageList;
-
-import java.util.ArrayList;
-
-import static android.support.v4.app.ActivityCompat.startActivityForResult;
-
-/**
- * Created by M1DERY on 05.07.2017.
- */
 
 public class ListAdapter extends BaseAdapter {
 

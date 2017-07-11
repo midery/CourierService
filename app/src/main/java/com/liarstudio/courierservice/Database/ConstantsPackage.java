@@ -2,9 +2,6 @@ package com.liarstudio.courierservice.Database;
 
 import android.provider.BaseColumns;
 
-/**
- * Created by M1DERY on 10.07.2017.
- */
 
 public abstract class ConstantsPackage  implements BaseColumns {
     public static final String TABLE_NAME = "package";

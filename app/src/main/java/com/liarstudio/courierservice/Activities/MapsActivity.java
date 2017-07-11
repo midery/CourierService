@@ -9,7 +9,6 @@ import android.location.LocationManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -32,7 +31,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     TextView textViewCoordinates;
     Button buttonReady;
-    Button iconCenterMap;
+    LatLng location;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +44,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         textViewCoordinates = (TextView)findViewById(R.id.textViewCoordinates);
         buttonReady = (Button)findViewById(R.id.buttonReady);
-        iconCenterMap = (Button)findViewById(R.id.iconCenterMap);
     }
 
 
@@ -56,38 +54,44 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
         Intent intent = getIntent();
+        double[] coordinates = intent.getDoubleArrayExtra("coordinates");
 
+
+        //Если запускается из главной формы
         if (getCallingActivity() == null) {
-            iconCenterMap.setVisibility(View.INVISIBLE);
-            if (intent.hasExtra("coordinates")) {
-                double[] coordinates = intent.getDoubleArrayExtra("coordinates");
 
-                LatLng gmapCoordinates = new LatLng(coordinates[0], coordinates[1]);
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(gmapCoordinates, 15.0f));
-                mMap.addMarker(new MarkerOptions().position(gmapCoordinates).title("Адрес доставки"));
-            }
+            //Ставим маркер на координатах и закрываем при нажатии на "Готово"
+            location = new LatLng(coordinates[0], coordinates[1]);
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 15.0f));
+            mMap.addMarker(new MarkerOptions().position(location).title("Адрес доставки"));
+
             buttonReady.setOnClickListener(l -> finish());
         } else {
+            //Иначе если координаты != 0, то ставим маркер на координаты...
+            if (coordinates[0] != 0 && coordinates[1] != 0) {
+                location = new LatLng(coordinates[0], coordinates[1]);
 
-            if (intent.hasExtra("coordinates")) {
-                double[] coordinates = intent.getDoubleArrayExtra("coordinates");
-
-                LatLng gmapCoordinates = new LatLng(coordinates[0], coordinates[1]);
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(gmapCoordinates, 15.0f));
-            } else {
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 15.0f));
+                mMap.addMarker(new MarkerOptions().position(location).title("Адрес доставки"));
+            } else
+                //Если координаты равны 0, то просим пользователя разрешить определять местоположение и направляем камеру к нему
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
                         Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_REQUEST_CODE);
-            }
 
+            //Вешаем обработчики на кнопки, когда форма открыта на редактирование
+            mMap.setOnMapClickListener(location -> {
+                mMap.clear();
+                this.location = location;
+                mMap.addMarker(new MarkerOptions().position(location).title("Адрес доставки"));
+            });
 
-            mMap.setOnCameraMoveListener(() -> textViewCoordinates.setText(mMap.getCameraPosition().target.toString()));
-
-            buttonReady.setOnClickListener( l -> {
-                Intent data = new Intent();
-                double[] coordinates = {mMap.getCameraPosition().target.latitude,mMap.getCameraPosition().target.longitude} ;
-                data.putExtra("coordinates", coordinates);
-                setResult(RESULT_OK, data);
-                finish();
+            buttonReady.setOnClickListener(v -> {
+                if (location!=null) {
+                    Intent data = new Intent();
+                    data.putExtra("coordinates", new double[]{location.latitude, location.longitude});
+                    setResult(RESULT_OK, data);
+                    finish();
+                }
             });
 
         }
@@ -141,7 +145,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             loadDefault();
             // Permission was denied. Display an error message.
         }
-        textViewCoordinates.setText(mMap.getCameraPosition().target.toString());
     }
 
     void loadDefault() {

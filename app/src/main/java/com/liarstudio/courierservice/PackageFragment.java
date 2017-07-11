@@ -13,11 +13,9 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.liarstudio.courierservice.Activities.MainActivity;
 import com.liarstudio.courierservice.Activities.PackageEdit;
-import com.liarstudio.courierservice.BaseClasses.Package;
 import com.liarstudio.courierservice.Database.PackageDB;
 import com.liarstudio.courierservice.Database.PackageList;
 
-import java.util.ArrayList;
 
 
 public class PackageFragment extends Fragment {

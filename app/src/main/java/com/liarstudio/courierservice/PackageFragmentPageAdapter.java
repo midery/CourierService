@@ -1,6 +1,5 @@
 package com.liarstudio.courierservice;
 
-import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -9,9 +8,7 @@ import com.liarstudio.courierservice.BaseClasses.Package;
 import com.liarstudio.courierservice.Database.PackageDB;
 import com.liarstudio.courierservice.Database.PackageList;
 
-import org.apache.commons.collections.CollectionUtils;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 

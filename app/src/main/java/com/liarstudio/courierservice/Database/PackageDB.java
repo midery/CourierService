@@ -5,10 +5,6 @@ import com.liarstudio.courierservice.BaseClasses.Person;
 
 import java.util.Calendar;
 
-/**
- * Created by M1DERY on 08.07.2017.
- */
-
 public class PackageDB extends Package {
 
     private int id;
