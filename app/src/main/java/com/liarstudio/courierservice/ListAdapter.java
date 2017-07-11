@@ -70,26 +70,22 @@ public class ListAdapter extends BaseAdapter {
         Button buttonShowOnMap = (Button)view.findViewById(R.id.buttonShowOnMap);
         buttonShowOnMap.setEnabled(false);
 
-        if (pkg.getStatus()>0) {
+        if (pkg.getStatus()>0)
             rl.setBackgroundColor(Color.LTGRAY);
-        }   else    {
+        else
             rl.setBackgroundColor(Color.WHITE);
-            double[] coordinates = pkg.getCoordinates();
-            if (coordinates[0] != 0 && coordinates[1] !=0) {
-                buttonShowOnMap.setEnabled(true);
-                buttonShowOnMap.setOnClickListener(l -> {
-                    Intent mapIntent = new Intent(parent.getContext(), MapsActivity.class);
-                    mapIntent.putExtra("coordinates", coordinates);
-                    parent.getContext().startActivity(mapIntent);
 
-                });
-            }
+
+        double[] coordinates = pkg.getCoordinates();
+        if (coordinates[0] != 0 && coordinates[1] !=0) {
+            buttonShowOnMap.setEnabled(true);
+            buttonShowOnMap.setOnClickListener(l -> {
+                Intent mapIntent = new Intent(parent.getContext(), MapsActivity.class);
+                mapIntent.putExtra("coordinates", coordinates);
+                parent.getContext().startActivity(mapIntent);
+
+            });
         }
-
-
-
-
-
         return view;
     }
 }

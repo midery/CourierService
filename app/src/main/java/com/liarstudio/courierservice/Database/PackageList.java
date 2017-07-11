@@ -28,14 +28,30 @@ public class PackageList extends ArrayList<PackageDB> {
 
 
 
-    @Override
-    public boolean add(PackageDB aPackage) {
+    public boolean addDB(PackageDB aPackage) {
+
+
         insertToDB(aPackage);
-        return super.add(aPackage);
+        return addSort(aPackage);
     }
 
-    public boolean addWithoutDB(PackageDB aPackage) {
-        return super.add(aPackage);
+    public boolean addSort(PackageDB aPackage) {
+        int position = 0;
+
+        for (PackageDB pack : this)
+        {
+            if (aPackage.getDate().compareTo(pack.getDate()) < 0){
+                break;
+            }
+            position++;
+
+        }
+        if ((position == this.size()-1) && (aPackage.getDate().compareTo(this.get(position).getDate()) > 0))
+            return super.add(aPackage);
+        else
+            super.add(position, aPackage);
+        return true;
+
     }
 
 
@@ -46,11 +62,14 @@ public class PackageList extends ArrayList<PackageDB> {
         super.add(index, element);
     }
 
-    @Override
-    public PackageDB set(int index, PackageDB element) {
+    public PackageDB updateDB(int index, PackageDB element) {
         //updateInDB()
         updateInDB(element);
-        return super.set(index, element);
+        super.remove(index);
+
+        addSort(element);
+
+        return element;
     }
 
     public void loadFromDB() {

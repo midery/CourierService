@@ -30,6 +30,10 @@ import java.util.GregorianCalendar;
 
 public class  MainActivity extends AppCompatActivity {
 
+    /*
+    ****** STATIC CONSTANT AREA ******
+    */
+
 
     public static final int REQUEST_ADD_OR_EDIT = 1;
     public static final int REQUEST_MAP = 2;
@@ -39,19 +43,22 @@ public class  MainActivity extends AppCompatActivity {
     public static final String PREFERENCES_FILENAME = "preferences_data";
     public static final String ON_FIRST_LAUNCH = "first_launch";
 
+    /*
+    ****** FIELDS AREA ******
+    */
+
 
     DBHelper dbHelper;
     TabLayout tabLayout;
     PackageFragmentPageAdapter manager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         loadCoefficients();
-
         dbHelper = new DBHelper(this);
-
         onFirstLaunch();
 
 
@@ -103,6 +110,9 @@ public class  MainActivity extends AppCompatActivity {
     }
 
 
+    /*
+    ****** DATABASE AREA ******
+    */
 
     //Наполнение базы данных несколькими посылками
     void addToDB() {
@@ -221,6 +231,11 @@ public class  MainActivity extends AppCompatActivity {
             } while (cur.moveToNext());
         }
     }
+
+
+    /*
+    ****** PREFERENCE AREA ******
+    */
 
 
     void onFirstLaunch() {

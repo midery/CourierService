@@ -138,7 +138,7 @@ public class Package {
     public double[] getCoordinates() {
         return recipient.getCoordinates();
     }
-
+    public void setCoordinates(double[] coordinates) { recipient.coordinates = coordinates;}
 
 
     public void setPrice() {

@@ -54,12 +54,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_REQUEST_CODE);
+
+        Intent intent = getIntent();
 
         if (getCallingActivity() == null) {
             iconCenterMap.setVisibility(View.INVISIBLE);
-            Intent intent = getIntent();
             if (intent.hasExtra("coordinates")) {
                 double[] coordinates = intent.getDoubleArrayExtra("coordinates");
 
@@ -68,7 +67,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 mMap.addMarker(new MarkerOptions().position(gmapCoordinates).title("Адрес доставки"));
             }
             buttonReady.setOnClickListener(l -> finish());
-        } else  {
+        } else {
+
+            if (intent.hasExtra("coordinates")) {
+                double[] coordinates = intent.getDoubleArrayExtra("coordinates");
+
+                LatLng gmapCoordinates = new LatLng(coordinates[0], coordinates[1]);
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(gmapCoordinates, 15.0f));
+            } else {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_REQUEST_CODE);
+            }
+
+
             mMap.setOnCameraMoveListener(() -> textViewCoordinates.setText(mMap.getCameraPosition().target.toString()));
 
             buttonReady.setOnClickListener( l -> {
@@ -117,14 +128,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 if (location == null)
                     loadDefault();
                 else {
-                    LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15.0f));
+                    LatLng myLocation = new LatLng(location.getLatitude(), location.getLongitude());
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 15.0f));
+
+
                 }
             }catch (SecurityException se) {
                 se.printStackTrace();
                 loadDefault();
             }
-        }else {
+        } else {
             loadDefault();
             // Permission was denied. Display an error message.
         }
@@ -132,8 +145,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     void loadDefault() {
-        LatLng DSR = new LatLng(51.662805, 39.184641);
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(DSR, 15.0f));
+        LatLng defaultLoc = new LatLng(51.662805, 39.184641);
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLoc, 15.0f));
+
     }
 
     @Override

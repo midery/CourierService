@@ -35,8 +35,6 @@ public class PackageEdit extends AppCompatActivity {
     public static final int REQUEST_MAP = 2;
 
     int position = -1;
-    int status = 0;
-    double[] coordinates;
 
     PackageDB pkg;
 
@@ -93,7 +91,6 @@ public class PackageEdit extends AppCompatActivity {
             String jsonPackage = intent.getStringExtra("jsonPackage");
             pkg = new Gson().fromJson(jsonPackage, PackageDB.class);
             position = intent.getIntExtra("packagePosition", -1);
-            coordinates = pkg.getCoordinates();
             initFieldsForEdit();
         }
         else {
@@ -104,7 +101,6 @@ public class PackageEdit extends AppCompatActivity {
 
             pkg.setDate(c);
 
-            coordinates = new double[] {0,0};
             TextView textViewPackDate = (TextView)findViewById(R.id.textViewPackDate);
             textViewPackDate.setText(Package.getStringDate(c));
         }
@@ -243,7 +239,7 @@ public class PackageEdit extends AppCompatActivity {
         buttonConfirm = (Button) findViewById(R.id.buttonConfirm);
         buttonConfirm.setOnClickListener(v -> {
             if (validate()) {
-                if (status == 1)
+                if (pkg.getStatus() == 1)
                     packageCloseCheckDialog();
                 else
                     coordinateCheckDialog();}
@@ -257,6 +253,7 @@ public class PackageEdit extends AppCompatActivity {
         buttonSetCoordinates = (Button)findViewById(R.id.buttonSetCoordinates);
         buttonSetCoordinates.setOnClickListener(v -> {
             Intent mapIntent = new Intent(this, MapsActivity.class);
+            mapIntent.putExtra("coordinates", pkg.getCoordinates());
             startActivityForResult(mapIntent, REQUEST_MAP);
         });
 
@@ -313,7 +310,7 @@ public class PackageEdit extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> adapter, View v,int position, long id) {
                 // On selecting a spinner item
-                status = position;
+                pkg.setStatus(position);
 
                 if (position == 0){
                     editTextFinalCommentary.setVisibility(View.INVISIBLE);
@@ -427,7 +424,7 @@ public class PackageEdit extends AppCompatActivity {
 
         valid = validateDimensions() ? valid : false;
 
-        if (status > 0 && editTextFinalCommentary.getText().toString().isEmpty()) {
+        if (pkg.getStatus() > 0 && editTextFinalCommentary.getText().toString().isEmpty()) {
             valid = false;
             editTextFinalCommentary.setError("Неверный комментарий.");
         }
@@ -523,6 +520,7 @@ public class PackageEdit extends AppCompatActivity {
     }
 
     void coordinateCheckDialog() {
+        double[] coordinates = pkg.getCoordinates();
         if (coordinates[0] != 0 && coordinates[1] != 0) {
             passAndFinish();
             return;
@@ -553,7 +551,7 @@ public class PackageEdit extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK && requestCode == REQUEST_MAP) {
-            coordinates = data.getDoubleArrayExtra("coordinates");
+            pkg.setCoordinates(data.getDoubleArrayExtra("coordinates"));
         }
     }
 }
