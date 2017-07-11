@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.liarstudio.courierservice.Activities.MainActivity;
 import com.liarstudio.courierservice.Activities.MapsActivity;
 import com.liarstudio.courierservice.BaseClasses.Package;
+import com.liarstudio.courierservice.Database.PackageList;
 
 import java.util.ArrayList;
 
@@ -27,8 +28,8 @@ public class ListAdapter extends BaseAdapter {
 
     Context ctx;
     LayoutInflater layoutInflater;
-    ArrayList<Package> packages;
-    ListAdapter(Context context, ArrayList<Package> aPackages) {
+    PackageList packages;
+    ListAdapter(Context context, PackageList aPackages) {
         ctx = context;
         this.packages = aPackages;
         layoutInflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);

@@ -1,8 +1,9 @@
 package com.liarstudio.courierservice.Database;
 
-import android.provider.BaseColumns;
-
 import com.liarstudio.courierservice.BaseClasses.Package;
+import com.liarstudio.courierservice.BaseClasses.Person;
+
+import java.util.Calendar;
 
 /**
  * Created by M1DERY on 08.07.2017.
@@ -16,45 +17,55 @@ public class PackageDB extends Package {
         return id;
     }
 
-    public PackageDB() {
+    int senderID;
+    int recipientID;
 
+    public int getSenderID() {
+        return senderID;
     }
 
-    public static abstract class FeedPackage implements BaseColumns {
-        public static final String TABLE_NAME = "package";
-        public static final String COLUMN_ID = "package_id";
-        public static final String COLUMN_SENDER = "sender";
-        public static final String COLUMN_RECIPIENT = "recipient";
-        public static final String COLUMN_NAME = "name";
-        public static final String COLUMN_STATUS = "status";
-        public static final String COLUMN_SIZE_X = "size_x";
-        public static final String COLUMN_SIZE_Y = "size_y";
-        public static final String COLUMN_SIZE_Z = "size_z";
-        public static final String COLUMN_WEIGHT = "weight";
-        public static final String COLUMN_DATE = "date";
-        public static final String COLUMN_PRICE = "price";
-        public static final String COLUMN_COMMENTARY = "commentary";
+    public int getRecipientID() {
+        return recipientID;
+    }
+
+    public void setSenderID(int senderID) {this.senderID = senderID;}
+
+    public void setRecipientID(int recipientID) {this.recipientID = recipientID;}
 
 
-        public static final String SQL_CREATE_STATEMENT = "CREATE TABLE " + TABLE_NAME + "(" +
-                COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                COLUMN_SENDER + " integer not null, " +
-                COLUMN_RECIPIENT + " integer not null, " +
-                COLUMN_NAME + " text not null, " +
-                COLUMN_STATUS + " integer not null, " +
-                COLUMN_SIZE_X + " double not null, " +
-                COLUMN_SIZE_Y + " double not null, " +
-                COLUMN_SIZE_Z + " double not null, " +
-                COLUMN_WEIGHT + " double not null, " +
-                COLUMN_DATE + " datetime not null, " +
-                COLUMN_PRICE + " double not null, " +
-                COLUMN_COMMENTARY + " text not null, " +
-                "FOREIGN KEY(" + COLUMN_SENDER + ") REFERENCES " + PersonDB.FeedPerson.TABLE_NAME +
-                "(" + PersonDB.FeedPerson.COLUMN_ID + ") " +
-                "FOREIGN KEY(" + COLUMN_RECIPIENT + ") REFERENCES " + PersonDB.FeedPerson.TABLE_NAME +
-                "(" + PersonDB.FeedPerson.COLUMN_ID + "));";
 
-        public static final String SQL_DELETE_STATEMENT = "DROP TABLE IF EXISTS " + TABLE_NAME;
+
+
+
+    public PackageDB() {super();}
+
+    public PackageDB(int status, Person sender, Person recipient, String name, Calendar date) {
+        super(status, sender, recipient, name, date);
+    }
+
+    public PackageDB(int status, Person sender, Person recipient, String name, Calendar date, double[] sizes, double weight){
+        super(status, sender, recipient, name, date);
+        this.sizes = sizes;
+        this.weight = weight;
+    }
+
+
+    public PackageDB(int id, int status, Person sender, Person recipient, String name, Calendar date, double[] sizes, double weight){
+        this(status, sender, recipient, name, date, sizes, weight);
+        this.id = id;
+    }
+    public PackageDB(int id, int status, int senderID, int recipientID, String name, Calendar date, double[] sizes, double weight, String commentary){
+        this.id = id;
+        this.senderID = senderID;
+        this.recipientID = recipientID;
+        this.status = status;
+        this.name = name;
+        this.date = date;
+        this.commentary = commentary;
+        this.sizes = sizes;
+        this.weight = weight;
+        //setSizes(sizes);
+        //setWeight(weight);
     }
 
 

@@ -1,18 +1,25 @@
 package com.liarstudio.courierservice;
 
+import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.liarstudio.courierservice.BaseClasses.Package;
+import com.liarstudio.courierservice.Database.PackageDB;
+import com.liarstudio.courierservice.Database.PackageList;
+
+import org.apache.commons.collections.CollectionUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class PackageFragmentPageAdapter extends FragmentStatePagerAdapter {
 
     String[] tabs;
 
-    ArrayList<Package> packages;
+    PackageList packages;
 
 
     //Инициализируем табы
@@ -28,10 +35,19 @@ public class PackageFragmentPageAdapter extends FragmentStatePagerAdapter {
     }
 
     //Передаем список посылок и сортируем его по дате
-    public PackageFragmentPageAdapter(FragmentManager fm, ArrayList<Package> packages) {
+    public PackageFragmentPageAdapter(FragmentManager fm, PackageList packages) {
         this(fm);
         this.packages = packages;
-        packages.sort ( (p1, p2) -> p1.getDate().compareTo(p2.getDate()));
+
+
+        //Из-за того, что packages.sort требует API24, используем старую конструкцию с Comparator.compare
+        //packages.sort ( (p1, p2) -> p1.getDate().compareTo(p2.getDate()));
+        Collections.sort(packages, new Comparator<PackageDB>() {
+            @Override
+            public int compare(PackageDB o1, PackageDB o2) {
+                return o1.getDate().compareTo(o2.getDate());
+            }
+        });
     }
     @Override
     public CharSequence getPageTitle(int position) {
@@ -46,16 +62,20 @@ public class PackageFragmentPageAdapter extends FragmentStatePagerAdapter {
 
         //Фильтруем посылки по заданному критерию и возвращаем фрагмент с отфильтрованным списком
 
-        ArrayList<Package> filtered = (ArrayList<Package>) packages.clone();
+        //PackageList filtered = (PackageList) packages.clone();
 
         switch (position) {
             case 0:
-                filtered.removeIf(s -> !(s.getStatus()==0));
-                packageFragment.setPackages(filtered);
+
+                /*filtered.removeIf(s -> !(s.getStatus()==0));
+                packageFragment.setPackages(filtered);*/
+                packageFragment.setPackages(filterPackages(0));
                 return packageFragment;//PackageFragment.getInstance();
             case 1:
+                /*
                 filtered.removeIf(s -> !(s.getStatus()==1));
-                packageFragment.setPackages(filtered);
+                packageFragment.setPackages(filtered);*/
+                packageFragment.setPackages(filterPackages(1));
                 return packageFragment;
             case 2:
                 //filtered.removeIf(s -> !(s.status==2));
@@ -69,9 +89,9 @@ public class PackageFragmentPageAdapter extends FragmentStatePagerAdapter {
 
     //Процедура добавления посылки. Если позиция -1, то добавляем в конец.
     //Если нет - то на свою позицию
-    public void add(int position, Package pkg) {
+    public void add(int position, PackageDB pkg) {
         if (position == -1) {
-            for (Package pack : packages)
+            for (PackageDB pack : packages)
             {
                 position++;
                 if (pkg.getDate().compareTo(pack.getDate()) < 0){
@@ -106,5 +126,17 @@ public class PackageFragmentPageAdapter extends FragmentStatePagerAdapter {
     @Override
     public int getCount() {
         return tabs.length;
+    }
+
+    public PackageList filterPackages(int status) {
+        PackageList filtered = new PackageList(packages.getDbHelper());
+
+        for(PackageDB packageDB : packages)
+        {
+            if(packageDB.getStatus() == status)
+                filtered.insert(packageDB);
+        }
+        return filtered;
+
     }
 }

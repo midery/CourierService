@@ -24,7 +24,10 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.liarstudio.courierservice.BaseClasses.Package;
 import com.liarstudio.courierservice.BaseClasses.Person;
+import com.liarstudio.courierservice.Database.PackageDB;
 import com.liarstudio.courierservice.R;
+import org.apache.commons.validator.routines.EmailValidator;
+
 
 
 public class PackageEdit extends AppCompatActivity {
@@ -35,7 +38,7 @@ public class PackageEdit extends AppCompatActivity {
     int status = 0;
     double[] coordinates;
 
-    Package pkg;
+    PackageDB pkg;
 
     //Sender Fields
     EditText editTextSenderAddress;
@@ -88,13 +91,13 @@ public class PackageEdit extends AppCompatActivity {
         if (intent.hasExtra("jsonPackage") && intent.hasExtra("packagePosition"))
         {
             String jsonPackage = intent.getStringExtra("jsonPackage");
-            pkg = new Gson().fromJson(jsonPackage, Package.class);
+            pkg = new Gson().fromJson(jsonPackage, PackageDB.class);
             position = intent.getIntExtra("packagePosition", -1);
             coordinates = pkg.getCoordinates();
             initFieldsForEdit();
         }
         else {
-            pkg = new Package();
+            pkg = new PackageDB();
 
             Calendar c = Calendar.getInstance();
             c.add(Calendar.DAY_OF_YEAR, 1);
@@ -108,7 +111,7 @@ public class PackageEdit extends AppCompatActivity {
     }
 
     /*
-    ****** INITIALIZE ZONE ******
+    ****** INITIALIZE AREA ******
     */
     void initView() {
         editTextSenderAddress = (EditText) findViewById(R.id.editTextSenderAddress);
@@ -267,12 +270,17 @@ public class PackageEdit extends AppCompatActivity {
         editTextSenderEmail.setText(sender.getEmail());
         editTextSenderPhone.setText(sender.getPhone());
         editTextSenderCompanyName.setText(sender.getCompanyName());
+        spinner.setSelection(sender.getType());
+        editTextSenderCompanyName.setText(sender.getCompanyName());
+
 
         Person recipient = pkg.getRecipient();
         editTextRecipientAddress.setText(recipient.getAddress());
         editTextRecipientName.setText(recipient.getName());
         editTextRecipientEmail.setText(recipient.getEmail());
         editTextRecipientPhone.setText(recipient.getPhone());
+        editTextRecipientCompanyName.setText(recipient.getCompanyName());
+        spinnerRecipient.setSelection(recipient.getType());
         editTextRecipientCompanyName.setText(recipient.getCompanyName());
 
 
@@ -328,7 +336,7 @@ public class PackageEdit extends AppCompatActivity {
 
 
     /*
-    ****** VALIDATION ZONE ******
+    ****** VALIDATION AREA ******
     */
 
     boolean validate() {
@@ -355,8 +363,10 @@ public class PackageEdit extends AppCompatActivity {
 
         checkString = editTextSenderEmail.getText().toString();
 
-        if (checkString.isEmpty() ||
-                checkString.matches("^[a-z0-9._%+-]+@[a-z0-9.-]+\\\\.[a-z]{2,6}$")) {
+        if (!checkString.isEmpty() && !EmailValidator.getInstance().isValid(checkString))
+        {
+
+
             valid = false;
             editTextSenderEmail.setError("Введен неверный e-mail.");
         }
@@ -393,8 +403,7 @@ public class PackageEdit extends AppCompatActivity {
 
         checkString = editTextRecipientEmail.getText().toString();
 
-        if (checkString.isEmpty() ||
-                checkString.matches("^[a-z0-9._%+-]+@[a-z0-9.-]+\\\\.[a-z]{2,6}$")) {
+        if (!checkString.isEmpty() && !EmailValidator.getInstance().isValid(checkString)) {
             valid = false;
             editTextRecipientEmail.setError("Введен неверный e-mail.");
         } else
@@ -471,7 +480,7 @@ public class PackageEdit extends AppCompatActivity {
     }
 
     /*
-    ****** SUPPORT ZONE ******
+    ****** SUPPORT AREA ******
     */
 
 

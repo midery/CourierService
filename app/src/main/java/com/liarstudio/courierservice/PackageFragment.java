@@ -14,6 +14,8 @@ import com.google.gson.GsonBuilder;
 import com.liarstudio.courierservice.Activities.MainActivity;
 import com.liarstudio.courierservice.Activities.PackageEdit;
 import com.liarstudio.courierservice.BaseClasses.Package;
+import com.liarstudio.courierservice.Database.PackageDB;
+import com.liarstudio.courierservice.Database.PackageList;
 
 import java.util.ArrayList;
 
@@ -24,7 +26,7 @@ public class PackageFragment extends Fragment {
 
     private View view;
     //Количество посылок в текущем фрагменте
-    private ArrayList<Package> packages;
+    private PackageList packages;
 
     //Экземпляр adapter для поиска абсолютного положения
     PackageFragmentPageAdapter adapter;
@@ -35,7 +37,7 @@ public class PackageFragment extends Fragment {
 
 
 
-    public void setPackages(ArrayList<Package> packages) {
+    public void setPackages(PackageList packages) {
         this.packages = packages;
     }
     public void setAdapter(PackageFragmentPageAdapter adapter) { this.adapter = adapter;}
@@ -60,7 +62,7 @@ public class PackageFragment extends Fragment {
         listView.setOnItemClickListener((parent, v, position, id) -> {
 
             //работаем с выбранной посылкой
-            Package pkg = packages.get(position);
+            PackageDB pkg = packages.get(position);
 
             //можно редактировать, если статус - "Активна"
             if (pkg.getStatus() == 0) {

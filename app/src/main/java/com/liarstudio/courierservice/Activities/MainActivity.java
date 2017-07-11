@@ -1,19 +1,26 @@
 package com.liarstudio.courierservice.Activities;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.google.gson.Gson;
 import com.liarstudio.courierservice.BaseClasses.Package;
 import com.liarstudio.courierservice.BaseClasses.Person;
+import com.liarstudio.courierservice.Database.ConstantsPackage;
+import com.liarstudio.courierservice.Database.ConstantsPerson;
 import com.liarstudio.courierservice.Database.DBHelper;
+import com.liarstudio.courierservice.Database.PackageDB;
+import com.liarstudio.courierservice.Database.PackageList;
 import com.liarstudio.courierservice.PackageFragmentPageAdapter;
 import com.liarstudio.courierservice.R;
 
@@ -31,7 +38,7 @@ public class  MainActivity extends AppCompatActivity {
     public static final String WEIGHT_COEFFICIENT = "weight_coefficient";
     public static final String PREFERENCES_FILENAME = "preferences_data";
 
-    Toolbar toolbar;
+    DBHelper dbHelper;
     TabLayout tabLayout;
     PackageFragmentPageAdapter manager;
     @Override
@@ -39,24 +46,27 @@ public class  MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //Toolbar toolBar = (Toolbar) findViewById(R.id.toolBar);
-        //setSupportActionBar(toolBar);
-
         loadCoefficients();
-        ArrayList<Package> packages = loadPackages();
+
+        dbHelper = new DBHelper(this);
+
+
+        //addToDB();
+        //readPersonData();
+        //readPackageData();
+
+
+
+        PackageList packages = new PackageList(dbHelper);
+        packages.loadFromDB();
+
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewPager);
         manager = new PackageFragmentPageAdapter(getSupportFragmentManager(), packages);
 
         viewPager.setAdapter(manager);
 
-        //viewPager.addView(findViewById(R.id.trShipments));
         tabLayout = (TabLayout) findViewById(R.id.tabLayout);
-
         tabLayout.setupWithViewPager(viewPager);
-
-        DBHelper dbh = new DBHelper(this);
-
-        //initRows();
 
     }
 
@@ -88,31 +98,134 @@ public class  MainActivity extends AppCompatActivity {
                 data.hasExtra("jsonPackageChild") && data.hasExtra("packageChildPosition")) {
             int position = data.getIntExtra("packageChildPosition", -1);
             String jsonPackage = data.getStringExtra("jsonPackageChild");
-            Package pkg = new Gson().fromJson(jsonPackage, Package.class);
+            PackageDB pkg = new Gson().fromJson(jsonPackage, PackageDB.class);
             manager.add(position, pkg);
         }
     }
 
 
 
+    //Наполнение базы данных несколькими посылками
+    void addToDB() {
+        PackageDB pkg = new PackageDB();
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
 
-        private ArrayList<Package> loadPackages() {
 
-        ArrayList<Package> packages = new ArrayList<>();
-        Package pkg = new Package(0,
-                new Person("Kuk", "9204595911", "m@m.m", "Lorum Ipsum street"),
-                new Person("Kuk", "9204505931", "m@m.m", "Lorum Ipsum street"), "Pkg 1",
-                new GregorianCalendar(2017, 07, 06), new double[]{5,1,6}, 5);
+        ContentValues cv = new ContentValues();
 
-        packages.add(pkg);
-        pkg = new Package(1, new Person("Kuk", "920", "m@m.m", "Lorum Ipsum street"), new Person("Kuk", "14156", "m@m.m", "Dorum av."), "Pkg 2", Calendar.getInstance());
-        packages.add(pkg);
-        pkg = new Package(0, new Person("Kuk", "920", "m@m.m", "Lorum Ipsum street"), new Person("Kuk", "14156", "m@m.m", "Dorum av."), "Pkg 3", new GregorianCalendar(2017, 05, 12),
-                new double[]{200,35,615}, 20);
-        packages.add(pkg);
-        return packages;
+
+        for (int i = 1; i <9 ; i++) {
+            cv.put(ConstantsPerson.NAME, "Ivan #" + i);
+            cv.put(ConstantsPerson.ADDRESS, "Pushkina Street, house " + i);
+            cv.put(ConstantsPerson.EMAIL, "ivan" + i + "@gmail.com");
+            cv.put(ConstantsPerson.PHONE, "(920)-555-593" + i);
+            cv.put(ConstantsPerson.TYPE, 1);
+            cv.put(ConstantsPerson.COMPANY_NAME, "");
+            cv.put(ConstantsPerson.COORDINATE_X, 127);
+            cv.put(ConstantsPerson.COORDINATE_Y, 35.1246);
+            db.insert(ConstantsPerson.TABLE_NAME, null, cv);
+        }
+
+        cv.clear();
+        cv.put(ConstantsPackage.SENDER, 1);
+        cv.put(ConstantsPackage.RECIPIENT, 2);
+        cv.put(ConstantsPackage.NAME, "Package #1");
+        cv.put(ConstantsPackage.STATUS, 0);
+        cv.put(ConstantsPackage.SIZE_X, 50);
+        cv.put(ConstantsPackage.SIZE_Y, 35);
+        cv.put(ConstantsPackage.SIZE_Z, 40);
+        cv.put(ConstantsPackage.WEIGHT, 4);
+        cv.put(ConstantsPackage.DATE, Calendar.getInstance().getTimeInMillis());
+
+        db.insert(ConstantsPackage.TABLE_NAME, null, cv);
+        cv.clear();
+
+        cv.put(ConstantsPackage.SENDER, 2);
+        cv.put(ConstantsPackage.RECIPIENT, 4);
+        cv.put(ConstantsPackage.NAME, "Package #2");
+        cv.put(ConstantsPackage.STATUS, 0);
+        cv.put(ConstantsPackage.SIZE_X, 200);
+        cv.put(ConstantsPackage.SIZE_Y, 10);
+        cv.put(ConstantsPackage.SIZE_Z, 55);
+        cv.put(ConstantsPackage.WEIGHT, 15);
+        cv.put(ConstantsPackage.DATE, new GregorianCalendar(2017, 8, 10).getTimeInMillis());
+
+        db.insert(ConstantsPackage.TABLE_NAME, null, cv);
+        cv.clear();
+
+        cv.put(ConstantsPackage.SENDER, 5);
+        cv.put(ConstantsPackage.RECIPIENT, 7);
+        cv.put(ConstantsPackage.NAME, "Package #3");
+        cv.put(ConstantsPackage.STATUS, 1);
+        cv.put(ConstantsPackage.SIZE_X, 10);
+        cv.put(ConstantsPackage.SIZE_Y, 10);
+        cv.put(ConstantsPackage.SIZE_Z, 35);
+        cv.put(ConstantsPackage.WEIGHT, 8.5);
+        cv.put(ConstantsPackage.DATE, new GregorianCalendar(2017, 06, 10).getTimeInMillis());
+
+        db.insert(ConstantsPackage.TABLE_NAME, null, cv);
+
     }
 
+
+    //Просмотр таблицы людей
+    void readPersonData() {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+        Cursor cursor = db.query(ConstantsPerson.TABLE_NAME, null, null, null, null, null, null, null);
+        if (cursor.moveToNext())
+        {
+            int idCol = cursor.getColumnIndex(ConstantsPerson.ID);
+            int nameCol = cursor.getColumnIndex(ConstantsPerson.NAME);
+            int addressCol = cursor.getColumnIndex(ConstantsPerson.ADDRESS);
+            int emailCol = cursor.getColumnIndex(ConstantsPerson.EMAIL);
+            int phoneCol = cursor.getColumnIndex(ConstantsPerson.PHONE);
+            int typeCol  = cursor.getColumnIndex(ConstantsPerson.TYPE);
+            int companyCol = cursor.getColumnIndex(ConstantsPerson.COMPANY_NAME);
+            int xCol  = cursor.getColumnIndex(ConstantsPerson.COORDINATE_X);
+            int yCol = cursor.getColumnIndex(ConstantsPerson.COORDINATE_Y);
+
+
+            do {
+                Log.d("-", "PERSON: " + cursor.getInt(idCol) + " ; " +
+                        cursor.getString(nameCol) + " ; " + cursor.getString(emailCol) + " ; " +
+                        cursor.getString(addressCol) + " ; " + cursor.getString(phoneCol) + " ; "
+                        + cursor.getInt(typeCol) + " ; " + cursor.getString(companyCol)
+                        + cursor.getDouble(xCol) + " ; "+ cursor.getDouble(yCol));
+            } while (cursor.moveToNext());
+        }
+
+    }
+    //Просмотр таблицы посылок
+    void readPackageData() {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+        Cursor cur = db.query(ConstantsPackage.TABLE_NAME, null, null, null, null, null, null, null);
+        if (cur.moveToNext())
+        {
+            int idCol = cur.getColumnIndex(ConstantsPackage.PACKAGE_ID);
+            int nameCol = cur.getColumnIndex(ConstantsPackage.NAME);
+            int statusCol = cur.getColumnIndex(ConstantsPackage.STATUS);
+            int xCol = cur.getColumnIndex(ConstantsPackage.SIZE_X);
+            int yCol = cur.getColumnIndex(ConstantsPackage.SIZE_Y);
+            int zCol = cur.getColumnIndex(ConstantsPackage.SIZE_Z);
+            int weightCol = cur.getColumnIndex(ConstantsPackage.WEIGHT);
+            int dateCol = cur.getColumnIndex(ConstantsPackage.DATE);
+            int commentaryCol = cur.getColumnIndex(ConstantsPackage.COMMENTARY);
+            int senderCol = cur.getColumnIndex(ConstantsPackage.SENDER);
+            int recipientCol = cur.getColumnIndex(ConstantsPackage.RECIPIENT);
+
+
+            do {
+                Log.d("-", "PACKAGE: " + cur.getInt(idCol) + " ; " +
+                        cur.getString(nameCol) + " ; " + cur.getInt(statusCol) + " ; " +
+                        cur.getInt(senderCol) + " ; " + cur.getInt(recipientCol) + " ; ");
+            } while (cur.moveToNext());
+        }
+    }
+
+
+    //Считываем коэффициенты из Preferences
     void loadCoefficients() {
         SharedPreferences sharedPref = getSharedPreferences(PREFERENCES_FILENAME, MODE_PRIVATE);
         Package.WEIGHT_PROGRAM_STATE = sharedPref.getInt(WEIGHT_COEFFICIENT, 1);

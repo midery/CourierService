@@ -22,12 +22,18 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(PersonDB.FeedPerson.SQL_CREATE_STATEMENT + PackageDB.FeedPackage.SQL_CREATE_STATEMENT);
+        db.execSQL(ConstantsPerson.SQL_CREATE_STATEMENT);
+        db.execSQL(ConstantsPackage.SQL_CREATE_STATEMENT);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL(PersonDB.FeedPerson.SQL_DELETE_STATEMENT + PackageDB.FeedPackage.SQL_DELETE_STATEMENT);
+        db.execSQL(ConstantsPerson.SQL_DELETE_STATEMENT);
+        db.execSQL(ConstantsPackage.SQL_DELETE_STATEMENT);
         onCreate(db);
+    }
+    @Override
+    public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion){
+        onUpgrade(db, newVersion, oldVersion);
     }
 }

@@ -104,6 +104,7 @@ public class Package {
 
     }
 
+
     public void setWeight(double weight) {
         this.weight = WEIGHT_PROGRAM_STATE == 0 ? weight :  weight/weightCoefficient;
     }
@@ -118,6 +119,10 @@ public class Package {
 
 
     }
+
+    public double getWeightConst() {return weight;}
+    public double[] getSizesConst() {return sizes;}
+
 
     public Calendar getDate() { return date; }
     public void setDate(Calendar date) {this.date = date;}
