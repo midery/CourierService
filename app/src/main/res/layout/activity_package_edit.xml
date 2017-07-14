@@ -233,7 +233,7 @@
             android:layout_height="wrap_content"
             android:layout_alignBaseline="@+id/textViewPackSizeDimension"
             android:layout_alignBottom="@+id/textViewPackSizeDimension"
-            android:layout_toEndOf="@+id/textViewPackWeightDimension"
+            android:layout_toEndOf="@+id/editTextPackW"
             android:ems="10"
             android:hint="В"
             android:inputType="numberDecimal"
