@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:title="Единицы измерения">
+
+
+    </PreferenceCategory>
+    <ListPreference
+        android:entries="@array/weight_entries"
+        android:entryValues="@array/weight_entries_values"
+        android:key="weight_dimensions"
+        android:title="Вес"
+        android:summary="Выбор единицы измерения веса из списка"/>
+
+    <ListPreference
+        android:entries="@array/size_entries"
+        android:entryValues="@array/size_entries_values"
+        android:key="size_dimensions"
+        android:title="Объем"
+        android:summary="Выбор единицы измерения объема из списка"/>
+
+
+</PreferenceScreen>

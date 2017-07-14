@@ -31,6 +31,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/editTextSenderAddress"
+            android:inputType="text"
             android:hint="ФИО*" />
 
 
@@ -43,6 +44,15 @@
             android:inputType="textEmailAddress"
             android:hint="Email"
             android:layout_below="@id/editTextSenderName"/>
+        <TextView
+            android:paddingLeft="5dp"
+            android:paddingTop="10dp"
+            android:id="@+id/textViewPhone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/editTextSenderEmail"
+            android:text="Телефон*"
+            android:textSize="18sp" />
 
         <EditText
             android:id="@+id/editTextSenderPhone"
@@ -50,7 +60,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/editTextSenderEmail"
             android:ems="10"
-            android:hint="Телефон*"
+            android:hint="(9**)-***-****"
+            android:layout_toEndOf="@id/textViewPhone"
             android:inputType="phone"
             android:maxLength="14" />
 
@@ -105,6 +116,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/editTextRecipientAddress"
+            android:inputType="text"
             android:hint="ФИО*" />
 
 
@@ -117,13 +129,24 @@
             android:hint="Email"
             android:inputType="textEmailAddress" />
 
+        <TextView
+            android:paddingLeft="5dp"
+            android:paddingTop="10dp"
+            android:id="@+id/textViewPhoneRecipient"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/editTextRecipientEmail"
+            android:text="Телефон*"
+            android:textSize="18sp" />
+
         <EditText
             android:id="@+id/editTextRecipientPhone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/editTextRecipientEmail"
             android:ems="10"
-            android:hint="Телефон*"
+            android:hint="(9**)-***-****"
+            android:layout_toEndOf="@id/textViewPhone"
             android:inputType="phone"
             android:maxLength="14" />
 
@@ -196,33 +219,38 @@
             android:id="@+id/editTextPackW"
             android:layout_width="60dp"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="numberDecimal"
-            android:layout_toEndOf="@+id/textViewPackSizes"
             android:layout_below="@id/editTextPackName"
+            android:layout_toEndOf="@+id/textViewPackSizes"
+            android:ems="10"
             android:hint="Ш"
-            android:textAlignment="center"/>
+            android:inputType="numberDecimal"
+            android:nextFocusDown="@+id/editTextPackH"
+            android:textAlignment="center" />
 
         <EditText
             android:id="@+id/editTextPackH"
             android:layout_width="60dp"
             android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/textViewPackSizeDimension"
+            android:layout_alignBottom="@+id/textViewPackSizeDimension"
+            android:layout_toEndOf="@+id/textViewPackWeightDimension"
             android:ems="10"
-            android:inputType="numberDecimal"
-            android:layout_toEndOf="@+id/editTextPackW"
-            android:layout_below="@id/editTextPackName"
             android:hint="В"
-            android:textAlignment="center"/>
+            android:inputType="numberDecimal"
+            android:nextFocusDown="@+id/editTextPackD"
+            android:textAlignment="center" />
+
         <EditText
             android:id="@+id/editTextPackD"
             android:layout_width="60dp"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="numberDecimal"
-            android:layout_toEndOf="@+id/editTextPackH"
             android:layout_below="@id/editTextPackName"
+            android:layout_toEndOf="@+id/editTextPackH"
+            android:ems="10"
             android:hint="Г"
-            android:textAlignment="center"/>
+            android:inputType="numberDecimal"
+            android:nextFocusDown="@+id/editTextPackWeight"
+            android:textAlignment="center" />
 
         <TextView
             android:layout_marginTop="9dp"

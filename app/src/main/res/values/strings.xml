@@ -12,11 +12,47 @@
         <item>Активная</item>
         <item>Завершенная</item>
     </string-array>
+
+    <string-array name="weight_entries">
+        <item name="0">Килограммы</item>
+        <item name="1">Фунты</item>
+    </string-array>
+
+    <string-array name="size_entries">
+        <item name="0">Сантиметры</item>
+        <item name="1">Дюймы</item>
+    </string-array>
+
+    <string-array name="weight_entries_values">
+        <item name="0">0</item>
+        <item name="1">1</item>
+    </string-array>
+
+
+    <string-array name="size_entries_values">
+        <item name="0">0</item>
+        <item name="1">1</item>
+    </string-array>
+
+
+
+
+
     <string name="title_activity_maps">Map</string>
     <string name="weight_kg">кг</string>
     <string name="weight_lb">фунт(ов)</string>
     <string name="size_sm">см</string>
     <string name="size_inch">д</string>
+
+    <string name="title_activity_draweract">draweract</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+
+    <string name="weight_key">weight_dimensions</string>
+    <string name="size_key">size_dimensions</string>
 
 
 </resources>

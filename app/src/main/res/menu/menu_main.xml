@@ -6,7 +6,4 @@
         app:showAsAction="always"
         android:icon="@drawable/ic_add_black_24dp"
         />
-    <item
-        android:id="@+id/itemSettings"
-        android:title="Настройки" />
 </menu>

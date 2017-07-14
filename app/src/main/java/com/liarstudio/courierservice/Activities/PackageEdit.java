@@ -13,6 +13,7 @@ import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.view.Menu;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -81,11 +82,14 @@ public class PackageEdit extends AppCompatActivity {
         requestWindowFeature(Window.FEATURE_ACTION_BAR);
         setContentView(R.layout.activity_package_edit);
 
+
+        getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
+
         initView();
 
         Intent intent = getIntent();
-
-
         if (intent.hasExtra("jsonPackage") && intent.hasExtra("packagePosition"))
         {
             String jsonPackage = intent.getStringExtra("jsonPackage");

@@ -19,7 +19,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme.NoActionBar">
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
@@ -36,8 +36,9 @@
         <activity
             android:name=".Activities.PackageEdit"
             android:label="@string/package_activity_name"
-            android:parentActivityName=".Activities.MainActivity">
-            <meta-data
+            android:parentActivityName=".Activities.MainActivity"
+            android:theme="@style/AppTheme.Base">
+        <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".Activities.MainActivity" />
         </activity>
@@ -56,14 +57,6 @@
         <activity
             android:name=".Activities.MapsActivity"
             android:label="@string/title_activity_maps" />
-        <activity
-            android:name=".Activities.SettingsActivity"
-            android:label="@string/settings_activity_name"
-            android:parentActivityName=".Activities.MainActivity">>
-        <meta-data
-            android:name="android.support.PARENT_ACTIVITY"
-            android:value=".Activities.MainActivity" />
-            </activity>
     </application>
 
 </manifest>

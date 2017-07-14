@@ -1,6 +1,8 @@
 package com.liarstudio.courierservice.BaseClasses;
 
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -100,22 +102,26 @@ public class Package {
     public void setCommentary(String commentary) {this.commentary = commentary;}
 
     public double getWeight() {
-        return WEIGHT_PROGRAM_STATE == 0 ? weight :  weight*weightCoefficient;
+        return WEIGHT_PROGRAM_STATE == 0 ? weight :  round(weight*weightCoefficient);
 
     }
 
 
     public void setWeight(double weight) {
-        this.weight = WEIGHT_PROGRAM_STATE == 0 ? weight :  weight/weightCoefficient;
+        this.weight = WEIGHT_PROGRAM_STATE == 0 ? weight :  round(weight/weightCoefficient);
     }
 
     public double[] getSizes() {
             return SIZE_PROGRAM_STATE == 0 ? sizes :
-                    new double[] {sizes[0]* sizeCoefficient, sizes[1]* sizeCoefficient, sizes[2]* sizeCoefficient};
+                    new double[] {round(sizes[0]* sizeCoefficient),
+                                round(sizes[1]* sizeCoefficient),
+                                round(sizes[2]* sizeCoefficient)};
     }
     public void setSizes(double[] sizes) {
         this.sizes = SIZE_PROGRAM_STATE == 0 ? sizes :
-                new double[]{sizes[0] / sizeCoefficient, sizes[1] / sizeCoefficient, sizes[2] / sizeCoefficient};
+                new double[]{round(sizes[0] / sizeCoefficient),
+                            round(sizes[1] / sizeCoefficient),
+                            round(sizes[2] / sizeCoefficient)};
 
 
     }
@@ -167,6 +173,21 @@ public class Package {
             price = v * cargoRate * tariff * fastShippingMultiplier;
     }
     public double getPrice() {return price;}
+
+
+
+
+    public static double round(double value, int places) {
+        if (places < 0) throw new IllegalArgumentException();
+
+        BigDecimal bd = new BigDecimal(value);
+        bd = bd.setScale(places, RoundingMode.HALF_UP);
+        return bd.doubleValue();
+    }
+
+    public static double round(double value) {
+        return round(value, 2);
+    }
 
 
 }
