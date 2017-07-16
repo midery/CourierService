@@ -10,7 +10,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.telephony.PhoneNumberFormattingTextWatcher;
-import android.view.Menu;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -23,21 +22,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.liarstudio.courierservice.BaseClasses.Package;
 import com.liarstudio.courierservice.BaseClasses.Person;
-import com.liarstudio.courierservice.Database.PackageDB;
+import com.liarstudio.courierservice.BaseClasses.Package;
 import com.liarstudio.courierservice.R;
 import org.apache.commons.validator.routines.EmailValidator;
 
 
 
-public class PackageEdit extends AppCompatActivity {
+public class PackageFieldsActivity extends AppCompatActivity {
 
     public static final int REQUEST_MAP = 2;
 
-    int position = -1;
-
-    PackageDB pkg;
+    Package pkg;
 
     //Sender Fields
     EditText editTextSenderAddress;
@@ -90,15 +86,14 @@ public class PackageEdit extends AppCompatActivity {
         initView();
 
         Intent intent = getIntent();
-        if (intent.hasExtra("jsonPackage") && intent.hasExtra("packagePosition"))
+        if (intent.hasExtra("jsonPackage"))
         {
             String jsonPackage = intent.getStringExtra("jsonPackage");
-            pkg = new Gson().fromJson(jsonPackage, PackageDB.class);
-            position = intent.getIntExtra("packagePosition", -1);
+            pkg = new Gson().fromJson(jsonPackage, Package.class);
             initFieldsForEdit();
         }
         else {
-            pkg = new PackageDB();
+            pkg = new Package();
 
             Calendar c = Calendar.getInstance();
             c.add(Calendar.DAY_OF_YEAR, 1);
@@ -384,6 +379,7 @@ public class PackageEdit extends AppCompatActivity {
         else
             pkg.getSender().setPhone(checkString);
 
+        pkg.getSender().setCompanyName(editTextSenderCompanyName.getText().toString());
         checkString = editTextRecipientAddress.getText().toString();
         if (checkString.isEmpty())
         {
@@ -418,6 +414,9 @@ public class PackageEdit extends AppCompatActivity {
             editTextRecipientPhone.setError("Введен некорректный номер телефона.");
         } else
             pkg.getRecipient().setPhone(checkString);
+
+        pkg.getSender().setCompanyName(editTextRecipientCompanyName.getText().toString());
+
 
         checkString = editTextPackName.getText().toString();
         if (checkString.isEmpty()) {
@@ -530,7 +529,6 @@ public class PackageEdit extends AppCompatActivity {
         Intent data = new Intent();
 
         data.putExtra("jsonPackageChild", new Gson().toJson(pkg));
-        data.putExtra("packageChildPosition", position);
 
         setResult(RESULT_OK, data);
         finish();

@@ -1,43 +1,29 @@
 package com.liarstudio.courierservice.Database;
 
-import android.content.ContentValues;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
+import android.support.annotation.NonNull;
 
-import com.liarstudio.courierservice.BaseClasses.Person;
+import com.liarstudio.courierservice.BaseClasses.Package;
 
 import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.Collection;
 
 
-public class PackageList extends ArrayList<PackageDB> {
+public class PackageList extends ArrayList<Package> {
 
-    private DBHelper dbHelper;
-
-    public DBHelper getDbHelper() {
-        return dbHelper;
-    }
 
     public PackageList() {}
 
-    public PackageList(DBHelper dbHelper) {
-        this.dbHelper = dbHelper;
+    public PackageList(@NonNull Collection<? extends Package> c) {
+        super(c);
     }
 
 
 
-    public boolean addDB(PackageDB aPackage) {
 
-
-        insertToDB(aPackage);
-        return addSort(aPackage);
-    }
-
-    public boolean addSort(PackageDB aPackage) {
+    public boolean addLocally(Package aPackage) {
         int position = 0;
 
-        for (PackageDB pack : this)
+        for (Package pack : this)
         {
             if (aPackage.getDate().compareTo(pack.getDate()) < 0){
                 break;
@@ -50,169 +36,45 @@ public class PackageList extends ArrayList<PackageDB> {
         else
             super.add(position, aPackage);
         return true;
-
     }
 
 
     @Override
-    public void add(int index, PackageDB element) {
-
-        insertToDB(element);
-        super.add(index, element);
+    public boolean add(Package aPackage) {
+        aPackage.save();
+        return addLocally(aPackage);
     }
 
-    public PackageDB updateDB(int index, PackageDB element) {
-        //updateInDB()
-        updateInDB(element);
-        super.remove(index);
+    @Override
+    public void add(int index, Package element) {
+        element.save();
+        super.add(index, element);
 
-        addSort(element);
+    }
+
+    public Package update(Package element) {
+
+        element.save();
+
+        this.remove(element.getId());
+
+        addLocally(element);
 
         return element;
     }
 
-    public void loadFromDB() {
-
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
-
-        Cursor cur = db.query(ConstantsPackage.TABLE_NAME, null, null, null, null, null, null);
-        if (cur.moveToFirst()) {
-            int idCol = cur.getColumnIndex(ConstantsPackage.PACKAGE_ID);
-            int nameCol = cur.getColumnIndex(ConstantsPackage.NAME);
-            int statusCol = cur.getColumnIndex(ConstantsPackage.STATUS);
-            int xCol = cur.getColumnIndex(ConstantsPackage.SIZE_X);
-            int yCol = cur.getColumnIndex(ConstantsPackage.SIZE_Y);
-            int zCol = cur.getColumnIndex(ConstantsPackage.SIZE_Z);
-            int weightCol = cur.getColumnIndex(ConstantsPackage.WEIGHT);
-            int dateCol = cur.getColumnIndex(ConstantsPackage.DATE);
-            int commentaryCol = cur.getColumnIndex(ConstantsPackage.COMMENTARY);
-            int senderCol = cur.getColumnIndex(ConstantsPackage.SENDER);
-            int recipientCol = cur.getColumnIndex(ConstantsPackage.RECIPIENT);
 
 
-
-
-            do {
-                int senderID = cur.getInt(senderCol);
-                int recipientID = cur.getInt(recipientCol);
-
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTimeInMillis(cur.getLong(dateCol));
-
-                PackageDB pkg = new PackageDB(cur.getInt(idCol), cur.getInt(statusCol), senderID, recipientID,
-                        cur.getString(nameCol), calendar, new double[]{cur.getDouble(xCol), cur.getDouble(yCol), cur.getDouble(zCol)},
-                        cur.getDouble(weightCol), cur.getString(commentaryCol));
-                pkg.setSender(loadPersonByID(db, senderID));
-                pkg.setRecipient(loadPersonByID(db, recipientID));
-
-                super.add(pkg);
-            } while (cur.moveToNext());
+    public void remove(Long id) {
+        for (Package pack : this) {
+            if (pack.getId() == id) {
+                super.remove(pack);
+                break;
+            }
         }
     }
-    private Person loadPersonByID(SQLiteDatabase db, int id) {
-        Cursor cur = db.query(ConstantsPerson.TABLE_NAME, null, "person_id="+id, null, null, null, null, null);
-        if (cur.moveToFirst()) {
-            int nameCol = cur.getColumnIndex(ConstantsPerson.NAME);
-            int addressCol = cur.getColumnIndex(ConstantsPerson.ADDRESS);
-            int emailCol = cur.getColumnIndex(ConstantsPerson.EMAIL);
-            int phoneCol = cur.getColumnIndex(ConstantsPerson.PHONE);
-            int typeCol = cur.getColumnIndex(ConstantsPerson.TYPE);
-            int companyCol = cur.getColumnIndex(ConstantsPerson.COMPANY_NAME);
-            int xCol = cur.getColumnIndex(ConstantsPerson.COORDINATE_X);
-            int yCol = cur.getColumnIndex(ConstantsPerson.COORDINATE_Y);
-
-
-            return new Person(cur.getInt(typeCol), cur.getString(nameCol),
-                    cur.getString(phoneCol), cur.getString(emailCol),
-                    cur.getString(addressCol), cur.getString(companyCol),
-                    new double[]{cur.getDouble(xCol), cur.getDouble(yCol)});
-        }
-        return  null;
-    }
-
-    private int insertToDB(Person person) {
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-
-        ContentValues cv = new ContentValues();
-
-        cv.put(ConstantsPerson.NAME, person.getName());
-        cv.put(ConstantsPerson.ADDRESS, person.getAddress());
-        cv.put(ConstantsPerson.EMAIL, person.getEmail());
-        cv.put(ConstantsPerson.PHONE, person.getPhone());
-        cv.put(ConstantsPerson.TYPE, person.getType());
-        cv.put(ConstantsPerson.COMPANY_NAME, person.getCompanyName());
-        cv.put(ConstantsPerson.COORDINATE_X, person.getCoordinates()[0]);
-        cv.put(ConstantsPerson.COORDINATE_Y, person.getCoordinates()[1]);
-
-        return (int)db.insert(ConstantsPerson.TABLE_NAME, null, cv);
-
-    }
-    private int insertToDB(PackageDB pkg) {
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-
-        ContentValues cv = new ContentValues();
-
-        double[] sizes = pkg.getSizesConst();
-        cv.put(ConstantsPackage.SENDER, insertToDB(pkg.getSender()));
-        cv.put(ConstantsPackage.RECIPIENT, insertToDB(pkg.getRecipient()));
-        cv.put(ConstantsPackage.NAME, pkg.getName());
-        cv.put(ConstantsPackage.STATUS, pkg.getStatus());
-        cv.put(ConstantsPackage.SIZE_X, sizes[0]);
-        cv.put(ConstantsPackage.SIZE_Y, sizes[1]);
-        cv.put(ConstantsPackage.SIZE_Z, sizes[2]);
-        cv.put(ConstantsPackage.WEIGHT, pkg.getWeightConst());
-        cv.put(ConstantsPackage.DATE, pkg.getDate().getTimeInMillis());
-        cv.put(ConstantsPackage.PRICE, pkg.getPrice());
-        cv.put(ConstantsPackage.COMMENTARY, pkg.getCommentary());
-
-        return (int)db.insert(ConstantsPackage.TABLE_NAME, null, cv);
-    }
-
-    private int updateInDB(int id, Person person) {
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-
-        ContentValues cv = new ContentValues();
-        cv.put(ConstantsPerson.NAME, person.getName());
-        cv.put(ConstantsPerson.ADDRESS, person.getAddress());
-        cv.put(ConstantsPerson.EMAIL, person.getEmail());
-        cv.put(ConstantsPerson.PHONE, person.getPhone());
-        cv.put(ConstantsPerson.TYPE, person.getType());
-        cv.put(ConstantsPerson.COMPANY_NAME, person.getCompanyName());
-        cv.put(ConstantsPerson.COORDINATE_X, person.getCoordinates()[0]);
-        cv.put(ConstantsPerson.COORDINATE_Y, person.getCoordinates()[1]);
-
-        return db.update(ConstantsPerson.TABLE_NAME, cv, "person_id=?",
-                new String[] {Integer.toString(id)});
-
-    }
-
-    private int updateInDB(PackageDB pkg) {
-        updateInDB(pkg.getSenderID(), pkg.getSender());
-        updateInDB(pkg.getRecipientID(), pkg.getRecipient());
-
-
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-
-        ContentValues cv = new ContentValues();
-        double[] sizes = pkg.getSizesConst();
-        int id = pkg.getId();
 
 
 
-        cv.put(ConstantsPackage.PACKAGE_ID, id);
-        cv.put(ConstantsPackage.NAME, pkg.getName());
-        cv.put(ConstantsPackage.STATUS, pkg.getStatus());
-        cv.put(ConstantsPackage.SIZE_X, sizes[0]);
-        cv.put(ConstantsPackage.SIZE_Y, sizes[1]);
-        cv.put(ConstantsPackage.SIZE_Z, sizes[2]);
-        cv.put(ConstantsPackage.WEIGHT, pkg.getWeightConst());
-        cv.put(ConstantsPackage.DATE, pkg.getDate().getTimeInMillis());
-        cv.put(ConstantsPackage.PRICE, pkg.getPrice());
-        cv.put(ConstantsPackage.COMMENTARY, pkg.getCommentary());
-
-        return db.update(ConstantsPackage.TABLE_NAME, cv, "package_id=?",
-                new String[] {Integer.toString(id)});
-
-    }
 
 }

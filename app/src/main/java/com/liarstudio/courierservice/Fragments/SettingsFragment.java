@@ -1,4 +1,4 @@
-package com.liarstudio.courierservice.Activities;
+package com.liarstudio.courierservice.Fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

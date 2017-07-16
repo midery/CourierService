@@ -2,8 +2,6 @@ package com.liarstudio.courierservice.Activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -15,15 +13,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.liarstudio.courierservice.BaseClasses.Package;
-import com.liarstudio.courierservice.Database.ConstantsPackage;
-import com.liarstudio.courierservice.Database.ConstantsPerson;
-import com.liarstudio.courierservice.Database.DBHelper;
+import com.liarstudio.courierservice.Fragments.HomeFragment;
+import com.liarstudio.courierservice.Fragments.SettingsFragment;
 import com.liarstudio.courierservice.R;
+import com.liarstudio.courierservice.BaseClasses.Package;
+import com.orm.SugarContext;
 
 public class  MainActivity extends AppCompatActivity
     implements NavigationView.OnNavigationItemSelectedListener {
@@ -41,6 +38,7 @@ public class  MainActivity extends AppCompatActivity
     public static final String PREFERENCES_FILENAME = "preferences_data";
     public static final String ON_FIRST_LAUNCH = "first_launch";
 
+
     /*
     ****** FIELDS AREA ******
     */
@@ -50,9 +48,15 @@ public class  MainActivity extends AppCompatActivity
     Fragment fragment;
 
     @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         loadCoefficients();
 
@@ -88,7 +92,7 @@ public class  MainActivity extends AppCompatActivity
 
         switch (item.getItemId()) {
             case R.id.itemAdd:
-                Intent addIntent = new Intent(this, PackageEdit.class);
+                Intent addIntent = new Intent(this, PackageFieldsActivity.class);
                 startActivityForResult(addIntent, REQUEST_ADD_OR_EDIT);
         }
         return true;
@@ -120,7 +124,7 @@ public class  MainActivity extends AppCompatActivity
                 fragment = new HomeFragment();
                 break;
             case R.id.nav_settings:
-                //Intent addIntent = new Intent(this, PackageEdit.class);
+                //Intent addIntent = new Intent(this, PackageFieldsActivity.class);
                 //startActivityForResult(addIntent, REQUEST_ADD_OR_EDIT);
                 fragment = new SettingsFragment();
                 break;

@@ -1,26 +1,26 @@
 package com.liarstudio.courierservice.BaseClasses;
 
 
-public class Person {
+import com.orm.SugarRecord;
+
+public class Person extends SugarRecord{
+
     protected int type;
+
     protected String address;
     protected String name;
+
     protected String email;
+
     protected String phone;
+
     protected String companyName;
-    protected double[] coordinates;
+
+    protected double coordinates_x;
+    protected double coordinates_y;
 
 
-    public Person() { coordinates = new double[] {0,0};}
-    public Person(int type, String name, String phone, String email, String address, String companyName) {
-        this(type,name,phone,email, address, companyName, new double[]{0,0});
-    }
-    public Person(int type, String name, String phone, String email, String address) {
-        this(type,name,phone,email, address, "");
-    }
-    public Person(String name, String phone, String email, String address) {
-        this(0, name, phone, email, address);
-    }
+    public Person() { coordinates_x = 0; coordinates_y = 0;}
 
     public Person(int type, String name, String phone, String email, String address, String companyName, double[] coordinates) {
         this.name = name;
@@ -29,9 +29,9 @@ public class Person {
         this.phone = phone;
         this.address = address;
         this.companyName = companyName;
-        this.coordinates = coordinates;
+        this.coordinates_x = coordinates[0];
+        this.coordinates_y = coordinates[1];
     }
-
 
     public int getType() {
         return type;
@@ -74,11 +74,12 @@ public class Person {
     }
 
     public double[] getCoordinates() {
-        return coordinates;
+        return new double[]{coordinates_x, coordinates_y};
     }
 
     public void setCoordinates(double[] coordinates) {
-        this.coordinates = coordinates;
+        coordinates_x = coordinates[0];
+        coordinates_y = coordinates[1];
     }
 
     public String getCompanyName() {

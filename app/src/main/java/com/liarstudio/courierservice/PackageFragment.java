@@ -12,8 +12,8 @@ import android.widget.ListView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.liarstudio.courierservice.Activities.MainActivity;
-import com.liarstudio.courierservice.Activities.PackageEdit;
-import com.liarstudio.courierservice.Database.PackageDB;
+import com.liarstudio.courierservice.Activities.PackageFieldsActivity;
+import com.liarstudio.courierservice.BaseClasses.Package;
 import com.liarstudio.courierservice.Database.PackageList;
 
 
@@ -55,27 +55,35 @@ public class PackageFragment extends Fragment {
 
 
         //Устанавливаем
-        ListAdapter la = new ListAdapter(getContext(), packages);
+        PackageListAdapter la = new PackageListAdapter(getContext(), packages);
 
         listView.setOnItemClickListener((parent, v, position, id) -> {
 
             //работаем с выбранной посылкой
-            PackageDB pkg = packages.get(position);
+
+            Package pkg = packages.get(position);
+            Package newPkg = Package.findById(Package.class, pkg.getId());
+
 
             //можно редактировать, если статус - "Активна"
-            if (pkg.getStatus() == 0) {
+            if (newPkg.getStatus() == 0) {
                 //Проводим JSON-сериализацию для передачи в другую Activity
                 Gson gson =  new GsonBuilder().create();
-                String jsonPackage = gson.toJson(pkg);
+                String jsonPackage = gson.toJson(newPkg);
 
 
-                Intent intent = new Intent(getContext(), PackageEdit.class);
+                Intent intent = new Intent(getContext(), PackageFieldsActivity.class);
                 intent.putExtra("jsonPackage", jsonPackage);
                 //Кладем не position, а AbsolutePosition, так как после завершения обновлять будем
                 //посылку не из списка этого фрагмента, а из списка посылок целиком.
 
-                intent.putExtra("packagePosition", adapter.getAbsolutePosition(pkg));
                 getActivity().startActivityForResult(intent, MainActivity.REQUEST_ADD_OR_EDIT);
+            }
+            else {
+                if (pkg.getStatus() != newPkg.getStatus()) {
+                    pkg = newPkg;
+                   adapter.notifyDataSetChanged();
+                }
             }
         });
 

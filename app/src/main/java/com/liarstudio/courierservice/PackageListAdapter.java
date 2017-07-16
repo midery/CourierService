@@ -12,15 +12,15 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.liarstudio.courierservice.Activities.MapsActivity;
-import com.liarstudio.courierservice.BaseClasses.Package;
 import com.liarstudio.courierservice.Database.PackageList;
+import com.liarstudio.courierservice.BaseClasses.Package;
 
-public class ListAdapter extends BaseAdapter {
+public class PackageListAdapter extends BaseAdapter {
 
     Context ctx;
     LayoutInflater layoutInflater;
     PackageList packages;
-    ListAdapter(Context context, PackageList aPackages) {
+    PackageListAdapter(Context context, PackageList aPackages) {
         ctx = context;
         this.packages = aPackages;
         layoutInflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
