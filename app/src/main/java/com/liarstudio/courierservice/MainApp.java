@@ -1,8 +1,6 @@
 package com.liarstudio.courierservice;
 
 
-import android.app.Application;
-
 import com.orm.SugarApp;
 import com.orm.SugarContext;
 
@@ -12,6 +10,7 @@ public class MainApp extends SugarApp {
     public void onCreate() {
         super.onCreate();
         SugarContext.init(this);
+
     }
 
     @Override

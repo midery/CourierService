@@ -67,7 +67,7 @@ public class PackageList extends ArrayList<Package> {
 
     public void remove(Long id) {
         for (Package pack : this) {
-            if (pack.getId() == id) {
+            if (pack.getId().compareTo(id) == 0) {
                 super.remove(pack);
                 break;
             }

@@ -28,8 +28,7 @@ public class  MainActivity extends AppCompatActivity
     /*
     ****** STATIC CONSTANT AREA ******
     */
-
-
+    
     public static final int REQUEST_ADD_OR_EDIT = 1;
     public static final int REQUEST_MAP = 2;
 
