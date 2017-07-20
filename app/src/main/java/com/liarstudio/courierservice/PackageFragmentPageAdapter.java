@@ -4,16 +4,26 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
+import com.liarstudio.courierservice.API.PackageAPI;
+import com.liarstudio.courierservice.API.UrlUtils;
 import com.liarstudio.courierservice.BaseClasses.Package;
+import com.liarstudio.courierservice.BaseClasses.Person;
 import com.liarstudio.courierservice.Database.PackageList;
-import com.orm.SugarContext;
 import com.orm.SugarRecord;
 import com.orm.query.Condition;
 import com.orm.query.Select;
 
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.util.Collections;
-import java.util.Comparator;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class PackageFragmentPageAdapter extends FragmentStatePagerAdapter {
 
@@ -29,7 +39,6 @@ public class PackageFragmentPageAdapter extends FragmentStatePagerAdapter {
                 "Завершенные",
                 "Все"
         };
-
 
     }
 
@@ -97,7 +106,6 @@ public class PackageFragmentPageAdapter extends FragmentStatePagerAdapter {
     private PackageList loadPackages() {
         return new PackageList(Package.listAll(Package.class));
     }
-
 
 
 

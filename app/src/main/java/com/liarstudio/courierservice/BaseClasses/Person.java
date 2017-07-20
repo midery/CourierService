@@ -16,11 +16,11 @@ public class Person extends SugarRecord{
 
     protected String companyName;
 
-    protected double coordinates_x;
-    protected double coordinates_y;
+    protected double coordinatesX;
+    protected double coordinatesY;
 
 
-    public Person() { coordinates_x = 0; coordinates_y = 0;}
+    public Person() { coordinatesX = 0; coordinatesY = 0;}
 
     public Person(int type, String name, String phone, String email, String address, String companyName, double[] coordinates) {
         this.name = name;
@@ -29,8 +29,8 @@ public class Person extends SugarRecord{
         this.phone = phone;
         this.address = address;
         this.companyName = companyName;
-        this.coordinates_x = coordinates[0];
-        this.coordinates_y = coordinates[1];
+        this.coordinatesX = coordinates[0];
+        this.coordinatesY = coordinates[1];
     }
 
     public int getType() {
@@ -74,12 +74,12 @@ public class Person extends SugarRecord{
     }
 
     public double[] getCoordinates() {
-        return new double[]{coordinates_x, coordinates_y};
+        return new double[]{coordinatesX, coordinatesY};
     }
 
     public void setCoordinates(double[] coordinates) {
-        coordinates_x = coordinates[0];
-        coordinates_y = coordinates[1];
+        coordinatesX = coordinates[0];
+        coordinatesY = coordinates[1];
     }
 
     public String getCompanyName() {

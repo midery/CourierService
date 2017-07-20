@@ -3,6 +3,8 @@ package com.liarstudio.courierservice.Database;
 import android.support.annotation.NonNull;
 
 import com.liarstudio.courierservice.BaseClasses.Package;
+import com.liarstudio.courierservice.BaseClasses.Person;
+import com.orm.SugarRecord;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -63,6 +65,17 @@ public class PackageList extends ArrayList<Package> {
         return element;
     }
 
+
+    public void reloadAll() {
+        SugarRecord.deleteAll(Person.class);
+        SugarRecord.deleteAll(Package.class);
+
+        for (Package pack : this) {
+            pack.getSender().save();
+            pack.getRecipient().save();
+            pack.save();
+        }
+    }
 
 
     public void remove(Long id) {

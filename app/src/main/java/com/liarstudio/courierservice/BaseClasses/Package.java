@@ -13,6 +13,11 @@ import java.util.Calendar;
 
 public class Package extends SugarRecord {
 
+    /*
+    ****** FIELD AREA ******
+    */
+
+
 
     @NotNull
     private int status;
@@ -26,9 +31,9 @@ public class Package extends SugarRecord {
     @NotNull
     private String name;
 
-    private double size_x;
-    private double size_y;
-    private double size_z;
+    private double sizeX;
+    private double sizeY;
+    private double sizeZ;
 
 
 
@@ -39,14 +44,16 @@ public class Package extends SugarRecord {
     private Calendar date;
 
 
+    private int courierId;
+
     private double price = 0;
 
     private String commentary;
 
     @Ignore
-    private double sizeCoefficient = 0.3937;
+    private transient double sizeCoefficient = 0.3937;
     @Ignore
-    private double weightCoefficient = 2.2;
+    private transient double weightCoefficient = 2.2;
 
     /*
     ****** CONSTRUCTOR AREA ******
@@ -56,9 +63,9 @@ public class Package extends SugarRecord {
     public Package()  {
         sender = new Person();
         recipient = new Person();
-        size_x = 0;
-        size_y = 0;
-        size_z = 0;
+        sizeX = 0;
+        sizeY = 0;
+        sizeZ = 0;
     }
     public Package(int status, Person sender, Person recipient, String name, Calendar date){
         this.status = status;
@@ -72,26 +79,22 @@ public class Package extends SugarRecord {
 
     public Package(int status, Person sender, Person recipient, String name, Calendar date, double[] sizes, double weight){
         this(status, sender, recipient, name, date);
-        this.size_x = sizes[0];
-        this.size_y = sizes[1];
-        this.size_z = sizes[2];
+        this.sizeX = sizes[0];
+        this.sizeY = sizes[1];
+        this.sizeZ = sizes[2];
         this.weight = weight;
         commentary = "";
     }
-
-
-    public Package(int status, Person sender, Person recipient,String name, Calendar date, double[] sizes, double weight, String commentary){
-        this.sender = sender;
-        this.recipient = recipient;
-        this.status = status;
-        this.name = name;
-        this.date = date;
-        this.commentary = commentary;
-        this.size_x = sizes[0];
-        this.size_y = sizes[1];
-        this.size_z = sizes[2];
+    public Package(int status, int courierId, Person sender, Person recipient, String name, Calendar date, double[] sizes, double weight){
+        this(status, sender, recipient, name, date);
+        this.sizeX = sizes[0];
+        this.sizeY = sizes[1];
+        this.sizeZ = sizes[2];
         this.weight = weight;
+        this.courierId = courierId;
+        commentary = "";
     }
+
 
     /*
     ****** STATIC AND HELP METHODS AREA ******
@@ -173,23 +176,23 @@ public class Package extends SugarRecord {
     }
 
     public double[] getSizes() {
-        return SIZE_PROGRAM_STATE == 0 ? new double[] {size_x, size_y, size_z} :
+        return SIZE_PROGRAM_STATE == 0 ? new double[] {sizeX, sizeY, sizeZ} :
                 new double[]{
-                        round(size_x*sizeCoefficient),
-                        round(size_y*sizeCoefficient),
-                        round(size_z*sizeCoefficient)
+                        round(sizeX *sizeCoefficient),
+                        round(sizeY *sizeCoefficient),
+                        round(sizeZ *sizeCoefficient)
         };
     }
     public void setSizes(double[] sizes) {
         if (SIZE_PROGRAM_STATE == 0 ) {
-            this.size_x = sizes[0];
-            this.size_y = sizes[1];
-            this.size_z = sizes[2];
+            this.sizeX = sizes[0];
+            this.sizeY = sizes[1];
+            this.sizeZ = sizes[2];
         }
         else {
-            this.size_x = round(sizes[0]/sizeCoefficient);
-            this.size_y = round(sizes[1]/sizeCoefficient);
-            this.size_z = round(sizes[2]/sizeCoefficient);
+            this.sizeX = round(sizes[0]/sizeCoefficient);
+            this.sizeY = round(sizes[1]/sizeCoefficient);
+            this.sizeZ = round(sizes[2]/sizeCoefficient);
 
         }
 
@@ -216,7 +219,7 @@ public class Package extends SugarRecord {
 
 
 
-        double v = size_x* size_y * size_z /(double)1000000;
+        double v = sizeX * sizeY * sizeZ /(double)1000000;
 
 
         double g = weight/v;
@@ -239,6 +242,13 @@ public class Package extends SugarRecord {
     }
     public double getPrice() {return price;}
 
+    public int getCourierId() {
+        return courierId;
+    }
+
+    public void setCourierId(int courierId) {
+        this.courierId = courierId;
+    }
 
 
 

@@ -14,7 +14,7 @@ import android.widget.Toast;
 
 
 import com.liarstudio.courierservice.API.UserAPI;
-import com.liarstudio.courierservice.API.UtilsURL;
+import com.liarstudio.courierservice.API.UrlUtils;
 import com.liarstudio.courierservice.R;
 import com.liarstudio.courierservice.API.User;
 
@@ -78,19 +78,19 @@ public class LoginActivity extends AppCompatActivity {
     private void loginUser() {
         progressBarLogin.setVisibility(View.VISIBLE);
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(UtilsURL.BASE_URL)
+                .baseUrl(UrlUtils.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         UserAPI api = retrofit.create(UserAPI.class);
         api.login(loginEmail.getText().toString(),
-                UtilsURL.encryptPassword(loginPassword.getText().toString())).enqueue(
+                UrlUtils.encryptPassword(loginPassword.getText().toString())).enqueue(
                 new Callback<User>() {
                     @Override
                     public void onResponse(Call<User> call, Response<User> response) {
                         switch (response.code()) {
                             case HttpURLConnection.HTTP_OK:
                                 loginError.setText("");
-                                UtilsURL.CURRENT_USER = response.body();
+                                UrlUtils.CURRENT_USER = response.body();
                                 startActivity(new Intent(LoginActivity.this, MainActivity.class));
                                 break;
                             case HttpURLConnection.HTTP_FORBIDDEN:
@@ -108,7 +108,7 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(Call<User> call, Throwable t) {
                         Toast.makeText(LoginActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
-                        loginError.setText("Произошла ошибка при авторизации. Попробуйте позднее.");
+                        loginError.setText("Истекло время ожидания от сервера.");
                         progressBarLogin.setVisibility(View.GONE);
                     }
                 }

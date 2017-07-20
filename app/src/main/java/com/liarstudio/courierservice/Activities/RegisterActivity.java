@@ -12,7 +12,7 @@ import android.widget.Toast;
 
 import com.liarstudio.courierservice.API.User;
 import com.liarstudio.courierservice.API.UserAPI;
-import com.liarstudio.courierservice.API.UtilsURL;
+import com.liarstudio.courierservice.API.UrlUtils;
 import com.liarstudio.courierservice.R;
 
 import org.apache.commons.validator.routines.EmailValidator;
@@ -67,14 +67,14 @@ public class RegisterActivity extends AppCompatActivity {
     private void registerUser() {
         progressBarRegister.setVisibility(View.VISIBLE);
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(UtilsURL.BASE_URL)
+                .baseUrl(UrlUtils.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         UserAPI api = retrofit.create(UserAPI.class);
 
         api.register(registerEmail.getText().toString(),
                 registerName.getText().toString(),
-                UtilsURL.encryptPassword(registerPassword.getText().toString())).enqueue(
+                UrlUtils.encryptPassword(registerPassword.getText().toString())).enqueue(
 
                 new Callback<User>() {
                     @Override
@@ -83,13 +83,13 @@ public class RegisterActivity extends AppCompatActivity {
                             case HttpURLConnection.HTTP_OK:
                                 registerError.setText("");
 
-                                UtilsURL.CURRENT_USER = response.body();
+                                UrlUtils.CURRENT_USER = response.body();
                                 Toast.makeText(RegisterActivity.this, "Регистрация успешно завершена.", Toast.LENGTH_LONG);
                                 startActivity(new Intent(RegisterActivity.this, MainActivity.class));
 
                                 break;
-                            case HttpURLConnection.HTTP_FORBIDDEN:
-                                registerError.setText("Неверные email или пароль. Повторите ввод.");
+                            case HttpURLConnection.HTTP_CONFLICT:
+                                registerError.setText("Пользователь с данным Email уже зарегистрирован.");
                                 break;
                             default:
                                 registerError.setText("Произошла ошибка при авторизации. Попробуйте позднее.");

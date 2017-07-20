@@ -9,11 +9,14 @@ import java.security.NoSuchAlgorithmException;
  * Created by M1DERY on 19.07.2017.
  */
 
-public class UtilsURL {
+public class UrlUtils {
 
 
     public static final String BASE_URL = "http://10.0.2.2:8080";
     public static User CURRENT_USER = null;
+    public static boolean TOGGLE_OFFLINE = false;
+    public static boolean IS_ADMIN = false;
+
 
     public static String encryptPassword(String nonEncryptedPassword) {
         try {
