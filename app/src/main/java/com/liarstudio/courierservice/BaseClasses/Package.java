@@ -66,6 +66,7 @@ public class Package extends SugarRecord {
         sizeX = 0;
         sizeY = 0;
         sizeZ = 0;
+        commentary = "";
     }
     public Package(int status, Person sender, Person recipient, String name, Calendar date){
         this.status = status;
@@ -73,6 +74,7 @@ public class Package extends SugarRecord {
         this.recipient = recipient;
         this.name = name;
         this.date = date;
+        commentary = "";
     }
 
 
@@ -83,7 +85,6 @@ public class Package extends SugarRecord {
         this.sizeY = sizes[1];
         this.sizeZ = sizes[2];
         this.weight = weight;
-        commentary = "";
     }
     public Package(int status, int courierId, Person sender, Person recipient, String name, Calendar date, double[] sizes, double weight){
         this(status, sender, recipient, name, date);

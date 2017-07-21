@@ -102,7 +102,6 @@ public class PackageFragment extends Fragment {
     }
 
     void loadPackageFromServer(int id) {
-
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(UrlUtils.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -142,7 +141,5 @@ public class PackageFragment extends Fragment {
                     }
                 }
         );
-
     }
 }
-

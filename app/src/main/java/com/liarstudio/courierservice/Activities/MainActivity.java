@@ -28,7 +28,7 @@ public class  MainActivity extends AppCompatActivity
     /*
     ****** STATIC CONSTANT AREA ******
     */
-    
+
     public static final int REQUEST_ADD_OR_EDIT = 1;
     public static final int REQUEST_MAP = 2;
 
@@ -79,24 +79,6 @@ public class  MainActivity extends AppCompatActivity
 
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-
-        switch (item.getItemId()) {
-            case R.id.itemAdd:
-                Intent addIntent = new Intent(this, PackageFieldsActivity.class);
-                startActivityForResult(addIntent, REQUEST_ADD_OR_EDIT);
-        }
-        return true;
-
-    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

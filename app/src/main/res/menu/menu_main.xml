@@ -6,4 +6,9 @@
         app:showAsAction="always"
         android:icon="@drawable/ic_add_black_24dp"
         />
+    <item android:id="@+id/itemRefresh"
+        app:showAsAction="always"
+        android:icon="@drawable/ic_replay_black_24dp"
+        />
+
 </menu>

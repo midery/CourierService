@@ -20,7 +20,7 @@ public class Person extends SugarRecord{
     protected double coordinatesY;
 
 
-    public Person() { coordinatesX = 0; coordinatesY = 0;}
+    public Person() { coordinatesX = 0; coordinatesY = 0; companyName = "";}
 
     public Person(int type, String name, String phone, String email, String address, String companyName, double[] coordinates) {
         this.name = name;

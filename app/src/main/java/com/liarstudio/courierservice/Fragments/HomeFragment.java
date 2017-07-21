@@ -4,10 +4,15 @@ package com.liarstudio.courierservice.Fragments;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -15,6 +20,8 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.liarstudio.courierservice.API.PackageAPI;
 import com.liarstudio.courierservice.API.UrlUtils;
+import com.liarstudio.courierservice.Activities.MainActivity;
+import com.liarstudio.courierservice.Activities.PackageFieldsActivity;
 import com.liarstudio.courierservice.BaseClasses.Person;
 import com.liarstudio.courierservice.BaseClasses.Package;
 import com.liarstudio.courierservice.Database.PackageList;
@@ -38,7 +45,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import static android.app.Activity.RESULT_OK;
 import static android.content.Context.MODE_PRIVATE;
 import static com.liarstudio.courierservice.Activities.MainActivity.ON_FIRST_LAUNCH;
-import static com.liarstudio.courierservice.Activities.MainActivity.REQUEST_ADD_OR_EDIT;
 
 public class HomeFragment extends Fragment {
 
@@ -48,7 +54,6 @@ public class HomeFragment extends Fragment {
 
     PackageFragmentPageAdapter manager;
     PackageAPI api;
-
     /*
     ****** CONSTRUCTOR AREA ******
     */
@@ -57,6 +62,11 @@ public class HomeFragment extends Fragment {
 
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -65,8 +75,6 @@ public class HomeFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
 
-        SugarRecord.deleteAll(Package.class);
-        SugarRecord.deleteAll(Person.class);
 
         onFirstLaunch();
 
@@ -75,6 +83,7 @@ public class HomeFragment extends Fragment {
 
 
         viewPager.setAdapter(manager);
+
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(UrlUtils.BASE_URL)
@@ -90,6 +99,29 @@ public class HomeFragment extends Fragment {
 
         return view;
     }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        getActivity().getMenuInflater().inflate(R.menu.menu_main, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+
+        switch (item.getItemId()) {
+            case R.id.itemAdd:
+                Intent addIntent = new Intent(getActivity(), PackageFieldsActivity.class);
+                getActivity().startActivityForResult(addIntent, MainActivity.REQUEST_ADD_OR_EDIT);
+                break;
+            case R.id.itemRefresh: {
+                loadListFromServer();
+            }
+        }
+        return true;
+
+    }
+
 
     /*
     ****** DATABASE AREA ******
@@ -116,9 +148,9 @@ public class HomeFragment extends Fragment {
     void onFirstLaunch() {
         SharedPreferences pref = getActivity().getPreferences(MODE_PRIVATE);
 
-        addToDB();
 
         if (!pref.getBoolean(ON_FIRST_LAUNCH, false)) {
+            addToDB();
             pref.edit().putBoolean(ON_FIRST_LAUNCH, true).commit();
         }
     }
@@ -126,7 +158,7 @@ public class HomeFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_OK && requestCode == REQUEST_ADD_OR_EDIT &&
+        if (resultCode == RESULT_OK && requestCode == MainActivity.REQUEST_ADD_OR_EDIT &&
                 data.hasExtra("jsonPackageChild")) {
             String jsonPackage = data.getStringExtra("jsonPackageChild");
             Package pkg = new Gson().fromJson(jsonPackage, Package.class);
@@ -140,39 +172,6 @@ public class HomeFragment extends Fragment {
     */
 
 
-    void loadListFromServer() {
-        api.loadList(UrlUtils.CURRENT_USER.getId()).enqueue(
-                new Callback<List<Package>>() {
-                    @Override
-                    public void onResponse(Call<List<Package>> call, Response<List<Package>> response) {
-                        switch (response.code()) {
-                            case HttpURLConnection.HTTP_OK:
-
-                                PackageList pkgList = new PackageList(response.body());
-                                pkgList.reloadAll();
-
-                                manager.notifyDataSetChanged();
-
-                                break;
-                            case HttpURLConnection.HTTP_NOT_FOUND:
-                                Toast.makeText(getActivity(), "Время ожидание ответа от сервера истекло.",
-                                        Toast.LENGTH_LONG).show();
-
-                                break;
-                            default:
-                                Toast.makeText(getActivity(), "Произошла ошибка на стороне сервера.",
-                                        Toast.LENGTH_LONG).show();
-                                break;
-                        }}
-                    @Override
-                    public void onFailure(Call<List<Package>> call, Throwable t) {
-                        Toast.makeText(getActivity(), "Время ожидание ответа от сервера истекло.",
-                                Toast.LENGTH_LONG).show();
-
-                    }
-                }
-        );
-    }
 
 
     void addToServer(Package pkg) {
@@ -207,5 +206,42 @@ public class HomeFragment extends Fragment {
                 }
         );
     }
+
+    public void loadListFromServer() {
+        api.loadList(UrlUtils.CURRENT_USER.getId()).enqueue(
+                new Callback<List<Package>>() {
+                    @Override
+                    public void onResponse(Call<List<Package>> call, Response<List<Package>> response) {
+                        switch (response.code()) {
+                            case HttpURLConnection.HTTP_OK:
+
+                                PackageList pkgList = new PackageList(response.body());
+                                pkgList.reloadAll();
+                                manager.notifyDataSetChanged();
+                                break;
+                            case HttpURLConnection.HTTP_NOT_FOUND:
+                                Toast.makeText(getActivity(), "Время ожидание ответа от сервера истекло.",
+                                        Toast.LENGTH_LONG).show();
+
+                                break;
+                            default:
+                                Toast.makeText(getActivity(), "Произошла ошибка на стороне сервера.",
+                                        Toast.LENGTH_LONG).show();
+                                break;
+                        }}
+                    @Override
+                    public void onFailure(Call<List<Package>> call, Throwable t) {
+                        Toast.makeText(getActivity(), "Время ожидание ответа от сервера истекло.",
+                                Toast.LENGTH_LONG).show();
+
+                    }
+                }
+        );
+    }
+
+    public void refresh() {
+
+    }
+
 
 }

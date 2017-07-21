@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.liarstudio.courierservice.API.UrlUtils;
 import com.liarstudio.courierservice.BaseClasses.Person;
 import com.liarstudio.courierservice.BaseClasses.Package;
 import com.liarstudio.courierservice.R;
@@ -527,6 +528,8 @@ public class PackageFieldsActivity extends AppCompatActivity {
 
        //Package pkg = loadPackage();
         Intent data = new Intent();
+
+        pkg.setCourierId(UrlUtils.CURRENT_USER.getId());
 
         data.putExtra("jsonPackageChild", new Gson().toJson(pkg));
 
