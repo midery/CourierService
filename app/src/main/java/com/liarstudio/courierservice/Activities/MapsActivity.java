@@ -25,13 +25,25 @@ import com.liarstudio.courierservice.R;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, LocationListener {
 
-    private GoogleMap mMap;
+    /*
+    ****** FIELDS AREA ******
+    */
+
+
+    private GoogleMap gMap;
 
     private static final int PERMISSION_REQUEST_CODE = 1;
 
     TextView textViewCoordinates;
     Button buttonReady;
     LatLng location;
+
+
+    /*
+    ****** METHODS AREA ******
+    */
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +62,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
+        gMap = googleMap;
 
 
         Intent intent = getIntent();
@@ -62,8 +74,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             //Ставим маркер на координатах и закрываем при нажатии на "Готово"
             location = new LatLng(coordinates[0], coordinates[1]);
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 15.0f));
-            mMap.addMarker(new MarkerOptions().position(location).title("Адрес доставки"));
+            gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 15.0f));
+            gMap.addMarker(new MarkerOptions().position(location).title("Адрес доставки"));
 
             buttonReady.setOnClickListener(l -> finish());
         } else {
@@ -71,18 +83,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             if (coordinates[0] != 0 && coordinates[1] != 0) {
                 location = new LatLng(coordinates[0], coordinates[1]);
 
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 15.0f));
-                mMap.addMarker(new MarkerOptions().position(location).title("Адрес доставки"));
+                gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 15.0f));
+                gMap.addMarker(new MarkerOptions().position(location).title("Адрес доставки"));
             } else
                 //Если координаты равны 0, то просим пользователя разрешить определять местоположение и направляем камеру к нему
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
                         Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_REQUEST_CODE);
 
             //Вешаем обработчики на кнопки, когда форма открыта на редактирование
-            mMap.setOnMapClickListener(location -> {
-                mMap.clear();
+            gMap.setOnMapClickListener(location -> {
+                gMap.clear();
                 this.location = location;
-                mMap.addMarker(new MarkerOptions().position(location).title("Адрес доставки"));
+                gMap.addMarker(new MarkerOptions().position(location).title("Адрес доставки"));
             });
 
             buttonReady.setOnClickListener(v -> {
@@ -99,27 +111,39 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
 
-
+    /*
+    * Функция, вызываемая после того, как пользователь ответил на запрос о выдаче прав на
+    * определение местоположения.
+    * Если на все результаты запроса был положительный ответ, а так же если у пользователя включено
+    * определение местоположение по GPS или по сетям, центрируем камеру на нем.
+    * Иначе - на офисе компании
+    *
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         boolean valid = true;
+
+
         for (int perms : grantResults) {
-            valid = perms == PackageManager.PERMISSION_GRANTED ? valid : false;
+            valid = perms == PackageManager.PERMISSION_GRANTED && valid;
         }
+
+
         LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        // getting GPS status
+        // Получаем статус GPS
         boolean isGPSEnabled = locationManager
                 .isProviderEnabled(LocationManager.GPS_PROVIDER);
 
-        // getting network status
+        // Получаем статус сети
         boolean isNetworkEnabled = locationManager
                 .isProviderEnabled(LocationManager.NETWORK_PROVIDER);
 
+        //
         valid = valid && (isGPSEnabled || isNetworkEnabled);
         if (requestCode == PERMISSION_REQUEST_CODE && valid) {
 
             try {
-                //mMap.setMyLocationEnabled(true);
+                //gMap.setMyLocationEnabled(true);
                 Location location;
                 if (isNetworkEnabled)
                     locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000 * 60, 10, this);
@@ -133,7 +157,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     loadDefault();
                 else {
                     LatLng myLocation = new LatLng(location.getLatitude(), location.getLongitude());
-                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 15.0f));
+                    gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 15.0f));
 
 
                 }
@@ -143,13 +167,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         } else {
             loadDefault();
-            // Permission was denied. Display an error message.
         }
     }
 
     void loadDefault() {
         LatLng defaultLoc = new LatLng(51.662805, 39.184641);
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLoc, 15.0f));
+        gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLoc, 15.0f));
 
     }
 

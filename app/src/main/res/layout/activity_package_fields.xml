@@ -408,22 +408,24 @@
 
         <Button
             android:id="@+id/buttonConfirm"
-            android:layout_centerInParent="true"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:text="Подтвердить"
             android:layout_below="@+id/editTextCommentary"
-            />
+            android:layout_centerInParent="true"
+            android:text="Подтвердить" />
+
         <Button
             android:id="@+id/buttonDelete"
-            android:layout_centerInParent="true"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="Удалить"
             android:layout_below="@+id/buttonConfirm"
-            android:visibility="gone"
-            />
+            android:layout_centerInParent="true"
+            android:layout_marginTop="20dp"
+            android:backgroundTint="@android:color/holo_red_light"
+            android:text="Удалить"
+            android:textColor="#FFFFFF"
+            android:textColorHighlight="@color/colorAccent"
+            android:visibility="gone" />
         <ProgressBar
             android:id="@+id/progressBarPackageField"
             style="?android:attr/progressBarStyle"
@@ -431,8 +433,6 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:visibility="gone"/>
-
-
     </RelativeLayout>
 
 </ScrollView>

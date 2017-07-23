@@ -117,21 +117,22 @@ public class PackageFieldsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_package_fields);
 
 
+        //Чтобы каждый раз при открытии посылки не вываливалась клавиатура
         getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
 
         initView();
-
         Intent intent = getIntent();
 
 
+        //Определяем, для чего посылка - для создания, или редактирования
         if (intent.hasExtra("jsonPackage"))
         {
             String jsonPackage = intent.getStringExtra("jsonPackage");
             pkg = new Gson().fromJson(jsonPackage, Package.class);
 
-
+            //Если пользователь - администратор, то загружаем API
             if (IS_ADMIN) {
                 Retrofit retrofit = new Retrofit.Builder()
                         .baseUrl(ApiUtils.BASE_URL)
@@ -144,12 +145,16 @@ public class PackageFieldsActivity extends AppCompatActivity {
             initFieldsForEdit();
         }
         else {
+
+
             pkg = new Package();
 
+            //Создаем календарь по-умолчанию с датой равной текущему дню + 1;
             Calendar c = Calendar.getInstance();
             c.add(Calendar.DAY_OF_YEAR, 1);
-
             pkg.setDate(c);
+
+            //Загружаем ID курьера у текущего пользователя.
             pkg.setCourierId(ApiUtils.CURRENT_USER.getId());
             pkg.setStatus(0);
 
@@ -230,6 +235,9 @@ public class PackageFieldsActivity extends AppCompatActivity {
         initButtons();
     }
 
+    /*
+    * Функция, инициализирующая поведение spinner'ов отправителя и получателя
+     */
     void initSpinners() {
 
 
@@ -238,7 +246,6 @@ public class PackageFieldsActivity extends AppCompatActivity {
 
             @Override
             public void onItemSelected(AdapterView<?> adapter, View v,int position, long id) {
-                // On selecting a spinner item
                 if (position > 0)
                     editTextSenderCompanyName.setVisibility(View.GONE);
                 else
@@ -254,7 +261,6 @@ public class PackageFieldsActivity extends AppCompatActivity {
 
             @Override
             public void onItemSelected(AdapterView<?> adapter, View v,int position, long id) {
-                // On selecting a spinner item
                 if (position > 0)
                     editTextRecipientCompanyName.setVisibility(View.GONE);
                  else
@@ -264,10 +270,13 @@ public class PackageFieldsActivity extends AppCompatActivity {
             public void onNothingSelected(AdapterView<?> arg0) {}});
     }
 
+
     void initDatePicker() {
         DatePickerDialog.OnDateSetListener listener = (view, year, month, dayOfMonth) -> {
-            //pkg.date = new GregorianCalendar(year, month, dayOfMonth);
+
             Calendar chosenDate = new GregorianCalendar(year, month, dayOfMonth);
+
+            //Если выбранная дата не раньше, чем завтра, обновляем дату у редактируемой посылки
             if (chosenDate.compareTo(Calendar.getInstance()) > 0)
             {
                 pkg.setDate(chosenDate);
@@ -286,16 +295,19 @@ public class PackageFieldsActivity extends AppCompatActivity {
     }
 
     void initButtons() {
+
         buttonConfirm = (Button) findViewById(R.id.buttonConfirm);
         buttonConfirm.setOnClickListener(v -> {
+            //Проверяем поля
             if (validate()) {
-
-
+                //Если послылка завершенная, и readonly - просто закрываем activity
+                //иначе, если она не readonly, спрашиваем, как уведомить отправителя
+                //иначе, показываем диалог проверки координат
                 if (pkg.getStatus() == 4 ) {
-                    if (editTextPackName.isEnabled())
-                        packageCloseCheckDialog();
-                    else
+                    if (!editTextPackName.isEnabled())
                         finish();
+                    else
+                        packageCloseCheckDialog();
                 } else
                     coordinateCheckDialog();
             }
@@ -306,6 +318,7 @@ public class PackageFieldsActivity extends AppCompatActivity {
                 textViewPackPrice.setText(Double.toString(pkg.getPrice()));
         });
 
+        //Запускаем MapActivity и ждем от нее результата
         buttonSetCoordinates = (Button)findViewById(R.id.buttonSetCoordinates);
         buttonSetCoordinates.setOnClickListener(l -> {
             Intent mapIntent = new Intent(this, MapsActivity.class);
@@ -313,6 +326,7 @@ public class PackageFieldsActivity extends AppCompatActivity {
             startActivityForResult(mapIntent, REQUEST_MAP);
         });
 
+        //Кнопка удалить, которая видна только администратору
         buttonDelete = (Button)findViewById(R.id.buttonDelete);
         buttonDelete.setOnClickListener(l -> deleteDialog());
         if (IS_ADMIN)

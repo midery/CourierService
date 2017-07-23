@@ -18,15 +18,13 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.liarstudio.courierservice.API.ApiUtils;
-import com.liarstudio.courierservice.Adapters.PagerAdapterMy;
-import com.liarstudio.courierservice.Adapters.PagerAdapterNew;
 import com.liarstudio.courierservice.Fragments.HomeFragment;
 import com.liarstudio.courierservice.Fragments.SettingsFragment;
-import com.liarstudio.courierservice.Fragments.PackageFragment;
 import com.liarstudio.courierservice.R;
 import com.liarstudio.courierservice.BaseClasses.Package;
 
-import org.w3c.dom.Text;
+
+import java.util.List;
 
 import static com.liarstudio.courierservice.API.ApiUtils.CURRENT_USER;
 
@@ -38,12 +36,10 @@ public class  MainActivity extends AppCompatActivity
     */
 
     public static final int REQUEST_ADD_OR_EDIT = 1;
-    public static final int REQUEST_MAP = 2;
 
 
-    public static final String VOL_COEFFICIENT = "size_dimensions"; //"vol_coefficient";
-    public static final String WEIGHT_COEFFICIENT = "weight_dimensions";//"weight_coefficient";
-    public static final String PREFERENCES_FILENAME = "preferences_data";
+    public static final String VOL_COEFFICIENT = "size_dimensions";
+    public static final String WEIGHT_COEFFICIENT = "weight_dimensions";
     public static final String ON_FIRST_LAUNCH = "first_launch";
 
 
@@ -52,11 +48,19 @@ public class  MainActivity extends AppCompatActivity
     ****** FIELDS AREA ******
     */
 
+
+    //Тип менеджера - PagerAdapterMy, если 0, и PagerAdapterNew, если 1
+    //Переменная для экономии ресурсов
     public static int managerType = 0;
 
 
     DrawerLayout drawer;
     Fragment fragment;
+
+    /*
+    ****** METHODS AREA ******
+    */
+
 
 
     @Override
@@ -67,16 +71,19 @@ public class  MainActivity extends AppCompatActivity
 
         loadCoefficients();
 
+
+        //Создаем новый HomeFragment с менеджером PagerAdapterMy
         managerType = 0;
         fragment = new HomeFragment();
-
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.content_main, fragment).commit();
 
+
+        //Назначаем toolBar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
+        //Создаем navigationDrawer
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -86,12 +93,14 @@ public class  MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        //Меняем textView у заголовка drawer'a в соответствии с имененем пользователя
         View header = navigationView.getHeaderView(0);
         TextView textViewNavHeader = (TextView) header.findViewById(R.id.textViewNavHeader);
         textViewNavHeader.setText(CURRENT_USER.getName());
 
 
-
+        //Меняем названия и доступность пунктов меню drawer'а в зависимости от того, является ли
+        //пользователь администратором
         MenuItem nav_my = navigationView.getMenu().findItem(R.id.nav_my);
         MenuItem nav_new = navigationView.getMenu().findItem(R.id.nav_new);
 
@@ -105,22 +114,26 @@ public class  MainActivity extends AppCompatActivity
     }
 
 
+    /*
+    * Функция, вызываемая после завершения activity, запущенной для получения результата
+    * Вызываем onActivityResult с теми же параметрами у фрагментов
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         //super.onActivityResult(requestCode,resultCode, data);
-        //fragment.onActivityResult(requestCode, resultCode, data);
 
-        for (Fragment frag : getSupportFragmentManager().getFragments()) {
-            frag.onActivityResult(requestCode, resultCode, data);
-        }
+        List<Fragment> fragments = getSupportFragmentManager().getFragments();
 
+        fragment.onActivityResult(requestCode, resultCode, data);
 
     }
-
+    /*
+    * Функция, вызываемая при выборе одного из элементов меню drawer'а
+    */
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
-        Fragment fragment = null;
+        fragment = null;
         switch (item.getItemId()) {
             case R.id.nav_my:
                 managerType = 0;
@@ -155,7 +168,10 @@ public class  MainActivity extends AppCompatActivity
         ft.replace(R.id.content_main, fragment).commit();
     }
 
-    //Считываем коэффициенты из Preferences
+
+    /*
+    * Функция считывания коэффициентов из Preferences
+     */
     void loadCoefficients() {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         Package.WEIGHT_PROGRAM_STATE = Integer.parseInt(sharedPref.getString(WEIGHT_COEFFICIENT, "0"));

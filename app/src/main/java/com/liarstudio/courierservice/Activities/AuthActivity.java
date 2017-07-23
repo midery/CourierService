@@ -34,6 +34,9 @@ import static com.liarstudio.courierservice.API.ApiUtils.IS_ADMIN;
 
 
 public class AuthActivity extends AppCompatActivity {
+    /*
+    ****** FIELDS AREA ******
+    */
 
     UserAPI api;
 
@@ -47,6 +50,12 @@ public class AuthActivity extends AppCompatActivity {
 
     ProgressBar progressBar;
     TextView textViewError;
+
+
+    /*
+    ****** METHODS AREA ******
+    */
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,37 +97,47 @@ public class AuthActivity extends AppCompatActivity {
 
         buttonConfirm.setOnClickListener(l -> {
             if (validate()) {
-                    proceedRequest();
+                    sendRequest();
             }
         });
 
     }
 
-    private void proceedRequest() {
+
+    /*
+    * Функция, посылающая запрос к серверу
+    */
+    private void sendRequest() {
         progressBar.setVisibility(View.VISIBLE);
 
+        //Проверяем, в каком состоянии находится switchRegister
         Call<User> userCall = switchRegister.isChecked() ?
-
+                //Если isChecked - вызываем api.register(...)
                 api.register(editTextEmail.getText().toString().toLowerCase(),
                         editTextName.getText().toString(),
                         ApiUtils.encryptPassword(editTextPassword.getText().toString())) :
-
+                //если !isChecked - вызываем api.login(...)
                 api.login(editTextEmail.getText().toString().toLowerCase(),
                 ApiUtils.encryptPassword(editTextPassword.getText().toString()));
-
+        //Посылаем асинхронный запрос на сервер
         userCall.enqueue(
                 new Callback<User>() {
                     @Override
                     public void onResponse(Call<User> call, Response<User> response) {
                         switch (response.code()) {
+                            //Если удалось войти и тело ответа не пустое, устанавливаем текущего пользователя
+                            //и запускаем MainActivity
                             case HttpURLConnection.HTTP_OK:
-                                textViewError.setText("");
-                                CURRENT_USER = response.body();
-                                IS_ADMIN = (CURRENT_USER.getRole() == 1);
-                                startActivity(new Intent(AuthActivity.this, MainActivity.class));
-                                finish();
+                                if (response.body() != null) {
+                                    textViewError.setText("");
+                                    CURRENT_USER = response.body();
+                                    IS_ADMIN = (CURRENT_USER.getRole() == 1);
+                                    startActivity(new Intent(AuthActivity.this, MainActivity.class));
+                                    finish();
+                                }
                                 break;
                             case HttpURLConnection.HTTP_FORBIDDEN:
+
                                 textViewError.setText("Неверные email или пароль. Повторите ввод.");
                                 break;
                             case HttpURLConnection.HTTP_CONFLICT:
@@ -129,8 +148,6 @@ public class AuthActivity extends AppCompatActivity {
                                 textViewError.setText("Произошла ошибка при авторизации. Попробуйте позднее.");
                                 break;
                         }
-
-
                         progressBar.setVisibility(View.GONE);
                     }
 
@@ -144,6 +161,12 @@ public class AuthActivity extends AppCompatActivity {
         );
     }
 
+
+
+    /*
+    * Функция валидации
+    * Проверяет email, имя и пароль на корректность
+    */
     private boolean validate() {
         boolean valid = true;
         String checkString = editTextEmail.getText().toString();
