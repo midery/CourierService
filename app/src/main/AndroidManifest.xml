@@ -70,21 +70,15 @@
         <activity
             android:name=".Activities.MapsActivity"
             android:label="@string/title_activity_maps" />
-        <activity android:name=".Activities.LoginActivity"
+
+
+        <activity android:name=".Activities.AuthActivity"
             android:theme="@style/AppTheme.Base"
-            android:label="@string/login_activity_header">
+            android:label="@string/auth_activity_header">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
-        </activity>
-        <activity android:name=".Activities.RegisterActivity"
-            android:theme="@style/AppTheme.Base"
-            android:label="@string/register_activity_header">
-        <meta-data
-            android:name="android.support.PARENT_ACTIVITY"
-            android:value=".Activities.LoginActivity" />
 
         </activity>
     </application>

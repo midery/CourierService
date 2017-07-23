@@ -1,15 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <group android:checkableBehavior="single">
+    <group android:checkableBehavior="single"
+        >
         <item
-            android:id="@+id/nav_home"
+            android:id="@+id/nav_my"
             android:icon="@drawable/ic_home_black_24dp"
-            android:title="Домой" />
+            android:title="@string/nav_my" />
+        <item
+            android:id="@+id/nav_new"
+            android:icon="@drawable/ic_hourglass_empty_black_24dp"
+            android:title="@string/nav_new" />
         <item
             android:id="@+id/nav_settings"
             android:icon="@drawable/ic_menu_manage"
-            android:title="Настройки" />
+            android:title="@string/nav_settings" />
+
     </group>
+
+    <item android:title="Аутентификация">
+        <menu>
+            <item
+                android:id="@+id/nav_logout"
+                android:title="Выход"
+                android:icon="@drawable/ic_exit_to_app_black_24dp">
+            </item>
+        </menu>
+    </item>
 
 </menu>

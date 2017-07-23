@@ -60,7 +60,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/editTextSenderEmail"
             android:ems="10"
-            android:hint="(9**)-***-****"
+            android:hint="(9**) ***-****"
             android:layout_toEndOf="@id/textViewPhone"
             android:inputType="phone"
             android:maxLength="14" />
@@ -145,7 +145,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/editTextRecipientEmail"
             android:ems="10"
-            android:hint="(9**)-***-****"
+            android:hint="(9**) ***-****"
             android:layout_toEndOf="@id/textViewPhone"
             android:inputType="phone"
             android:maxLength="14" />
@@ -155,15 +155,16 @@
             android:id="@+id/textViewRecipientType"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/editTextRecipientPhone"
             android:text="Тип"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:layout_alignTop="@+id/spinnerRecipient"
+            android:layout_alignParentStart="true" />
         <Spinner
             android:id="@+id/spinnerRecipient"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:entries="@array/person_type"
-            android:layout_toEndOf="@+id/textViewType"
+            android:layout_toEndOf="@+id/textViewRecipientType"
             android:layout_below="@+id/editTextRecipientPhone"/>
 
         <EditText
@@ -173,16 +174,16 @@
             android:ems="10"
             android:inputType="textPersonName"
             android:hint="Название компании"
-            android:layout_below="@id/spinnerRecipient"/>
+            android:layout_below="@+id/spinnerRecipient"
+            android:layout_alignParentStart="true" />
 
         <Button
             android:id="@+id/buttonSetCoordinates"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_below="@id/editTextRecipientCompanyName"
             android:text="Указать координаты"
-            />
+            android:layout_below="@+id/editTextRecipientCompanyName"
+            android:layout_centerHorizontal="true" />
 
 
         <!--PACKAGE-->
@@ -267,7 +268,7 @@
         <TextView
             android:id="@+id/textViewPackWeight"
             android:layout_width="150dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_alignBaseline="@+id/editTextPackWeight"
             android:layout_alignBottom="@+id/editTextPackWeight"
             android:layout_alignParentStart="true"
@@ -356,37 +357,54 @@
             android:text="Рассчитать"
             />
 
-
         <TextView
             android:paddingLeft="5dp"
-            android:id="@+id/textViewFinal"
+            android:id="@+id/textViewCourierList"
+            android:paddingTop="11dp"
             android:layout_width="70dp"
             android:layout_height="wrap_content"
             android:layout_below="@+id/textViewPackPrice"
-            android:text="Статус"
+            android:layout_alignTop="@+id/spinnerCourierList"
+            android:text="Курьер:"
             android:textSize="18sp"
-            android:visibility="invisible"/>
+            android:visibility="gone"/>
 
         <Spinner
-            android:id="@+id/spinnerFinalStatus"
+            android:id="@+id/spinnerCourierList"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:entries="@array/status_type"
-            android:layout_toEndOf="@+id/textViewFinal"
+            android:layout_toEndOf="@+id/textViewStatus"
             android:layout_below="@+id/textViewPackPrice"
-            android:visibility="invisible"/>
+            android:visibility="gone"/>
 
+        <TextView
+            android:id="@+id/textViewStatus"
+            android:paddingLeft="5dp"
+            android:paddingTop="11dp"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:text="Статус:"
+            android:textSize="18sp"
+            android:visibility="gone"
+            android:layout_below="@+id/spinnerCourierList"
+            android:layout_alignParentStart="true" />
 
-
-        <EditText
-            android:id="@+id/editTextFinalCommentary"
+        <Spinner
+            android:id="@+id/spinnerStatus"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/spinnerFinalStatus"
+            android:layout_toEndOf="@+id/textViewStatus"
+            android:layout_below="@+id/spinnerCourierList"
+            android:visibility="gone"/>
+        <EditText
+            android:id="@+id/editTextCommentary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/spinnerStatus"
             android:ems="10"
             android:inputType="textPersonName"
             android:hint="Комментарий*"
-            android:visibility="invisible"/>
+            android:visibility="gone"/>
 
         <Button
             android:id="@+id/buttonConfirm"
@@ -394,8 +412,25 @@
             android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:text="Подтвердить"
-            android:layout_below="@+id/textViewPackPrice"
+            android:layout_below="@+id/editTextCommentary"
             />
+        <Button
+            android:id="@+id/buttonDelete"
+            android:layout_centerInParent="true"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="Удалить"
+            android:layout_below="@+id/buttonConfirm"
+            android:visibility="gone"
+            />
+        <ProgressBar
+            android:id="@+id/progressBarPackageField"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:visibility="gone"/>
 
 
     </RelativeLayout>

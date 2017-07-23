@@ -7,6 +7,7 @@ import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 /**
@@ -25,7 +26,10 @@ public interface UserAPI {
             @Field("password") String password);
 
     @GET("/users")
-    Call<List<User>> loadList();
+    Call<List<User>> loadUsers(@Query("role") int role);
+
+    @GET("/users/{id}")
+    Call<User> loadUser(@Path("id") int id);
 
 
 }

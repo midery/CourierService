@@ -1,4 +1,4 @@
-package com.liarstudio.courierservice;
+package com.liarstudio.courierservice.Fragments;
 
 import android.content.Intent;
 import android.support.v4.app.Fragment;
@@ -13,11 +13,13 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.liarstudio.courierservice.API.PackageAPI;
-import com.liarstudio.courierservice.API.UrlUtils;
+import com.liarstudio.courierservice.API.ApiUtils;
 import com.liarstudio.courierservice.Activities.MainActivity;
 import com.liarstudio.courierservice.Activities.PackageFieldsActivity;
 import com.liarstudio.courierservice.BaseClasses.Package;
 import com.liarstudio.courierservice.Database.PackageList;
+import com.liarstudio.courierservice.Adapters.PackageListAdapter;
+import com.liarstudio.courierservice.R;
 
 import java.net.HttpURLConnection;
 
@@ -36,9 +38,6 @@ public class PackageFragment extends Fragment {
     //Количество посылок в текущем фрагменте
     private PackageList packages;
 
-    //Экземпляр adapter для поиска абсолютного положения
-    PackageFragmentPageAdapter adapter;
-
     public PackageFragment() {
 
     }
@@ -46,10 +45,6 @@ public class PackageFragment extends Fragment {
 
     public void setPackages(PackageList packages) {
         this.packages = packages;
-    }
-
-    public void setAdapter(PackageFragmentPageAdapter adapter) {
-        this.adapter = adapter;
     }
 
     @Override
@@ -74,7 +69,7 @@ public class PackageFragment extends Fragment {
             //работаем с выбранной посылкой
 
 
-            if (UrlUtils.TOGGLE_OFFLINE) {
+            if (ApiUtils.TOGGLE_OFFLINE) {
                 Package newPkg = Package.findById(Package.class, packages.get(position).getId());
 
 
@@ -103,7 +98,7 @@ public class PackageFragment extends Fragment {
 
     void loadPackageFromServer(int id) {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(UrlUtils.BASE_URL)
+                .baseUrl(ApiUtils.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         PackageAPI api = retrofit.create(PackageAPI.class);

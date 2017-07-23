@@ -1,38 +1,26 @@
-package com.liarstudio.courierservice;
+package com.liarstudio.courierservice.Adapters;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import com.liarstudio.courierservice.API.PackageAPI;
-import com.liarstudio.courierservice.API.UrlUtils;
 import com.liarstudio.courierservice.BaseClasses.Package;
-import com.liarstudio.courierservice.BaseClasses.Person;
 import com.liarstudio.courierservice.Database.PackageList;
-import com.orm.SugarRecord;
+import com.liarstudio.courierservice.Fragments.PackageFragment;
 import com.orm.query.Condition;
 import com.orm.query.Select;
 
 
-import java.io.IOException;
-import java.net.HttpURLConnection;
 import java.util.Collections;
-import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
+import static com.liarstudio.courierservice.API.ApiUtils.IS_ADMIN;
 
-public class PackageFragmentPageAdapter extends FragmentStatePagerAdapter {
+public class PagerAdapterMy extends FragmentStatePagerAdapter {
 
     String[] tabs;
 
-
-
     //Инициализируем табы
-    public PackageFragmentPageAdapter(FragmentManager fm) {
+    public PagerAdapterMy(FragmentManager fm) {
         super(fm);
         tabs = new String[] {
                 "Активные",
@@ -41,6 +29,10 @@ public class PackageFragmentPageAdapter extends FragmentStatePagerAdapter {
         };
 
     }
+
+
+
+
 
     @Override
     public CharSequence getPageTitle(int position) {
@@ -51,7 +43,6 @@ public class PackageFragmentPageAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
 
         PackageFragment packageFragment = new PackageFragment();
-        packageFragment.setAdapter(this);
 
         //Фильтруем посылки по заданному критерию и возвращаем фрагмент с отфильтрованным списком
 
@@ -59,13 +50,17 @@ public class PackageFragmentPageAdapter extends FragmentStatePagerAdapter {
 
         switch (position) {
             case 0:
-                packages = filterPackages(0);
+                packages = new PackageList(Select.from(Package.class)
+                                .where(Condition.prop("status").notEq(4)).list());
                 break;
             case 1:
-                packages = filterPackages(1);
+                packages = new PackageList(
+                        Select.from(Package.class)
+                                .where(Condition.prop("status").eq(4))
+                                .list());
                 break;
             case 2:
-                packages = loadPackages();
+                packages = new PackageList(Package.listAll(Package.class));
                 break;
             default:
                 return null;
@@ -75,16 +70,6 @@ public class PackageFragmentPageAdapter extends FragmentStatePagerAdapter {
 
         packageFragment.setPackages(packages);
         return packageFragment;
-
-    }
-
-    //Процедура добавления посылки. Если позиция -1, то добавляем в конец.
-    //Если нет - то на свою позицию
-    public void add(Package pkg) {
-        pkg.getSender().save();
-        pkg.getRecipient().save();
-        pkg.save();
-        notifyDataSetChanged();
 
     }
 
@@ -98,15 +83,5 @@ public class PackageFragmentPageAdapter extends FragmentStatePagerAdapter {
     public int getCount() {
         return tabs.length;
     }
-
-    private PackageList filterPackages(int status) {
-        return new PackageList(
-                Select.from(Package.class).where(Condition.prop("status").eq(status)).list());
-    }
-    private PackageList loadPackages() {
-        return new PackageList(Package.listAll(Package.class));
-    }
-
-
 
 }

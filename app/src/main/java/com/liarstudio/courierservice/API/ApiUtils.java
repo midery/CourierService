@@ -9,7 +9,7 @@ import java.security.NoSuchAlgorithmException;
  * Created by M1DERY on 19.07.2017.
  */
 
-public class UrlUtils {
+public class ApiUtils {
 
 
     public static final String BASE_URL = "http://10.0.2.2:8080";
@@ -18,6 +18,7 @@ public class UrlUtils {
     public static boolean IS_ADMIN = false;
 
 
+    /** Функция MD5-шифрования пароля **/
     public static String encryptPassword(String nonEncryptedPassword) {
         try {
             MessageDigest md5 = MessageDigest.getInstance("MD5");

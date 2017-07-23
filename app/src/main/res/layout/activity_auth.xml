@@ -4,73 +4,81 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.liarstudio.courierservice.Activities.RegisterActivity">
-
+    tools:context="com.liarstudio.courierservice.Activities.AuthActivity">
 
     <EditText
-        android:id="@+id/editTextRegisterEmail"
+        android:id="@+id/editTextEmail"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_alignParentTop="true"
+        android:ems="10"
+        android:inputType="textEmailAddress"
+        android:hint="E-mail*"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginTop="36dp"
-        android:ems="10"
-        android:hint="E-mail*"
-        android:inputType="textEmailAddress" />
-
-
+        android:layout_alignParentTop="true" />
     <EditText
-        android:id="@+id/editTextRegisterName"
+        android:id="@+id/editTextName"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_below="@+id/editTextRegisterEmail"
+        android:layout_below="@+id/editTextEmail"
         android:layout_centerHorizontal="true"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginTop="10dp"
         android:ems="10"
         android:hint="Имя*"
+        android:visibility="gone"
         android:inputType="text" />
 
     <EditText
-        android:id="@+id/editTextRegisterPassword"
+        android:id="@+id/editTextPassword"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_below="@+id/editTextRegisterName"
-        android:layout_centerHorizontal="true"
+        android:ems="10"
+        android:hint="Пароль*"
+        android:inputType="textPassword"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginTop="10dp"
-        android:ems="10"
-        android:hint="Пароль*"
-        android:inputType="textPassword" />
+        android:layout_below="@+id/editTextName"
+        android:layout_centerHorizontal="true" />
 
     <Button
-        android:id="@+id/buttonRegister"
+        android:id="@+id/buttonConfirm"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Зарегистрироваться"
-        android:layout_below="@+id/editTextRegisterPassword"
+        android:text="Войти"
+        tools:layout_editor_absoluteY="235dp"
+        tools:layout_editor_absoluteX="148dp"
+        android:layout_below="@+id/editTextPassword"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="18dp"/>
+        android:layout_marginTop="18dp" />
 
     <ProgressBar
-        android:id="@+id/progressBarRegister"
+        android:id="@+id/progressBarAuth"
         style="?android:attr/progressBarStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/buttonRegister"
+        android:layout_below="@id/buttonConfirm"
         android:layout_centerHorizontal="true" />
 
     <TextView
-        android:id="@+id/textViewRegisterError"
+        android:id="@+id/textViewError"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/progressBarRegister"
+        android:layout_below="@+id/progressBarAuth"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="14dp"
         android:textColor="@android:color/holo_red_light"
         android:textSize="12sp" />
 
+    <Switch
+        android:id="@+id/switchRegister"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Регистрация"
+        android:layout_marginBottom="18dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
 </RelativeLayout>

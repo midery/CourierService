@@ -3,8 +3,7 @@
 
     <string name="package_activity_header">Посылка</string>
     <string name="settings_fragment_header">Настройки</string>
-    <string name="login_activity_header">Вход</string>
-    <string name="register_activity_header">Регистрация</string>
+    <string name="auth_activity_header">Аутентификация</string>
 
     <string-array name="person_type">
         <item>Компания</item>
@@ -12,9 +11,19 @@
     </string-array>
 
     <string-array name="status_type">
-        <item>Активная</item>
+        <item>Новая</item>
+        <item>Назначенная</item>
+        <item>В процессе</item>
+        <item>Отклоненная</item>
         <item>Завершенная</item>
     </string-array>
+
+    <string-array name="status_type_admin">
+        <item>Назначенная</item>
+        <item>Отклоненная</item>
+        <item>Завершенная</item>
+    </string-array>
+
 
     <string-array name="weight_entries">
         <item name="0">Килограммы</item>
@@ -30,6 +39,8 @@
         <item name="0">0</item>
         <item name="1">1</item>
     </string-array>
+
+
 
 
     <string-array name="size_entries_values">
@@ -68,6 +79,10 @@
         completions."
     </string>
 
+    <string name="nav_my">Мои посылки</string>
+    <string name="nav_my_admin">Посылки</string>
+    <string name="nav_new">Добавленные</string>
+    <string name="nav_settings">Настройки</string>
 
 
 

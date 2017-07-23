@@ -2,8 +2,13 @@ package com.liarstudio.courierservice.Activities;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
+
+import java.net.HttpURLConnection;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 import android.net.Uri;
 import android.support.v7.app.AlertDialog;
@@ -14,27 +19,53 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.liarstudio.courierservice.API.UrlUtils;
+import com.liarstudio.courierservice.API.ApiUtils;
+import com.liarstudio.courierservice.API.User;
+import com.liarstudio.courierservice.API.UserAPI;
 import com.liarstudio.courierservice.BaseClasses.Person;
 import com.liarstudio.courierservice.BaseClasses.Package;
 import com.liarstudio.courierservice.R;
 import org.apache.commons.validator.routines.EmailValidator;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
+import static com.liarstudio.courierservice.API.ApiUtils.IS_ADMIN;
 
 
 public class PackageFieldsActivity extends AppCompatActivity {
 
+
+    /*
+    ****** FIELDS AREA ******
+    */
+
     public static final int REQUEST_MAP = 2;
 
     Package pkg;
+    UserAPI api;
+
+
+    List<String> allStatuses = Arrays.asList("Новая", "Назначенная", "В процессе",
+            "Отклоненная", "Завершенная");
+
+
+    /*
+    ****** VIEW FIELDS AREA ******
+    */
+
 
     //Sender Fields
     EditText editTextSenderAddress;
@@ -58,26 +89,32 @@ public class PackageFieldsActivity extends AppCompatActivity {
     EditText editTextPackWeight;
     TextView textViewPackDate;
     TextView textViewPackPrice;
-    TextView textViewFinal;
-    EditText editTextFinalCommentary;
+    TextView textViewStatus;
+    EditText editTextCommentary;
     TextView textViewPackSizeDimension;
     TextView textViewPackWeightDimension;
+    TextView textViewCourierList;
 
     //Spinners
     Spinner spinner;
     Spinner spinnerRecipient;
-    Spinner spinnerFinalStatus;
+    Spinner spinnerStatus;
+    Spinner spinnerCourierList;
     //Buttons
     Button buttonSetCoordinates;
     Button buttonCalculatePrice;
     Button buttonConfirm;
+    Button buttonPickDate;
+    Button buttonDelete;
+
+    ProgressBar progressBar;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_ACTION_BAR);
-        setContentView(R.layout.activity_package_edit);
+        setContentView(R.layout.activity_package_fields);
 
 
         getWindow().setSoftInputMode(
@@ -87,10 +124,23 @@ public class PackageFieldsActivity extends AppCompatActivity {
         initView();
 
         Intent intent = getIntent();
+
+
         if (intent.hasExtra("jsonPackage"))
         {
             String jsonPackage = intent.getStringExtra("jsonPackage");
             pkg = new Gson().fromJson(jsonPackage, Package.class);
+
+
+            if (IS_ADMIN) {
+                Retrofit retrofit = new Retrofit.Builder()
+                        .baseUrl(ApiUtils.BASE_URL)
+                        .addConverterFactory(GsonConverterFactory.create())
+                        .build();
+                api = retrofit.create(UserAPI.class);
+
+            }
+
             initFieldsForEdit();
         }
         else {
@@ -100,6 +150,8 @@ public class PackageFieldsActivity extends AppCompatActivity {
             c.add(Calendar.DAY_OF_YEAR, 1);
 
             pkg.setDate(c);
+            pkg.setCourierId(ApiUtils.CURRENT_USER.getId());
+            pkg.setStatus(0);
 
             TextView textViewPackDate = (TextView)findViewById(R.id.textViewPackDate);
             textViewPackDate.setText(Package.getStringDate(c));
@@ -109,6 +161,8 @@ public class PackageFieldsActivity extends AppCompatActivity {
     /*
     ****** INITIALIZE AREA ******
     */
+
+
     void initView() {
         editTextSenderAddress = (EditText) findViewById(R.id.editTextSenderAddress);
         editTextSenderName = (EditText) findViewById(R.id.editTextSenderName);
@@ -135,10 +189,19 @@ public class PackageFieldsActivity extends AppCompatActivity {
         textViewPackWeightDimension = (TextView) findViewById(R.id.textViewPackWeightDimension);
         textViewPackDate = (TextView) findViewById(R.id.textViewPackDate);
         textViewPackPrice = (TextView) findViewById(R.id.textViewPackPrice);
+        buttonPickDate = (Button)findViewById(R.id.buttonPickDate);
 
 
-        textViewFinal = (TextView) findViewById(R.id.textViewFinal);
-        editTextFinalCommentary = (EditText) findViewById(R.id.editTextFinalCommentary);
+
+        spinnerCourierList = (Spinner) findViewById(R.id.spinnerCourierList);
+        textViewCourierList = (TextView) findViewById(R.id.textViewCourierList);
+
+
+        textViewStatus = (TextView) findViewById(R.id.textViewStatus);
+        editTextCommentary = (EditText) findViewById(R.id.editTextCommentary);
+        spinnerStatus = (Spinner) findViewById(R.id.spinnerStatus);
+
+        progressBar = (ProgressBar) findViewById(R.id.progressBarPackageField);
 
         switch (Package.WEIGHT_PROGRAM_STATE) {
             case 0:
@@ -168,27 +231,23 @@ public class PackageFieldsActivity extends AppCompatActivity {
     }
 
     void initSpinners() {
+
+
         spinner = (Spinner) findViewById(R.id.spinner);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
             @Override
             public void onItemSelected(AdapterView<?> adapter, View v,int position, long id) {
                 // On selecting a spinner item
-                if (position > 0){
-                    editTextSenderCompanyName.setVisibility(View.INVISIBLE);
-                    RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) textViewRecipient.getLayoutParams();
-                    params.addRule(RelativeLayout.BELOW, R.id.spinner);
-                    textViewRecipient.setLayoutParams(params);
-                } else {
-                    RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) textViewRecipient.getLayoutParams();
-                    params.addRule(RelativeLayout.BELOW, R.id.editTextSenderCompanyName);
-                    textViewRecipient.setLayoutParams(params);
+                if (position > 0)
+                    editTextSenderCompanyName.setVisibility(View.GONE);
+                else
                     editTextSenderCompanyName.setVisibility(View.VISIBLE);
-                }
-            }
 
+            }
             @Override
             public void onNothingSelected(AdapterView<?> arg0) {}});
+
 
         spinnerRecipient = (Spinner) findViewById(R.id.spinnerRecipient);
         spinnerRecipient.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -196,25 +255,16 @@ public class PackageFieldsActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> adapter, View v,int position, long id) {
                 // On selecting a spinner item
-                if (position > 0){
-                    editTextRecipientCompanyName.setVisibility(View.INVISIBLE);
-                    RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) buttonSetCoordinates.getLayoutParams();
-                    params.addRule(RelativeLayout.BELOW, R.id.spinnerRecipient);
-                    buttonSetCoordinates.setLayoutParams(params);
-                } else {
-                    RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) buttonSetCoordinates.getLayoutParams();
-                    params.addRule(RelativeLayout.BELOW, R.id.editTextRecipientCompanyName);
-                    buttonSetCoordinates.setLayoutParams(params);
+                if (position > 0)
+                    editTextRecipientCompanyName.setVisibility(View.GONE);
+                 else
                     editTextRecipientCompanyName.setVisibility(View.VISIBLE);
-                }
             }
-
             @Override
             public void onNothingSelected(AdapterView<?> arg0) {}});
     }
 
     void initDatePicker() {
-        Button buttonPickDate = (Button)findViewById(R.id.buttonPickDate);
         DatePickerDialog.OnDateSetListener listener = (view, year, month, dayOfMonth) -> {
             //pkg.date = new GregorianCalendar(year, month, dayOfMonth);
             Calendar chosenDate = new GregorianCalendar(year, month, dayOfMonth);
@@ -239,24 +289,34 @@ public class PackageFieldsActivity extends AppCompatActivity {
         buttonConfirm = (Button) findViewById(R.id.buttonConfirm);
         buttonConfirm.setOnClickListener(v -> {
             if (validate()) {
-                if (pkg.getStatus() == 1)
-                    packageCloseCheckDialog();
-                else
-                    coordinateCheckDialog();}
+
+
+                if (pkg.getStatus() == 4 ) {
+                    if (editTextPackName.isEnabled())
+                        packageCloseCheckDialog();
+                    else
+                        finish();
+                } else
+                    coordinateCheckDialog();
+            }
         });
         buttonCalculatePrice = (Button)findViewById(R.id.buttonCalculatePrice);
-        buttonCalculatePrice.setOnClickListener(v -> {
+        buttonCalculatePrice.setOnClickListener(l -> {
             if (validateDimensions())
                 textViewPackPrice.setText(Double.toString(pkg.getPrice()));
         });
 
         buttonSetCoordinates = (Button)findViewById(R.id.buttonSetCoordinates);
-        buttonSetCoordinates.setOnClickListener(v -> {
+        buttonSetCoordinates.setOnClickListener(l -> {
             Intent mapIntent = new Intent(this, MapsActivity.class);
             mapIntent.putExtra("coordinates", pkg.getCoordinates());
             startActivityForResult(mapIntent, REQUEST_MAP);
         });
 
+        buttonDelete = (Button)findViewById(R.id.buttonDelete);
+        buttonDelete.setOnClickListener(l -> deleteDialog());
+        if (IS_ADMIN)
+            buttonDelete.setVisibility(View.VISIBLE);
     }
 
     void initFieldsForEdit() {
@@ -281,7 +341,6 @@ public class PackageFieldsActivity extends AppCompatActivity {
         editTextRecipientCompanyName.setText(recipient.getCompanyName());
 
 
-
         //c = new GregorianCalendar(pkg.getDate().get(Calendar.YEAR), pkg.getDate().get(Calendar.MONTH), pkg.getDate().get(Calendar.DAY_OF_MONTH));
         textViewPackDate.setText(pkg.getStringDate());
 
@@ -291,44 +350,101 @@ public class PackageFieldsActivity extends AppCompatActivity {
         editTextPackH.setText(Double.toString(dimensions[1]));
         editTextPackD.setText(Double.toString(dimensions[2]));
         editTextPackWeight.setText(Double.toString(pkg.getWeight()));
+
+
         buttonConfirm.setText("Обновить");
 
 
-        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) buttonConfirm.getLayoutParams();
-        params.addRule(RelativeLayout.BELOW, R.id.spinnerFinalStatus);
-        buttonConfirm.setLayoutParams(params);
-
-
-
-        spinnerFinalStatus = (Spinner) findViewById(R.id.spinnerFinalStatus);
-
-        textViewFinal.setVisibility(View.VISIBLE);
-        spinnerFinalStatus.setVisibility(View.VISIBLE);
-
-        spinnerFinalStatus.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        spinnerStatus.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
             @Override
             public void onItemSelected(AdapterView<?> adapter, View v,int position, long id) {
                 // On selecting a spinner item
-                pkg.setStatus(position);
 
-                if (position == 0){
-                    editTextFinalCommentary.setVisibility(View.INVISIBLE);
-                    RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) buttonConfirm.getLayoutParams();
-                    params.addRule(RelativeLayout.BELOW, R.id.spinnerFinalStatus);
-                    buttonConfirm.setLayoutParams(params);
-                } else {
-                    RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) buttonConfirm.getLayoutParams();
-                    params.addRule(RelativeLayout.BELOW, R.id.editTextFinalCommentary);
-                    buttonConfirm.setLayoutParams(params);
-                    editTextFinalCommentary.setVisibility(View.VISIBLE);
-                }
+                if (position == 0)
+                    editTextCommentary.setVisibility(View.GONE);
+                else
+                    editTextCommentary.setVisibility(View.VISIBLE);
             }
+
+
 
             @Override
             public void onNothingSelected(AdapterView<?> arg0) {}});
 
+        List<String> statuses;
 
+        switch (pkg.getStatus()) {
+            case 0:
+                if (IS_ADMIN) {
+                    statuses = Arrays.asList("Назначенная");
+                    loadCourierList();
+                } else {
+                    statuses = Arrays.asList("Новая");
+                }
+                break;
+            case 1:
+                pkg.setStatus(2);
+                statuses = Arrays.asList("В процессе", "Отклоненная");
+                break;
+            case 2:
+                statuses = Arrays.asList("В процессе", "Отклоненная", "Завершенная");
+                break;
+            case 3:
+                statuses = Arrays.asList("Назначенная", "Завершенная");
+                loadCourierList();
+                editTextCommentary.setVisibility(View.VISIBLE);
+                break;
+            default:
+                statuses = Arrays.asList("Завершенная");
+
+                editTextSenderAddress.setEnabled(false);
+                editTextSenderName.setEnabled(false);
+                editTextSenderEmail.setEnabled(false);
+                editTextSenderPhone.setEnabled(false);
+                editTextSenderCompanyName.setEnabled(false);
+                spinner.setEnabled(false);
+                editTextSenderCompanyName.setEnabled(false);
+
+                editTextRecipientAddress.setEnabled(false);
+                editTextRecipientName.setEnabled(false);
+                editTextRecipientEmail.setEnabled(false);
+                editTextRecipientPhone.setEnabled(false);
+                editTextRecipientCompanyName.setEnabled(false);
+                spinnerRecipient.setEnabled(false);
+                editTextRecipientCompanyName.setEnabled(false);
+
+                textViewPackDate.setEnabled(false);
+
+                editTextPackName.setEnabled(false);
+                editTextPackW.setEnabled(false);
+                editTextPackH.setEnabled(false);
+                editTextPackD.setEnabled(false);
+                editTextPackWeight.setEnabled(false);
+                buttonSetCoordinates.setEnabled(false);
+                buttonPickDate.setEnabled(false);
+
+                buttonConfirm.setText("Закрыть");
+
+                spinnerStatus.setEnabled(false);
+                spinnerStatus.setOnItemSelectedListener(null);
+                spinnerCourierList.setEnabled(false);
+                editTextCommentary.setVisibility(View.VISIBLE);
+                editTextCommentary.setEnabled(false);
+                if (IS_ADMIN) {
+                    loadCourierByID();
+                    spinnerCourierList.setEnabled(false);
+                }
+                break;
+        }
+
+        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(this,
+                R.layout.support_simple_spinner_dropdown_item, statuses);
+        spinnerStatus.setAdapter(spinnerAdapter);
+        textViewStatus.setVisibility(View.VISIBLE);
+        editTextCommentary.setText(pkg.getCommentary());
+
+        spinnerStatus.setVisibility(View.VISIBLE);
     }
 
 
@@ -428,10 +544,16 @@ public class PackageFieldsActivity extends AppCompatActivity {
 
         valid = validateDimensions() ? valid : false;
 
-        if (pkg.getStatus() > 0 && editTextFinalCommentary.getText().toString().isEmpty()) {
+        if (spinnerStatus.getVisibility() == View.VISIBLE)
+            pkg.setStatus(allStatuses.indexOf(spinnerStatus.getSelectedItem().toString()));
+
+        checkString = editTextCommentary.getText().toString();
+        if ((pkg.getStatus() == 3 || pkg.getStatus() == 4) && checkString.isEmpty()) {
             valid = false;
-            editTextFinalCommentary.setError("Неверный комментарий.");
-        }
+            editTextCommentary.setError("Неверный комментарий.");
+        } else
+            pkg.setCommentary(checkString);
+
 
         return valid;
     }
@@ -481,7 +603,7 @@ public class PackageFieldsActivity extends AppCompatActivity {
     }
 
     /*
-    ****** SUPPORT AREA ******
+    ****** DIALOG AREA ******
     */
 
 
@@ -524,23 +646,156 @@ public class PackageFieldsActivity extends AppCompatActivity {
                 });
         builder.create().show();
     }
+
+    void deleteDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Уведомление")
+                .setMessage("Вы действительно желаете удалить посылку?")
+                .setPositiveButton("Продолжить", (dialog, which) -> passAndFinish("packageToDelete"))
+                .setNegativeButton("Вернуться", (dialog, which) -> {});
+        builder.create().show();
+    }
+
+    /*
+    ****** FINALIZE AREA ******
+    */
+
     private void passAndFinish() {
 
-       //Package pkg = loadPackage();
         Intent data = new Intent();
 
-        pkg.setCourierId(UrlUtils.CURRENT_USER.getId());
-
-        data.putExtra("jsonPackageChild", new Gson().toJson(pkg));
+        data.putExtra("packageToAdd", new Gson().toJson(pkg));
 
         setResult(RESULT_OK, data);
         finish();
     }
+
+    private void passAndFinish(String extraName) {
+        Intent data = new Intent();
+
+        data.putExtra(extraName, new Gson().toJson(pkg));
+
+        setResult(RESULT_OK, data);
+        finish();
+    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK && requestCode == REQUEST_MAP) {
             pkg.setCoordinates(data.getDoubleArrayExtra("coordinates"));
         }
+    }
+
+
+    /*
+    ****** SERVER AREA ******
+    */
+
+
+    private void loadCourierList() {
+        textViewCourierList.setVisibility(View.VISIBLE);
+        spinnerCourierList.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.VISIBLE);
+
+        api.loadUsers(0).enqueue(new Callback<List<User>>() {
+            @Override
+            public void onResponse(Call<List<User>> call, Response<List<User>> response) {
+                switch (response.code()) {
+                    case HttpURLConnection.HTTP_OK:
+
+                        List<User> users = response.body();
+
+                        List<String> names = new ArrayList<>();
+                        int i = 0, position = 0;
+                        for (User user : users) {
+                            names.add(user.getId() + ". " + user.getName());
+                            if (user.getId() == pkg.getCourierId())
+                                position = i;
+                            i++;
+                        }
+                        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(PackageFieldsActivity.this,
+                                R.layout.support_simple_spinner_dropdown_item, names);
+                        spinnerCourierList.setAdapter(spinnerAdapter);
+
+                        spinnerCourierList.setSelection(position);
+                        spinnerCourierList.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                            @Override
+                            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                                String fullName = spinnerCourierList.getSelectedItem().toString();
+                                pkg.setCourierId(Integer.parseInt(fullName.split(". ")[0]));
+                            }
+
+                            @Override
+                            public void onNothingSelected(AdapterView<?> parent) {
+
+                            }
+                        });
+
+                        break;
+                    case HttpURLConnection.HTTP_NOT_FOUND:
+                        Toast.makeText(PackageFieldsActivity.this, "Произошла ошибка работы с базой данных.",
+                                Toast.LENGTH_LONG).show();
+
+                        break;
+                    default:
+                        Toast.makeText(PackageFieldsActivity.this, "Произошла ошибка на стороне сервера.",
+                                Toast.LENGTH_LONG).show();
+                        break;
+                }
+                progressBar.setVisibility(View.GONE);
+
+            }
+
+            @Override
+            public void onFailure(Call<List<User>> call, Throwable t) {
+                Toast.makeText(PackageFieldsActivity.this, "Время ожидание ответа от сервера истекло.",
+                        Toast.LENGTH_LONG).show();
+                progressBar.setVisibility(View.GONE);
+
+            }
+        });
+    }
+    private void loadCourierByID() {
+        textViewCourierList.setVisibility(View.VISIBLE);
+        spinnerCourierList.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.VISIBLE);
+
+        api.loadUser(pkg.getCourierId()).enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                switch (response.code()) {
+                    case HttpURLConnection.HTTP_OK:
+
+                        User user = response.body();
+
+                        List<String> names = Arrays.asList(user.getName());
+
+                        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(PackageFieldsActivity.this,
+                                R.layout.support_simple_spinner_dropdown_item, names);
+                        spinnerCourierList.setAdapter(spinnerAdapter);
+
+                        break;
+                    case HttpURLConnection.HTTP_NOT_FOUND:
+                        Toast.makeText(PackageFieldsActivity.this, "Произошла ошибка работы с базой данных.",
+                                Toast.LENGTH_LONG).show();
+
+                        break;
+                    default:
+                        Toast.makeText(PackageFieldsActivity.this, "Произошла ошибка на стороне сервера.",
+                                Toast.LENGTH_LONG).show();
+                        break;
+                }
+                progressBar.setVisibility(View.GONE);
+
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                Toast.makeText(PackageFieldsActivity.this, "Время ожидание ответа от сервера истекло.",
+                        Toast.LENGTH_LONG).show();
+                progressBar.setVisibility(View.GONE);
+            }
+        });
     }
 }

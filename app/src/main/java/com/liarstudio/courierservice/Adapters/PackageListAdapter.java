@@ -1,4 +1,4 @@
-package com.liarstudio.courierservice;
+package com.liarstudio.courierservice.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
@@ -14,13 +14,14 @@ import android.widget.TextView;
 import com.liarstudio.courierservice.Activities.MapsActivity;
 import com.liarstudio.courierservice.Database.PackageList;
 import com.liarstudio.courierservice.BaseClasses.Package;
+import com.liarstudio.courierservice.R;
 
 public class PackageListAdapter extends BaseAdapter {
 
     Context ctx;
     LayoutInflater layoutInflater;
     PackageList packages;
-    PackageListAdapter(Context context, PackageList aPackages) {
+    public PackageListAdapter(Context context, PackageList aPackages) {
         ctx = context;
         this.packages = aPackages;
         layoutInflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -61,10 +62,23 @@ public class PackageListAdapter extends BaseAdapter {
         Button buttonShowOnMap = (Button)view.findViewById(R.id.buttonShowOnMap);
         buttonShowOnMap.setEnabled(false);
 
-        if (pkg.getStatus()>0)
-            rl.setBackgroundColor(Color.LTGRAY);
-        else
-            rl.setBackgroundColor(Color.WHITE);
+
+        switch (pkg.getStatus()) {
+            case 0:
+                rl.setBackgroundColor(Color.WHITE);
+                break;
+            case 1:
+                rl.setBackgroundColor(Color.WHITE);
+                break;
+            case 2:
+                rl.setBackgroundColor(Color.argb(50, 0, 180, 0));
+                break;
+            case 3:
+                rl.setBackgroundColor(Color.argb(50, 180, 0, 0));
+                break;
+            case 4:
+                rl.setBackgroundColor(Color.LTGRAY);
+        }
 
 
         double[] coordinates = pkg.getCoordinates();
