@@ -5,6 +5,10 @@ package com.liarstudio.courierservice.API;
  */
 
 public class User {
+    /*
+    ****** FIELDS AREA ******
+    */
+
 
     private int id;
 
@@ -15,6 +19,10 @@ public class User {
     private String name;
     private int role;
 
+
+    /*
+    ****** CONSTRUCTORS AREA ******
+    */
 
 
     public User(String email, String password) {
@@ -29,6 +37,13 @@ public class User {
         this.name = name;
         this.role = role;
     }
+
+    /*
+    ****** GETTERS/SETTERS AREA ******
+    */
+
+
+
     public int getId() {
         return id;
     }

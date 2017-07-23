@@ -299,17 +299,18 @@ public class PackageFieldsActivity extends AppCompatActivity {
         buttonConfirm = (Button) findViewById(R.id.buttonConfirm);
         buttonConfirm.setOnClickListener(v -> {
             //Проверяем поля
-            if (validate()) {
-                //Если послылка завершенная, и readonly - просто закрываем activity
-                //иначе, если она не readonly, спрашиваем, как уведомить отправителя
-                //иначе, показываем диалог проверки координат
-                if (pkg.getStatus() == 4 ) {
-                    if (!editTextPackName.isEnabled())
-                        finish();
+            //Если послылка завершенная, и readonly - просто закрываем activity
+            //иначе, если она не readonly, спрашиваем, как уведомить отправителя
+            //иначе, показываем диалог проверки координат
+            if (!editTextPackName.isEnabled())
+                finish();
+            else {
+                if (validate()) {
+                    if (pkg.getStatus() == 4)
+                        packageFinalCheckDialog();
                     else
-                        packageCloseCheckDialog();
-                } else
-                    coordinateCheckDialog();
+                        coordinatesEmptyCheckDialog();
+                }
             }
         });
         buttonCalculatePrice = (Button)findViewById(R.id.buttonCalculatePrice);
@@ -333,6 +334,7 @@ public class PackageFieldsActivity extends AppCompatActivity {
             buttonDelete.setVisibility(View.VISIBLE);
     }
 
+
     void initFieldsForEdit() {
         Person sender = pkg.getSender();
 
@@ -355,7 +357,6 @@ public class PackageFieldsActivity extends AppCompatActivity {
         editTextRecipientCompanyName.setText(recipient.getCompanyName());
 
 
-        //c = new GregorianCalendar(pkg.getDate().get(Calendar.YEAR), pkg.getDate().get(Calendar.MONTH), pkg.getDate().get(Calendar.DAY_OF_MONTH));
         textViewPackDate.setText(pkg.getStringDate());
 
         editTextPackName.setText(pkg.getName());
@@ -369,23 +370,7 @@ public class PackageFieldsActivity extends AppCompatActivity {
         buttonConfirm.setText("Обновить");
 
 
-        spinnerStatus.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-            @Override
-            public void onItemSelected(AdapterView<?> adapter, View v,int position, long id) {
-                // On selecting a spinner item
-
-                if (position == 0)
-                    editTextCommentary.setVisibility(View.GONE);
-                else
-                    editTextCommentary.setVisibility(View.VISIBLE);
-            }
-
-
-
-            @Override
-            public void onNothingSelected(AdapterView<?> arg0) {}});
-
+        //Список строк для отображения статусов
         List<String> statuses;
 
         switch (pkg.getStatus()) {
@@ -411,46 +396,30 @@ public class PackageFieldsActivity extends AppCompatActivity {
                 break;
             default:
                 statuses = Arrays.asList("Завершенная");
-
-                editTextSenderAddress.setEnabled(false);
-                editTextSenderName.setEnabled(false);
-                editTextSenderEmail.setEnabled(false);
-                editTextSenderPhone.setEnabled(false);
-                editTextSenderCompanyName.setEnabled(false);
-                spinner.setEnabled(false);
-                editTextSenderCompanyName.setEnabled(false);
-
-                editTextRecipientAddress.setEnabled(false);
-                editTextRecipientName.setEnabled(false);
-                editTextRecipientEmail.setEnabled(false);
-                editTextRecipientPhone.setEnabled(false);
-                editTextRecipientCompanyName.setEnabled(false);
-                spinnerRecipient.setEnabled(false);
-                editTextRecipientCompanyName.setEnabled(false);
-
-                textViewPackDate.setEnabled(false);
-
-                editTextPackName.setEnabled(false);
-                editTextPackW.setEnabled(false);
-                editTextPackH.setEnabled(false);
-                editTextPackD.setEnabled(false);
-                editTextPackWeight.setEnabled(false);
-                buttonSetCoordinates.setEnabled(false);
-                buttonPickDate.setEnabled(false);
-
-                buttonConfirm.setText("Закрыть");
-
-                spinnerStatus.setEnabled(false);
-                spinnerStatus.setOnItemSelectedListener(null);
-                spinnerCourierList.setEnabled(false);
-                editTextCommentary.setVisibility(View.VISIBLE);
-                editTextCommentary.setEnabled(false);
+                setReadOnlyView();
                 if (IS_ADMIN) {
                     loadCourierByID();
                     spinnerCourierList.setEnabled(false);
                 }
                 break;
         }
+
+
+
+        //Устанавливаем Listener для spinnerStatus и устанавливаем список статусов как его контент
+        spinnerStatus.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> adapter, View v,int position, long id) {
+                if (position == 0)
+                    editTextCommentary.setVisibility(View.GONE);
+                else
+                    editTextCommentary.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> arg0) {}});
+
 
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(this,
                 R.layout.support_simple_spinner_dropdown_item, statuses);
@@ -461,11 +430,52 @@ public class PackageFieldsActivity extends AppCompatActivity {
         spinnerStatus.setVisibility(View.VISIBLE);
     }
 
+    void setReadOnlyView() {
+        editTextSenderAddress.setEnabled(false);
+        editTextSenderName.setEnabled(false);
+        editTextSenderEmail.setEnabled(false);
+        editTextSenderPhone.setEnabled(false);
+        editTextSenderCompanyName.setEnabled(false);
+        spinner.setEnabled(false);
+        editTextSenderCompanyName.setEnabled(false);
+
+        editTextRecipientAddress.setEnabled(false);
+        editTextRecipientName.setEnabled(false);
+        editTextRecipientEmail.setEnabled(false);
+        editTextRecipientPhone.setEnabled(false);
+        editTextRecipientCompanyName.setEnabled(false);
+        spinnerRecipient.setEnabled(false);
+        editTextRecipientCompanyName.setEnabled(false);
+
+        textViewPackDate.setEnabled(false);
+
+        editTextPackName.setEnabled(false);
+        editTextPackW.setEnabled(false);
+        editTextPackH.setEnabled(false);
+        editTextPackD.setEnabled(false);
+        editTextPackWeight.setEnabled(false);
+        buttonSetCoordinates.setEnabled(false);
+        buttonPickDate.setEnabled(false);
+
+        buttonConfirm.setText("Закрыть");
+
+        spinnerStatus.setEnabled(false);
+        spinnerStatus.setOnItemSelectedListener(null);
+        spinnerCourierList.setEnabled(false);
+        editTextCommentary.setVisibility(View.VISIBLE);
+        editTextCommentary.setEnabled(false);
+
+    }
+
 
     /*
     ****** VALIDATION AREA ******
     */
 
+
+    /*
+    * Функция проверки введенной пользователем информации
+     */
     boolean validate() {
 
         boolean valid = true;
@@ -556,7 +566,7 @@ public class PackageFieldsActivity extends AppCompatActivity {
         } else
             pkg.setName(checkString);
 
-        valid = validateDimensions() ? valid : false;
+        valid = validateDimensions() && valid;
 
         if (spinnerStatus.getVisibility() == View.VISIBLE)
             pkg.setStatus(allStatuses.indexOf(spinnerStatus.getSelectedItem().toString()));
@@ -568,14 +578,16 @@ public class PackageFieldsActivity extends AppCompatActivity {
         } else
             pkg.setCommentary(checkString);
 
-
         return valid;
     }
 
+    /*
+    * Функция проверки значений с плавающей запятой: веса и размеров посылки
+     */
     boolean validateDimensions() {
         boolean valid = true;
         String checkString = editTextPackWeight.getText().toString();
-        double numericValue = checkString.isEmpty() ? 0 : Double.parseDouble(checkString);
+        double numericValue = checkString.isEmpty() || checkString.startsWith(".") ? 0 : Double.parseDouble(checkString);
 
         if (numericValue <= 0 || numericValue > 10000)
         {
@@ -587,14 +599,14 @@ public class PackageFieldsActivity extends AppCompatActivity {
         double[] dimensions = new double[3];
 
         checkString = editTextPackW.getText().toString();
-        numericValue = checkString.isEmpty() ? 0 : Double.parseDouble(checkString);
+        numericValue = checkString.isEmpty() || checkString.startsWith(".") ? 0 : Double.parseDouble(checkString);
         if (numericValue == 0  || numericValue > 10000) {
             valid = false;
             editTextPackW.setError("Некорректные размеры посылки.");
         }
             else dimensions[0] = numericValue;
         checkString = editTextPackH.getText().toString();
-        numericValue = checkString.isEmpty() ? 0 : Double.parseDouble(checkString);
+        numericValue = checkString.isEmpty() || checkString.startsWith(".") ? 0 : Double.parseDouble(checkString);
         if (numericValue == 0  || numericValue > 10000) {
             valid = false;
             editTextPackH.setError("Некорректные размеры посылки.");
@@ -602,7 +614,7 @@ public class PackageFieldsActivity extends AppCompatActivity {
 
 
         checkString = editTextPackD.getText().toString();
-        numericValue = checkString.isEmpty() ? 0 : Double.parseDouble(checkString);
+        numericValue = checkString.isEmpty() || checkString.startsWith(".") ? 0 : Double.parseDouble(checkString);
         if (numericValue == 0  || numericValue > 10000) {
             valid = false;
             editTextPackD.setError("Некорректные размеры посылки.");
@@ -621,7 +633,10 @@ public class PackageFieldsActivity extends AppCompatActivity {
     */
 
 
-    void packageCloseCheckDialog() {
+    /*
+    * Диалог перед отметкой посылки, как завершенная. Спрашиваем у пользователя, как следует уведомить отправителя
+     */
+    void packageFinalCheckDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Уведомление")
                 .setMessage("Как вы желаете оповестить заказчика?")
@@ -630,42 +645,43 @@ public class PackageFieldsActivity extends AppCompatActivity {
                     Intent intentPhone = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + editTextSenderPhone.getText().toString()));
                     startActivity(intentPhone);
 
-                    passAndFinish();
+                    finishAndSend();
                 })
-                .setPositiveButton("Не уведомлять", (dialog, which) -> passAndFinish());
+                .setPositiveButton("Не уведомлять", (dialog, which) -> finishAndSend());
         if (!editTextSenderPhone.getText().toString().isEmpty())
             builder.setNeutralButton("E-mail", (dialog, which) -> {
                 Intent intentEmail = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", editTextSenderEmail.getText().toString(), null));
                 startActivity(intentEmail);
-                passAndFinish();
+                finishAndSend();
             });
 
         builder.create().show();
     }
 
-    void coordinateCheckDialog() {
+
+    /*
+    * Если координаты
+     */
+    void coordinatesEmptyCheckDialog() {
         double[] coordinates = pkg.getCoordinates();
         if (coordinates[0] != 0 && coordinates[1] != 0) {
-            passAndFinish();
+            finishAndSend();
             return;
         }
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Уведомление")
                 .setMessage("Вы не указали координаты. Желаете продолжить без них?")
-                .setPositiveButton("Продолжить", (dialog, which) -> {
-                    passAndFinish();
-                })
-                .setNegativeButton("Вернуться", (dialog, which) -> {
-
-                });
+                .setPositiveButton("Продолжить", (dialog, which) -> finishAndSend())
+                .setNegativeButton("Вернуться", (dialog, which) -> {});
         builder.create().show();
     }
+
 
     void deleteDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Уведомление")
                 .setMessage("Вы действительно желаете удалить посылку?")
-                .setPositiveButton("Продолжить", (dialog, which) -> passAndFinish("packageToDelete"))
+                .setPositiveButton("Продолжить", (dialog, which) -> finishAndSend("packageToDelete"))
                 .setNegativeButton("Вернуться", (dialog, which) -> {});
         builder.create().show();
     }
@@ -674,7 +690,10 @@ public class PackageFieldsActivity extends AppCompatActivity {
     ****** FINALIZE AREA ******
     */
 
-    private void passAndFinish() {
+    /*
+    * Функция завершения PackageFieldsActivity и отсылки результирующей посылки в запустившую ее activity
+     */
+    private void finishAndSend() {
 
         Intent data = new Intent();
 
@@ -684,7 +703,11 @@ public class PackageFieldsActivity extends AppCompatActivity {
         finish();
     }
 
-    private void passAndFinish(String extraName) {
+    /*
+    * Перегруженная версия метода finsihAndSend() для того, чтобы задать другой тэг для отправляемой
+    * посылки
+    */
+    private void finishAndSend(String extraName) {
         Intent data = new Intent();
 
         data.putExtra(extraName, new Gson().toJson(pkg));
@@ -707,6 +730,10 @@ public class PackageFieldsActivity extends AppCompatActivity {
     */
 
 
+
+    /*
+    * Функция загрузки списка курьера с сервера
+     */
     private void loadCourierList() {
         textViewCourierList.setVisibility(View.VISIBLE);
         spinnerCourierList.setVisibility(View.VISIBLE);
@@ -718,34 +745,44 @@ public class PackageFieldsActivity extends AppCompatActivity {
                 switch (response.code()) {
                     case HttpURLConnection.HTTP_OK:
 
+
+                        //Загружаем список курьеров с сервера, заполняем строковый список их
+                        // id и именами, загружаем их в spinnerCourierList и устанавливаем
+                        // выбранным элементом, курьера, создавшего эту посылку.
+
                         List<User> users = response.body();
 
-                        List<String> names = new ArrayList<>();
-                        int i = 0, position = 0;
-                        for (User user : users) {
-                            names.add(user.getId() + ". " + user.getName());
-                            if (user.getId() == pkg.getCourierId())
-                                position = i;
-                            i++;
+                        if (users == null) {
+
+                            List<String> names = new ArrayList<>();
+                            int i = 0, position = -1;
+                            for (User user : users) {
+                                names.add(user.getId() + ". " + user.getName());
+                                if (user.getId() == pkg.getCourierId())
+                                    position = i;
+                                i++;
+                            }
+                            ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(PackageFieldsActivity.this,
+                                    R.layout.support_simple_spinner_dropdown_item, names);
+                            spinnerCourierList.setAdapter(spinnerAdapter);
+                            if (position != -1)
+                                spinnerCourierList.setSelection(position);
+
+                            spinnerCourierList.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                                @Override
+                                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                                    String fullName = spinnerCourierList.getSelectedItem().toString();
+                                    pkg.setCourierId(Integer.parseInt(fullName.split(". ")[0]));
+                                }
+
+                                @Override
+                                public void onNothingSelected(AdapterView<?> parent) {
+                                }
+                            });
+                        } else {
+                            spinnerCourierList.setVisibility(View.GONE);
+                            textViewCourierList.setVisibility(View.GONE);
                         }
-                        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(PackageFieldsActivity.this,
-                                R.layout.support_simple_spinner_dropdown_item, names);
-                        spinnerCourierList.setAdapter(spinnerAdapter);
-
-                        spinnerCourierList.setSelection(position);
-                        spinnerCourierList.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                            @Override
-                            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                                String fullName = spinnerCourierList.getSelectedItem().toString();
-                                pkg.setCourierId(Integer.parseInt(fullName.split(". ")[0]));
-                            }
-
-                            @Override
-                            public void onNothingSelected(AdapterView<?> parent) {
-
-                            }
-                        });
-
                         break;
                     case HttpURLConnection.HTTP_NOT_FOUND:
                         Toast.makeText(PackageFieldsActivity.this, "Произошла ошибка работы с базой данных.",
@@ -781,14 +818,25 @@ public class PackageFieldsActivity extends AppCompatActivity {
                 switch (response.code()) {
                     case HttpURLConnection.HTTP_OK:
 
+                        //Загружаем курьера, создавшего посылку, и помещаем его в spinner.
+                        //Если курьера нет в списке(например, он был уволен и удален, убираем
+                        //соответствующие view-элементы
+
+
                         User user = response.body();
 
-                        List<String> names = Arrays.asList(user.getName());
+                        if (user != null) {
 
-                        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(PackageFieldsActivity.this,
-                                R.layout.support_simple_spinner_dropdown_item, names);
-                        spinnerCourierList.setAdapter(spinnerAdapter);
+                            List<String> names = Arrays.asList(user.getId() + ". " + user.getName());
 
+                            ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(PackageFieldsActivity.this,
+                                    R.layout.support_simple_spinner_dropdown_item, names);
+                            spinnerCourierList.setAdapter(spinnerAdapter);
+                        } else
+                        {
+                            spinnerCourierList.setVisibility(View.GONE);
+                            textViewCourierList.setVisibility(View.GONE);
+                        }
                         break;
                     case HttpURLConnection.HTTP_NOT_FOUND:
                         Toast.makeText(PackageFieldsActivity.this, "Произошла ошибка работы с базой данных.",

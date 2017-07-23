@@ -22,6 +22,8 @@ public class Package extends SugarRecord {
     @NotNull
     private int status;
 
+    private int courierId;
+
     @NotNull
     private Person sender;
 
@@ -35,16 +37,12 @@ public class Package extends SugarRecord {
     private double sizeY;
     private double sizeZ;
 
-
-
     @NotNull
     private double weight;
 
     @NotNull
     private Calendar date;
 
-
-    private int courierId;
 
     private double price = 0;
 
@@ -107,15 +105,17 @@ public class Package extends SugarRecord {
     @Ignore
     public static int WEIGHT_PROGRAM_STATE = 1;
     @Ignore
-    public static double tariff = 200;
+    private double tariff = 200;
 
     //http://www.bagagesdumonde.com/en/lost-and-found/faq/79
     @Ignore
-    public static double cargoRate = 250;
+    private double cargoRate = 250;
 
 
 
-
+    /*
+    * Функции для отображения даты в заданном формате
+    */
     public static String getStringDate(Calendar date, String format) {
         Format formatter = new SimpleDateFormat(format);
         return formatter.format(date.getTime());
@@ -126,7 +126,9 @@ public class Package extends SugarRecord {
     }
 
 
-
+    /*
+    * Округление double-числа до places-знаков после запятой
+     */
     public static double round(double value, int places) {
         if (places < 0) throw new IllegalArgumentException();
 
@@ -214,7 +216,6 @@ public class Package extends SugarRecord {
         return recipient.getCoordinates();
     }
     public void setCoordinates(double[] coordinates) { recipient.setCoordinates(coordinates);}
-
 
     public void setPrice() {
 

@@ -60,36 +60,13 @@ public class PackageFragment extends Fragment {
 
         ListView listView = (ListView) view.findViewById(R.id.lwShipmentList);
 
-
-        //Устанавливаем
         PackageListAdapter la = new PackageListAdapter(getContext(), packages);
-
-        listView.setOnItemClickListener((parent, v, position, id) -> {
-
-            //работаем с выбранной посылкой
-
-
-            if (ApiUtils.TOGGLE_OFFLINE) {
-                Package newPkg = Package.findById(Package.class, packages.get(position).getId());
-
-
-                //Проводим JSON-сериализацию для передачи в другую Activity
-                Gson gson = new GsonBuilder().create();
-                String jsonPackage = gson.toJson(newPkg);
-
-
-                Intent intent = new Intent(getContext(), PackageFieldsActivity.class);
-                intent.putExtra("jsonPackage", jsonPackage);
-                //Кладем не position, а AbsolutePosition, так как после завершения обновлять будем
-                //посылку не из списка этого фрагмента, а из списка посылок целиком.
-
-                getActivity().startActivityForResult(intent, MainActivity.REQUEST_ADD_OR_EDIT);
-            } else {
-                loadPackageFromServer(packages.get(position).getId().intValue());
-            }
-        });
-
         listView.setAdapter(la);
+
+
+        listView.setOnItemClickListener((parent, v, position, id) ->
+                loadPackageFromServer(packages.get(position).getId().intValue()));
+
 
         return view;//super.onCreateView(inflater, container, savedInstanceState);
 
@@ -109,13 +86,18 @@ public class PackageFragment extends Fragment {
                     public void onResponse(Call<Package> call, Response<Package> response) {
                         switch (response.code()) {
                             case HttpURLConnection.HTTP_OK:
-                                Gson gson = new GsonBuilder().create();
-                                String jsonPackage = gson.toJson(response.body());
 
-                                Intent intent = new Intent(getContext(), PackageFieldsActivity.class);
-                                intent.putExtra("jsonPackage", jsonPackage);
+                                // Если тело запроса не пустое, сериализуем его в JSON
+                                // и добавляем в новую Activity
+                                if (response.body() != null) {
+                                    Gson gson = new GsonBuilder().create();
+                                    String jsonPackage = gson.toJson(response.body());
 
-                                getActivity().startActivityForResult(intent, MainActivity.REQUEST_ADD_OR_EDIT);
+                                    Intent intent = new Intent(getContext(), PackageFieldsActivity.class);
+                                    intent.putExtra("jsonPackage", jsonPackage);
+
+                                    getActivity().startActivityForResult(intent, MainActivity.REQUEST_ADD_OR_EDIT);
+                                }
                                 break;
                             case HttpURLConnection.HTTP_NOT_FOUND:
                                 Toast.makeText(getActivity(), "Ошибка при работе с базой данных.",

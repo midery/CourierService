@@ -4,20 +4,27 @@ package com.liarstudio.courierservice.BaseClasses;
 import com.orm.SugarRecord;
 
 public class Person extends SugarRecord{
+    /*
+    ****** FIELD AREA ******
+    */
 
-    protected int type;
+    private int type;
 
-    protected String address;
-    protected String name;
+    private String address;
+    private String name;
 
-    protected String email;
+    private String email;
 
-    protected String phone;
+    private String phone;
 
-    protected String companyName;
+    private String companyName;
 
-    protected double coordinatesX;
-    protected double coordinatesY;
+    private double coordinatesX;
+    private double coordinatesY;
+
+    /*
+    ****** CONSTRUCTOR AREA ******
+    */
 
 
     public Person() { coordinatesX = 0; coordinatesY = 0; companyName = "";}
@@ -32,6 +39,9 @@ public class Person extends SugarRecord{
         this.coordinatesX = coordinates[0];
         this.coordinatesY = coordinates[1];
     }
+    /*
+    ****** GETTER/SETTER AREA ******
+    */
 
     public int getType() {
         return type;

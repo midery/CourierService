@@ -21,51 +21,10 @@ public class PackageList extends ArrayList<Package> {
 
 
 
-
-    public boolean addLocally(Package aPackage) {
-        int position = 0;
-
-        for (Package pack : this)
-        {
-            if (aPackage.getDate().compareTo(pack.getDate()) < 0){
-                break;
-            }
-            position++;
-
-        }
-        if ((position == this.size()-1) && (aPackage.getDate().compareTo(this.get(position).getDate()) > 0))
-            return super.add(aPackage);
-        else
-            super.add(position, aPackage);
-        return true;
-    }
-
-
-    @Override
-    public boolean add(Package aPackage) {
-        aPackage.save();
-        return addLocally(aPackage);
-    }
-
-    @Override
-    public void add(int index, Package element) {
-        element.save();
-        super.add(index, element);
-
-    }
-
-    public Package update(Package element) {
-
-        element.save();
-
-        this.remove(element.getId());
-
-        addLocally(element);
-
-        return element;
-    }
-
-
+    /*
+    * Функция обновления данных на устройстве
+    * Удаляет все данные из локальной БД и перезаписывает ее с посылками из текущего списка
+     */
     public void reloadAll() {
         SugarRecord.deleteAll(Person.class);
         SugarRecord.deleteAll(Package.class);
@@ -76,18 +35,4 @@ public class PackageList extends ArrayList<Package> {
             pack.save();
         }
     }
-
-
-    public void remove(Long id) {
-        for (Package pack : this) {
-            if (pack.getId().compareTo(id) == 0) {
-                super.remove(pack);
-                break;
-            }
-        }
-    }
-
-
-
-
 }

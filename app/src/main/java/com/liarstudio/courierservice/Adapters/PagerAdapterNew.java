@@ -16,17 +16,17 @@ import java.util.Collections;
 public class PagerAdapterNew extends FragmentStatePagerAdapter {
 
 
-    //Инициализируем табы
     public PagerAdapterNew(FragmentManager fm) {
         super(fm);
     }
-
 
     @Override
     public Fragment getItem(int position) {
 
         PackageFragment packageFragment = new PackageFragment();
         PackageList packages;
+
+        //Фильтруем посылки по заданному критерию и возвращаем фрагмент с отфильтрованным списком
 
         switch (position) {
             case 0:
@@ -37,6 +37,7 @@ public class PagerAdapterNew extends FragmentStatePagerAdapter {
                 return null;
         }
 
+        //Сортируем посылки по дате
         Collections.sort(packages, (o1, o2) -> o1.getDate().compareTo(o2.getDate()));
 
         packageFragment.setPackages(packages);

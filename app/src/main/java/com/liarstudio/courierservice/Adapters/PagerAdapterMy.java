@@ -13,11 +13,10 @@ import com.orm.query.Select;
 
 import java.util.Collections;
 
-import static com.liarstudio.courierservice.API.ApiUtils.IS_ADMIN;
 
 public class PagerAdapterMy extends FragmentStatePagerAdapter {
 
-    String[] tabs;
+    private String[] tabs;
 
     //Инициализируем табы
     public PagerAdapterMy(FragmentManager fm) {
@@ -30,11 +29,7 @@ public class PagerAdapterMy extends FragmentStatePagerAdapter {
 
     }
 
-
-
-
-
-    @Override
+        @Override
     public CharSequence getPageTitle(int position) {
         return tabs[position];
     }
@@ -66,6 +61,8 @@ public class PagerAdapterMy extends FragmentStatePagerAdapter {
                 return null;
         }
 
+
+        //Сортируем посылки по дате
         Collections.sort(packages, (o1, o2) -> o1.getDate().compareTo(o2.getDate()));
 
         packageFragment.setPackages(packages);

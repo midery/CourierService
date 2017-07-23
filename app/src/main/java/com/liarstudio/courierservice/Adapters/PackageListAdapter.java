@@ -18,14 +18,26 @@ import com.liarstudio.courierservice.R;
 
 public class PackageListAdapter extends BaseAdapter {
 
-    Context ctx;
-    LayoutInflater layoutInflater;
-    PackageList packages;
+
+    /*
+    ****** FIELDS AREA ******
+    */
+
+    private Context ctx;
+    private LayoutInflater layoutInflater;
+    private PackageList packages;
+
+
     public PackageListAdapter(Context context, PackageList aPackages) {
         ctx = context;
         this.packages = aPackages;
         layoutInflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
+
+
+    /*
+    ****** OVERRIDDEN METHODS AREA ******
+    */
 
     @Override
     public int getCount() {
@@ -42,6 +54,10 @@ public class PackageListAdapter extends BaseAdapter {
         return position;
     }
 
+
+    /*
+    * Функция, отвечающая за отображение элемента списка посылок на ListView
+     */
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View view = convertView;
@@ -63,6 +79,8 @@ public class PackageListAdapter extends BaseAdapter {
         buttonShowOnMap.setEnabled(false);
 
 
+        //Раскрашиваем посылку в завимсимости от ее статуса:
+        //Назначенная/Новая - белый. В процессе - зеленый. Отклоненная - красный. Завершенная - серый.
         switch (pkg.getStatus()) {
             case 0:
                 rl.setBackgroundColor(Color.WHITE);
@@ -80,7 +98,7 @@ public class PackageListAdapter extends BaseAdapter {
                 rl.setBackgroundColor(Color.LTGRAY);
         }
 
-
+        //Если у посылки есть координаты, то снимаем readonly c кнопки
         double[] coordinates = pkg.getCoordinates();
         if (coordinates[0] != 0 && coordinates[1] !=0) {
             buttonShowOnMap.setEnabled(true);
