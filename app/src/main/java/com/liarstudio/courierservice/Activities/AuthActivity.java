@@ -39,9 +39,6 @@ public class AuthActivity extends AppCompatActivity {
     ****** FIELDS AREA ******
     */
 
-    UserAPI api;
-
-
     EditText editTextEmail;
     EditText editTextName;
     EditText editTextPassword;
@@ -95,11 +92,6 @@ public class AuthActivity extends AppCompatActivity {
         progressBar = (ProgressBar) findViewById(R.id.progressBarAuth);
         progressBar.setVisibility(View.GONE);
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(ApiUtils.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        api = retrofit.create(UserAPI.class);
 
         buttonConfirm.setOnClickListener(l -> {
             if (validate()) {
@@ -114,7 +106,16 @@ public class AuthActivity extends AppCompatActivity {
     * Функция, посылающая запрос к серверу
     */
     private void sendRequest() {
+
         progressBar.setVisibility(View.VISIBLE);
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(ApiUtils.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        UserAPI api = retrofit.create(UserAPI.class);
+
 
         //Проверяем, в каком состоянии находится switchRegister
         Call<User> userCall = switchRegister.isChecked() ?

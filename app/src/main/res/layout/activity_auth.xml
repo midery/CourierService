@@ -38,6 +38,7 @@
         android:ems="10"
         android:hint="Пароль*"
         android:inputType="textPassword"
+        android:nextFocusDown="@+id/buttonConfirm"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginTop="10dp"

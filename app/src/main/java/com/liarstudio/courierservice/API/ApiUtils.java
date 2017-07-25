@@ -8,7 +8,7 @@ import java.security.NoSuchAlgorithmException;
 public class ApiUtils {
 
     //URL, по которому расположен сервер
-    public static String BASE_URL = "http://217.25.225.54:8080";
+    public static String BASE_URL = "http://52.169.182.251:8080/";
 
     //Текущий пользователь в системе
     public static User CURRENT_USER = null;

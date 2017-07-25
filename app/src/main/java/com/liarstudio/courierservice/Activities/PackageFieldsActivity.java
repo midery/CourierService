@@ -55,8 +55,6 @@ public class PackageFieldsActivity extends AppCompatActivity {
     public static final int REQUEST_MAP = 2;
 
     Package pkg;
-    UserAPI api;
-
 
     List<String> allStatuses = Arrays.asList("Новая", "Назначенная", "В процессе",
             "Отклоненная", "Завершенная");
@@ -131,16 +129,6 @@ public class PackageFieldsActivity extends AppCompatActivity {
         {
             String jsonPackage = intent.getStringExtra("jsonPackage");
             pkg = new Gson().fromJson(jsonPackage, Package.class);
-
-            //Если пользователь - администратор, то загружаем API
-            if (IS_ADMIN) {
-                Retrofit retrofit = new Retrofit.Builder()
-                        .baseUrl(ApiUtils.BASE_URL)
-                        .addConverterFactory(GsonConverterFactory.create())
-                        .build();
-                api = retrofit.create(UserAPI.class);
-
-            }
 
             initFieldsForEdit();
         }
@@ -739,6 +727,13 @@ public class PackageFieldsActivity extends AppCompatActivity {
         spinnerCourierList.setVisibility(View.VISIBLE);
         progressBar.setVisibility(View.VISIBLE);
 
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(ApiUtils.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        UserAPI api =retrofit.create(UserAPI.class);
+
+
         api.loadUsers(0).enqueue(new Callback<List<User>>() {
             @Override
             public void onResponse(Call<List<User>> call, Response<List<User>> response) {
@@ -811,6 +806,12 @@ public class PackageFieldsActivity extends AppCompatActivity {
         textViewCourierList.setVisibility(View.VISIBLE);
         spinnerCourierList.setVisibility(View.VISIBLE);
         progressBar.setVisibility(View.VISIBLE);
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(ApiUtils.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        UserAPI api =retrofit.create(UserAPI.class);
 
         api.loadUser(pkg.getCourierId()).enqueue(new Callback<User>() {
             @Override

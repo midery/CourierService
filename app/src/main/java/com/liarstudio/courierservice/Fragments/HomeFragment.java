@@ -51,7 +51,6 @@ public class HomeFragment extends Fragment {
     */
 
     FragmentStatePagerAdapter manager;
-    PackageAPI api;
     ProgressBar progressBar;
 
     /*
@@ -88,13 +87,6 @@ public class HomeFragment extends Fragment {
 
         }
         viewPager.setAdapter(manager);
-
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(ApiUtils.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        api = retrofit.create(PackageAPI.class);
 
         loadListFromServer();
 
@@ -179,6 +171,13 @@ public class HomeFragment extends Fragment {
 
     void addToServer(Package pkg) {
         progressBar.setVisibility(View.VISIBLE);
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(ApiUtils.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        PackageAPI api = retrofit.create(PackageAPI.class);
+
         api.add(pkg).enqueue(
                 new Callback<Void>() {
                     @Override
@@ -216,11 +215,21 @@ public class HomeFragment extends Fragment {
 
     public void loadListFromServer() {
         progressBar.setVisibility(View.VISIBLE);
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(ApiUtils.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        PackageAPI api = retrofit.create(PackageAPI.class);
+
+
+
         Call<List<Package>> apiCall;
 
         // Если пользователь - администратор, то загружаем "Новые"/"Отмененные"/"Завершенные"
         // Если курьер - то в зависимости от статуса(типа manager'а) загружаем либо только новые,
         // либо "Назначенные"/"В процессе"/"Завершенные"
+
         if (IS_ADMIN)
             apiCall = api.loadForAdmin();
         else
@@ -271,6 +280,14 @@ public class HomeFragment extends Fragment {
 
     void deleteFromServer(int id) {
         progressBar.setVisibility(View.VISIBLE);
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(ApiUtils.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        PackageAPI api = retrofit.create(PackageAPI.class);
+
+
         api.delete(id).enqueue(
                 new Callback<Void>() {
                     @Override
