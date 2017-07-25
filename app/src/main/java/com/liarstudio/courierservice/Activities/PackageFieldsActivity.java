@@ -752,7 +752,7 @@ public class PackageFieldsActivity extends AppCompatActivity {
 
                         List<User> users = response.body();
 
-                        if (users == null) {
+                        if (users != null) {
 
                             List<String> names = new ArrayList<>();
                             int i = 0, position = -1;
@@ -832,8 +832,7 @@ public class PackageFieldsActivity extends AppCompatActivity {
                             ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(PackageFieldsActivity.this,
                                     R.layout.support_simple_spinner_dropdown_item, names);
                             spinnerCourierList.setAdapter(spinnerAdapter);
-                        } else
-                        {
+                        } else {
                             spinnerCourierList.setVisibility(View.GONE);
                             textViewCourierList.setVisibility(View.GONE);
                         }
