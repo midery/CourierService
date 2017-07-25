@@ -2,7 +2,6 @@ package com.liarstudio.courierservice.Fragments;
 
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;

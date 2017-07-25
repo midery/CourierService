@@ -29,6 +29,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import static com.liarstudio.courierservice.API.ApiUtils.BASE_URL;
 import static com.liarstudio.courierservice.API.ApiUtils.CURRENT_USER;
 import static com.liarstudio.courierservice.API.ApiUtils.IS_ADMIN;
 
@@ -47,6 +48,7 @@ public class AuthActivity extends AppCompatActivity {
 
     Button buttonConfirm;
     Switch switchRegister;
+    Switch switchPreferredServer;
 
     ProgressBar progressBar;
     TextView textViewError;
@@ -82,6 +84,10 @@ public class AuthActivity extends AppCompatActivity {
                 editTextName.setVisibility(View.GONE);
             }
         });
+
+        switchPreferredServer = (Switch) findViewById(R.id.switchPreferredServer);
+        switchPreferredServer.setOnCheckedChangeListener((bv, isChecked) ->
+                BASE_URL = isChecked ? "http://10.0.2.2:8080" : "http://217.25.225.54:8080");
 
 
 
