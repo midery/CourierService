@@ -297,7 +297,11 @@ public class PackageFieldsActivity extends AppCompatActivity {
                     if (pkg.getStatus() == 4)
                         packageFinalCheckDialog();
                     else
-                        coordinatesEmptyCheckDialog();
+                        if (IS_ADMIN) {
+                            finishAndSend();
+                        } else {
+                            coordinatesEmptyCheckDialog();
+                        }
                 }
             }
         });
@@ -364,18 +368,28 @@ public class PackageFieldsActivity extends AppCompatActivity {
         switch (pkg.getStatus()) {
             case 0:
                 if (IS_ADMIN) {
-                    statuses = Arrays.asList("Назначенная");
+                    statuses = Arrays.asList("Назначенная", "Завершенная");
                     loadCourierList();
                 } else {
                     statuses = Arrays.asList("Новая");
                 }
                 break;
             case 1:
-                pkg.setStatus(2);
-                statuses = Arrays.asList("В процессе", "Отклоненная");
+                if (IS_ADMIN) {
+                    statuses = Arrays.asList("Назначенная", "Завершенная");
+                    loadCourierList();
+                } else {
+                    pkg.setStatus(2);
+                    statuses = Arrays.asList("В процессе", "Отклоненная");
+                }
                 break;
             case 2:
-                statuses = Arrays.asList("В процессе", "Отклоненная", "Завершенная");
+                if (IS_ADMIN) {
+                    statuses = Arrays.asList("Назначенная", "Завершенная");
+                    loadCourierList();
+                } else {
+                    statuses = Arrays.asList("В процессе", "Отклоненная", "Завершенная");
+                }
                 break;
             case 3:
                 statuses = Arrays.asList("Назначенная", "Завершенная");
@@ -392,16 +406,15 @@ public class PackageFieldsActivity extends AppCompatActivity {
                 break;
         }
 
-
-
         //Устанавливаем Listener для spinnerStatus и устанавливаем список статусов как его контент
         spinnerStatus.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
             @Override
             public void onItemSelected(AdapterView<?> adapter, View v,int position, long id) {
-                if (position == 0)
-                    editTextCommentary.setVisibility(View.GONE);
-                else
+                if (position == 0) {
+                    if (editTextCommentary.getText().toString().isEmpty())
+                        editTextCommentary.setVisibility(View.GONE);
+                } else
                     editTextCommentary.setVisibility(View.VISIBLE);
             }
 
@@ -413,8 +426,10 @@ public class PackageFieldsActivity extends AppCompatActivity {
                 R.layout.support_simple_spinner_dropdown_item, statuses);
         spinnerStatus.setAdapter(spinnerAdapter);
         textViewStatus.setVisibility(View.VISIBLE);
-        editTextCommentary.setText(pkg.getCommentary());
-
+        if (!pkg.getCommentary().isEmpty()) {
+            editTextCommentary.setText(pkg.getCommentary());
+            editTextCommentary.setVisibility(View.VISIBLE);
+        }
         spinnerStatus.setVisibility(View.VISIBLE);
     }
 

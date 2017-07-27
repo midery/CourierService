@@ -18,7 +18,7 @@ import com.liarstudio.courierservice.Activities.MainActivity;
 import com.liarstudio.courierservice.Activities.PackageFieldsActivity;
 import com.liarstudio.courierservice.BaseClasses.Package;
 import com.liarstudio.courierservice.Database.PackageList;
-import com.liarstudio.courierservice.Adapters.PackageListAdapter;
+import com.liarstudio.courierservice.Adapters.PackageListElementAdapter;
 import com.liarstudio.courierservice.R;
 
 import java.net.HttpURLConnection;
@@ -60,7 +60,7 @@ public class PackageFragment extends Fragment {
 
         ListView listView = (ListView) view.findViewById(R.id.lwShipmentList);
 
-        PackageListAdapter la = new PackageListAdapter(getContext(), packages);
+        PackageListElementAdapter la = new PackageListElementAdapter(getContext(), packages);
         listView.setAdapter(la);
 
 

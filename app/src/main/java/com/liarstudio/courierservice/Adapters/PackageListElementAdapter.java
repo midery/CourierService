@@ -16,7 +16,9 @@ import com.liarstudio.courierservice.Database.PackageList;
 import com.liarstudio.courierservice.BaseClasses.Package;
 import com.liarstudio.courierservice.R;
 
-public class PackageListAdapter extends BaseAdapter {
+import static com.liarstudio.courierservice.API.ApiUtils.IS_ADMIN;
+
+public class PackageListElementAdapter extends BaseAdapter {
 
 
     /*
@@ -28,7 +30,7 @@ public class PackageListAdapter extends BaseAdapter {
     private PackageList packages;
 
 
-    public PackageListAdapter(Context context, PackageList aPackages) {
+    public PackageListElementAdapter(Context context, PackageList aPackages) {
         ctx = context;
         this.packages = aPackages;
         layoutInflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -86,7 +88,11 @@ public class PackageListAdapter extends BaseAdapter {
                 rl.setBackgroundColor(Color.WHITE);
                 break;
             case 1:
-                rl.setBackgroundColor(Color.WHITE);
+                if (IS_ADMIN)
+                    rl.setBackgroundColor(Color.argb(50, 0, 0, 150));
+                else {
+                    rl.setBackgroundColor(Color.WHITE);
+                }
                 break;
             case 2:
                 rl.setBackgroundColor(Color.argb(50, 0, 180, 0));
