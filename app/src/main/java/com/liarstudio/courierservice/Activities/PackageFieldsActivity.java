@@ -54,7 +54,7 @@ public class PackageFieldsActivity extends AppCompatActivity {
 
     public static final int REQUEST_MAP = 2;
 
-    Package pkg;
+    Package pack, packConst;
 
     List<String> allStatuses = Arrays.asList("Новая", "Назначенная", "В процессе",
             "Отклоненная", "Завершенная");
@@ -128,23 +128,29 @@ public class PackageFieldsActivity extends AppCompatActivity {
         if (intent.hasExtra("jsonPackage"))
         {
             String jsonPackage = intent.getStringExtra("jsonPackage");
-            pkg = new Gson().fromJson(jsonPackage, Package.class);
+            pack = new Gson().fromJson(jsonPackage, Package.class);
+            try {
+                packConst = (Package) pack.clone();
+            } catch (CloneNotSupportedException e) {
+                packConst = null;
+            }
+
 
             initFieldsForEdit();
         }
         else {
 
 
-            pkg = new Package();
-
+            pack = new Package();
+            packConst = null;
             //Создаем календарь по-умолчанию с датой равной текущему дню + 1;
             Calendar c = Calendar.getInstance();
             c.add(Calendar.DAY_OF_YEAR, 1);
-            pkg.setDate(c);
+            pack.setDate(c);
 
             //Загружаем ID курьера у текущего пользователя.
-            pkg.setCourierId(ApiUtils.CURRENT_USER.getId());
-            pkg.setStatus(0);
+            pack.setCourierId(ApiUtils.CURRENT_USER.getId());
+            pack.setStatus(0);
 
             TextView textViewPackDate = (TextView)findViewById(R.id.textViewPackDate);
             textViewPackDate.setText(Package.getStringDate(c));
@@ -267,16 +273,16 @@ public class PackageFieldsActivity extends AppCompatActivity {
             //Если выбранная дата не раньше, чем завтра, обновляем дату у редактируемой посылки
             if (chosenDate.compareTo(Calendar.getInstance()) > 0)
             {
-                pkg.setDate(chosenDate);
-                textViewPackDate.setText(Package.getStringDate(pkg.getDate()));
+                pack.setDate(chosenDate);
+                textViewPackDate.setText(Package.getStringDate(pack.getDate()));
             }
             else
                 Toast.makeText(this,"Невозможно установить дату раньше сегодняшней.", Toast.LENGTH_LONG).show();
         };
 
         buttonPickDate.setOnClickListener(e -> {
-            DatePickerDialog dpd = new DatePickerDialog(this, listener, pkg.getDate().get(Calendar.YEAR),
-                    pkg.getDate().get(Calendar.MONTH), pkg.getDate().get(Calendar.DAY_OF_MONTH));
+            DatePickerDialog dpd = new DatePickerDialog(this, listener, pack.getDate().get(Calendar.YEAR),
+                    pack.getDate().get(Calendar.MONTH), pack.getDate().get(Calendar.DAY_OF_MONTH));
             dpd.show();
         });
 
@@ -294,7 +300,9 @@ public class PackageFieldsActivity extends AppCompatActivity {
                 finish();
             else {
                 if (validate()) {
-                    if (pkg.getStatus() == 4)
+                    if (pack.equals(packConst))
+                        finish();
+                    if (pack.getStatus() == 4)
                         packageFinalCheckDialog();
                     else
                         if (IS_ADMIN) {
@@ -308,14 +316,14 @@ public class PackageFieldsActivity extends AppCompatActivity {
         buttonCalculatePrice = (Button)findViewById(R.id.buttonCalculatePrice);
         buttonCalculatePrice.setOnClickListener(l -> {
             if (validateDimensions())
-                textViewPackPrice.setText(Double.toString(pkg.getPrice()));
+                textViewPackPrice.setText(Double.toString(pack.getPrice()));
         });
 
         //Запускаем MapActivity и ждем от нее результата
         buttonSetCoordinates = (Button)findViewById(R.id.buttonSetCoordinates);
         buttonSetCoordinates.setOnClickListener(l -> {
             Intent mapIntent = new Intent(this, MapsActivity.class);
-            mapIntent.putExtra("coordinates", pkg.getCoordinates());
+            mapIntent.putExtra("coordinates", pack.getCoordinates());
             startActivityForResult(mapIntent, REQUEST_MAP);
         });
 
@@ -328,7 +336,7 @@ public class PackageFieldsActivity extends AppCompatActivity {
 
 
     void initFieldsForEdit() {
-        Person sender = pkg.getSender();
+        Person sender = pack.getSender();
 
         editTextSenderAddress.setText(sender.getAddress());
         editTextSenderName.setText(sender.getName());
@@ -339,7 +347,7 @@ public class PackageFieldsActivity extends AppCompatActivity {
         editTextSenderCompanyName.setText(sender.getCompanyName());
 
 
-        Person recipient = pkg.getRecipient();
+        Person recipient = pack.getRecipient();
         editTextRecipientAddress.setText(recipient.getAddress());
         editTextRecipientName.setText(recipient.getName());
         editTextRecipientEmail.setText(recipient.getEmail());
@@ -349,14 +357,14 @@ public class PackageFieldsActivity extends AppCompatActivity {
         editTextRecipientCompanyName.setText(recipient.getCompanyName());
 
 
-        textViewPackDate.setText(pkg.getStringDate());
+        textViewPackDate.setText(pack.getStringDate());
 
-        editTextPackName.setText(pkg.getName());
-        double[] dimensions = pkg.getSizes();
+        editTextPackName.setText(pack.getName());
+        double[] dimensions = pack.getSizes();
         editTextPackW.setText(Double.toString(dimensions[0]));
         editTextPackH.setText(Double.toString(dimensions[1]));
         editTextPackD.setText(Double.toString(dimensions[2]));
-        editTextPackWeight.setText(Double.toString(pkg.getWeight()));
+        editTextPackWeight.setText(Double.toString(pack.getWeight()));
 
 
         buttonConfirm.setText("Обновить");
@@ -365,10 +373,10 @@ public class PackageFieldsActivity extends AppCompatActivity {
         //Список строк для отображения статусов
         List<String> statuses;
 
-        switch (pkg.getStatus()) {
+        switch (pack.getStatus()) {
             case 0:
                 if (IS_ADMIN) {
-                    statuses = Arrays.asList("Назначенная", "Завершенная");
+                    statuses = Arrays.asList("Новая", "Назначенная", "Завершенная");
                     loadCourierList();
                 } else {
                     statuses = Arrays.asList("Новая");
@@ -379,20 +387,19 @@ public class PackageFieldsActivity extends AppCompatActivity {
                     statuses = Arrays.asList("Назначенная", "Завершенная");
                     loadCourierList();
                 } else {
-                    pkg.setStatus(2);
-                    statuses = Arrays.asList("В процессе", "Отклоненная");
+                    statuses = Arrays.asList("Назначенная", "В процессе", "Отклоненная");
                 }
                 break;
             case 2:
                 if (IS_ADMIN) {
-                    statuses = Arrays.asList("Назначенная", "Завершенная");
+                    statuses = Arrays.asList("В процессе", "Назначенная", "Завершенная");
                     loadCourierList();
                 } else {
                     statuses = Arrays.asList("В процессе", "Отклоненная", "Завершенная");
                 }
                 break;
             case 3:
-                statuses = Arrays.asList("Назначенная", "Завершенная");
+                statuses = Arrays.asList("Отклоненная", "Назначенная", "Завершенная");
                 loadCourierList();
                 editTextCommentary.setVisibility(View.VISIBLE);
                 break;
@@ -411,13 +418,13 @@ public class PackageFieldsActivity extends AppCompatActivity {
 
             @Override
             public void onItemSelected(AdapterView<?> adapter, View v,int position, long id) {
-                if (position == 0) {
-                    if (editTextCommentary.getText().toString().isEmpty())
-                        editTextCommentary.setVisibility(View.GONE);
-                } else
-                    editTextCommentary.setVisibility(View.VISIBLE);
+                    if (!editTextCommentary.getText().toString().isEmpty() ||
+                            spinnerStatus.getSelectedItem().toString().compareTo(allStatuses.get(3)) == 0 ||
+                            spinnerStatus.getSelectedItem().toString().compareTo(allStatuses.get(4)) == 0)
+                        editTextCommentary.setVisibility(View.VISIBLE);
+                    else
+                            editTextCommentary.setVisibility(View.GONE);
             }
-
             @Override
             public void onNothingSelected(AdapterView<?> arg0) {}});
 
@@ -426,8 +433,8 @@ public class PackageFieldsActivity extends AppCompatActivity {
                 R.layout.support_simple_spinner_dropdown_item, statuses);
         spinnerStatus.setAdapter(spinnerAdapter);
         textViewStatus.setVisibility(View.VISIBLE);
-        if (!pkg.getCommentary().isEmpty()) {
-            editTextCommentary.setText(pkg.getCommentary());
+        if (!pack.getCommentary().isEmpty()) {
+            editTextCommentary.setText(pack.getCommentary());
             editTextCommentary.setVisibility(View.VISIBLE);
         }
         spinnerStatus.setVisibility(View.VISIBLE);
@@ -490,7 +497,7 @@ public class PackageFieldsActivity extends AppCompatActivity {
             editTextSenderAddress.setError("Адрес не может быть пустым.");
         }
         else
-            pkg.getSender().setAddress(checkString);
+            pack.getSender().setAddress(checkString);
 
         checkString = editTextSenderName.getText().toString();
         if (checkString.isEmpty())
@@ -499,7 +506,7 @@ public class PackageFieldsActivity extends AppCompatActivity {
             editTextSenderName.setError("Имя не может быть пустым.");
         }
         else
-            pkg.getSender().setName(checkString);
+            pack.getSender().setName(checkString);
 
         checkString = editTextSenderEmail.getText().toString();
 
@@ -511,7 +518,7 @@ public class PackageFieldsActivity extends AppCompatActivity {
             editTextSenderEmail.setError("Введен неверный e-mail.");
         }
         else
-            pkg.getSender().setEmail(checkString);
+            pack.getSender().setEmail(checkString);
 
 
         checkString = editTextSenderPhone.getText().toString();
@@ -521,16 +528,16 @@ public class PackageFieldsActivity extends AppCompatActivity {
             editTextSenderPhone.setError("Введен некорректный номер телефона.");
         }
         else
-            pkg.getSender().setPhone(checkString);
+            pack.getSender().setPhone(checkString);
 
-        pkg.getSender().setCompanyName(editTextSenderCompanyName.getText().toString());
+        pack.getSender().setCompanyName(editTextSenderCompanyName.getText().toString());
         checkString = editTextRecipientAddress.getText().toString();
         if (checkString.isEmpty())
         {
             valid = false;
             editTextRecipientAddress.setError("Адрес не может быть пустым.");
         } else
-            pkg.getRecipient().setAddress(checkString);
+            pack.getRecipient().setAddress(checkString);
 
 
         checkString = editTextRecipientName.getText().toString();
@@ -539,7 +546,7 @@ public class PackageFieldsActivity extends AppCompatActivity {
             valid = false;
             editTextRecipientName.setError("Имя не может быть пустым.");
         } else
-            pkg.getRecipient().setName(checkString);
+            pack.getRecipient().setName(checkString);
 
 
         checkString = editTextRecipientEmail.getText().toString();
@@ -548,7 +555,7 @@ public class PackageFieldsActivity extends AppCompatActivity {
             valid = false;
             editTextRecipientEmail.setError("Введен неверный e-mail.");
         } else
-            pkg.getRecipient().setEmail(checkString);
+            pack.getRecipient().setEmail(checkString);
 
 
         checkString = editTextRecipientPhone.getText().toString();
@@ -557,9 +564,9 @@ public class PackageFieldsActivity extends AppCompatActivity {
             valid = false;
             editTextRecipientPhone.setError("Введен некорректный номер телефона.");
         } else
-            pkg.getRecipient().setPhone(checkString);
+            pack.getRecipient().setPhone(checkString);
 
-        pkg.getSender().setCompanyName(editTextRecipientCompanyName.getText().toString());
+        pack.getSender().setCompanyName(editTextRecipientCompanyName.getText().toString());
 
 
         checkString = editTextPackName.getText().toString();
@@ -567,19 +574,28 @@ public class PackageFieldsActivity extends AppCompatActivity {
             valid = false;
             editTextPackName.setError("Введен некорректный номер телефона.");
         } else
-            pkg.setName(checkString);
+            pack.setName(checkString);
 
         valid = validateDimensions() && valid;
 
-        if (spinnerStatus.getVisibility() == View.VISIBLE)
-            pkg.setStatus(allStatuses.indexOf(spinnerStatus.getSelectedItem().toString()));
 
+        // Если spinner виден, посылку просматривает админ,
+        // а так же статус посылки не "Назначенная" или "Завершенная" - выводим сообщение об ошибке.
+        if (spinnerStatus.getVisibility() == View.VISIBLE) {
+            if (IS_ADMIN &&
+                    spinnerStatus.getSelectedItem().toString().compareTo(allStatuses.get(1)) != 0 &&
+                    spinnerStatus.getSelectedItem().toString().compareTo(allStatuses.get(4)) != 0) {
+                valid = false;
+                Toast.makeText(PackageFieldsActivity.this, "Выберите статус Назначенная либо Завершенная.", Toast.LENGTH_LONG).show();
+            } else
+                pack.setStatus(allStatuses.indexOf(spinnerStatus.getSelectedItem().toString()));
+        }
         checkString = editTextCommentary.getText().toString();
-        if ((pkg.getStatus() == 3 || pkg.getStatus() == 4) && checkString.isEmpty()) {
+        if ((pack.getStatus() == 3 || pack.getStatus() == 4) && checkString.isEmpty()) {
             valid = false;
             editTextCommentary.setError("Неверный комментарий.");
         } else
-            pkg.setCommentary(checkString);
+            pack.setCommentary(checkString);
 
         return valid;
     }
@@ -597,7 +613,7 @@ public class PackageFieldsActivity extends AppCompatActivity {
             editTextPackWeight.setError("Некорректный вес.");
             valid = false;
         } else
-            pkg.setWeight(numericValue);
+            pack.setWeight(numericValue);
 
         double[] dimensions = new double[3];
 
@@ -623,8 +639,8 @@ public class PackageFieldsActivity extends AppCompatActivity {
             editTextPackD.setError("Некорректные размеры посылки.");
         } else dimensions[2] = numericValue;
         if (valid) {
-            pkg.setSizes(dimensions);
-            pkg.setPrice();
+            pack.setSizes(dimensions);
+            pack.setPrice();
         }
 
         return valid;
@@ -666,7 +682,7 @@ public class PackageFieldsActivity extends AppCompatActivity {
     * Если координаты
      */
     void coordinatesEmptyCheckDialog() {
-        double[] coordinates = pkg.getCoordinates();
+        double[] coordinates = pack.getCoordinates();
         if (coordinates[0] != 0 && coordinates[1] != 0) {
             finishAndSend();
             return;
@@ -700,7 +716,7 @@ public class PackageFieldsActivity extends AppCompatActivity {
 
         Intent data = new Intent();
 
-        data.putExtra("packageToAdd", new Gson().toJson(pkg));
+        data.putExtra("packageToAdd", new Gson().toJson(pack));
 
         setResult(RESULT_OK, data);
         finish();
@@ -713,7 +729,7 @@ public class PackageFieldsActivity extends AppCompatActivity {
     private void finishAndSend(String extraName) {
         Intent data = new Intent();
 
-        data.putExtra(extraName, new Gson().toJson(pkg));
+        data.putExtra(extraName, new Gson().toJson(pack));
 
         setResult(RESULT_OK, data);
         finish();
@@ -723,7 +739,7 @@ public class PackageFieldsActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK && requestCode == REQUEST_MAP) {
-            pkg.setCoordinates(data.getDoubleArrayExtra("coordinates"));
+            pack.setCoordinates(data.getDoubleArrayExtra("coordinates"));
         }
     }
 
@@ -768,7 +784,7 @@ public class PackageFieldsActivity extends AppCompatActivity {
                             int i = 0, position = -1;
                             for (User user : users) {
                                 names.add(user.getId() + ". " + user.getName());
-                                if (user.getId() == pkg.getCourierId())
+                                if (user.getId() == pack.getCourierId())
                                     position = i;
                                 i++;
                             }
@@ -782,7 +798,7 @@ public class PackageFieldsActivity extends AppCompatActivity {
                                 @Override
                                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                                     String fullName = spinnerCourierList.getSelectedItem().toString();
-                                    pkg.setCourierId(Integer.parseInt(fullName.split(". ")[0]));
+                                    pack.setCourierId(Integer.parseInt(fullName.split(". ")[0]));
                                 }
 
                                 @Override
@@ -795,12 +811,12 @@ public class PackageFieldsActivity extends AppCompatActivity {
                         }
                         break;
                     case HttpURLConnection.HTTP_NOT_FOUND:
-                        Toast.makeText(PackageFieldsActivity.this, "Произошла ошибка работы с базой данных.",
+                        Toast.makeText(PackageFieldsActivity.this, R.string.error_http_not_found,
                                 Toast.LENGTH_LONG).show();
 
                         break;
                     default:
-                        Toast.makeText(PackageFieldsActivity.this, "Произошла ошибка на стороне сервера.",
+                        Toast.makeText(PackageFieldsActivity.this, R.string.error_db,
                                 Toast.LENGTH_LONG).show();
                         break;
                 }
@@ -810,7 +826,7 @@ public class PackageFieldsActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<List<User>> call, Throwable t) {
-                Toast.makeText(PackageFieldsActivity.this, "Время ожидание ответа от сервера истекло.",
+                Toast.makeText(PackageFieldsActivity.this, R.string.error_could_not_connect_to_server,
                         Toast.LENGTH_LONG).show();
                 progressBar.setVisibility(View.GONE);
 
@@ -828,7 +844,7 @@ public class PackageFieldsActivity extends AppCompatActivity {
                 .build();
         UserAPI api =retrofit.create(UserAPI.class);
 
-        api.loadUser(pkg.getCourierId()).enqueue(new Callback<User>() {
+        api.loadUser(pack.getCourierId()).enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 switch (response.code()) {
@@ -854,12 +870,12 @@ public class PackageFieldsActivity extends AppCompatActivity {
                         }
                         break;
                     case HttpURLConnection.HTTP_NOT_FOUND:
-                        Toast.makeText(PackageFieldsActivity.this, "Произошла ошибка работы с базой данных.",
+                        Toast.makeText(PackageFieldsActivity.this, R.string.error_http_not_found,
                                 Toast.LENGTH_LONG).show();
 
                         break;
                     default:
-                        Toast.makeText(PackageFieldsActivity.this, "Произошла ошибка на стороне сервера.",
+                        Toast.makeText(PackageFieldsActivity.this, R.string.error_db,
                                 Toast.LENGTH_LONG).show();
                         break;
                 }
@@ -869,7 +885,7 @@ public class PackageFieldsActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<User> call, Throwable t) {
-                Toast.makeText(PackageFieldsActivity.this, "Время ожидание ответа от сервера истекло.",
+                Toast.makeText(PackageFieldsActivity.this, R.string.error_could_not_connect_to_server,
                         Toast.LENGTH_LONG).show();
                 progressBar.setVisibility(View.GONE);
             }

@@ -3,7 +3,7 @@ package com.liarstudio.courierservice.BaseClasses;
 
 import com.orm.SugarRecord;
 
-public class Person extends SugarRecord{
+public class Person extends SugarRecord implements Cloneable{
     /*
     ****** FIELD AREA ******
     */
@@ -39,6 +39,12 @@ public class Person extends SugarRecord{
         this.coordinatesX = coordinates[0];
         this.coordinatesY = coordinates[1];
     }
+
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
+
+
     /*
     ****** GETTER/SETTER AREA ******
     */

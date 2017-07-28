@@ -11,7 +11,7 @@ import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-public class Package extends SugarRecord {
+public class Package extends SugarRecord implements Cloneable{
 
     /*
     ****** FIELD AREA ******
@@ -141,7 +141,9 @@ public class Package extends SugarRecord {
         return round(value, 2);
     }
 
-
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
 
 
     /*

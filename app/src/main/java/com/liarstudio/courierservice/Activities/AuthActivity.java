@@ -145,14 +145,14 @@ public class AuthActivity extends AppCompatActivity {
                                 break;
                             case HttpURLConnection.HTTP_FORBIDDEN:
 
-                                textViewError.setText("Неверные email или пароль. Повторите ввод.");
+                                textViewError.setText(R.string.error_http_forbidden);
                                 break;
                             case HttpURLConnection.HTTP_CONFLICT:
-                                textViewError.setText("Пользователь с данным Email уже зарегистрирован.");
+                                textViewError.setText(R.string.error_http_conflict);
                                 break;
 
                             default:
-                                textViewError.setText("Произошла ошибка при авторизации. Попробуйте позднее.");
+                                textViewError.setText(R.string.error_auth);
                                 break;
                         }
                         progressBar.setVisibility(View.GONE);
@@ -160,8 +160,7 @@ public class AuthActivity extends AppCompatActivity {
 
                     @Override
                     public void onFailure(Call<User> call, Throwable t) {
-                        Toast.makeText(AuthActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
-                        textViewError.setText("Истекло время ожидания от сервера.");
+                        textViewError.setText(R.string.error_could_not_connect_to_server);
                         progressBar.setVisibility(View.GONE);
                     }
                 }

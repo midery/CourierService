@@ -100,11 +100,11 @@ public class PackageFragment extends Fragment {
                                 }
                                 break;
                             case HttpURLConnection.HTTP_NOT_FOUND:
-                                Toast.makeText(getActivity(), "Ошибка при работе с базой данных.",
+                                Toast.makeText(getActivity(), R.string.error_http_not_found,
                                         Toast.LENGTH_LONG).show();
                                 break;
                             default:
-                                Toast.makeText(getActivity(), "Произошла ошибка на стороне сервера.",
+                                Toast.makeText(getActivity(), R.string.error_db,
                                         Toast.LENGTH_LONG).show();
                                 break;
                         }
@@ -112,7 +112,7 @@ public class PackageFragment extends Fragment {
 
                     @Override
                     public void onFailure(Call<Package> call, Throwable t) {
-                        Toast.makeText(getActivity(), "Время ожидание ответа от сервера истекло.",
+                        Toast.makeText(getActivity(), R.string.error_could_not_connect_to_server,
                                 Toast.LENGTH_LONG).show();
 
                     }

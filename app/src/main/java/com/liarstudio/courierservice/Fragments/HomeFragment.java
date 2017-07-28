@@ -190,12 +190,12 @@ public class HomeFragment extends Fragment {
                                 break;
                             case HttpURLConnection.HTTP_NOT_FOUND:
 
-                                Toast.makeText(getActivity(), "Произошла ошибка работы с базой данных.",
+                                Toast.makeText(getActivity(), R.string.error_add_http_not_found,
                                         Toast.LENGTH_LONG).show();
                                 break;
                             default:
 
-                                Toast.makeText(getActivity(), "Произошла ошибка на стороне сервера.",
+                                Toast.makeText(getActivity(), R.string.error_db,
                                         Toast.LENGTH_LONG).show();
                                 break;
                         }
@@ -204,7 +204,7 @@ public class HomeFragment extends Fragment {
                     }
                     @Override
                     public void onFailure(Call<Void> call, Throwable t) {
-                        Toast.makeText(getActivity(), "Время ожидание ответа от сервера истекло.",
+                        Toast.makeText(getActivity(), R.string.error_could_not_connect_to_server,
                                 Toast.LENGTH_LONG).show();
                         progressBar.setVisibility(View.GONE);
 
@@ -254,12 +254,12 @@ public class HomeFragment extends Fragment {
                                 }
                                 break;
                             case HttpURLConnection.HTTP_NOT_FOUND:
-                                Toast.makeText(getActivity(), "Произошла ошибка работы с базой данных.",
+                                Toast.makeText(getActivity(), R.string.error_http_not_found,
                                         Toast.LENGTH_LONG).show();
 
                                 break;
                             default:
-                                Toast.makeText(getActivity(), "Произошла ошибка на стороне сервера.",
+                                Toast.makeText(getActivity(), R.string.error_db,
                                         Toast.LENGTH_LONG).show();
                                 break;
                         }
@@ -268,7 +268,7 @@ public class HomeFragment extends Fragment {
 
                     @Override
                     public void onFailure(Call<List<Package>> call, Throwable t) {
-                        Toast.makeText(getActivity(), "Время ожидание ответа от сервера истекло.",
+                        Toast.makeText(getActivity(), R.string.error_could_not_connect_to_server,
                                 Toast.LENGTH_LONG).show();
                         progressBar.setVisibility(View.GONE);
 
@@ -300,12 +300,12 @@ public class HomeFragment extends Fragment {
                                 break;
                             case HttpURLConnection.HTTP_NOT_FOUND:
 
-                                Toast.makeText(getActivity(), "Произошла ошибка работы с базой данных.",
+                                Toast.makeText(getActivity(), R.string.error_add_http_not_found,
                                         Toast.LENGTH_LONG).show();
                                 break;
                             default:
 
-                                Toast.makeText(getActivity(), "Произошла ошибка на стороне сервера.",
+                                Toast.makeText(getActivity(), R.string.error_db,
                                         Toast.LENGTH_LONG).show();
                                 break;
                         }
@@ -314,7 +314,7 @@ public class HomeFragment extends Fragment {
                     }
                     @Override
                     public void onFailure(Call<Void> call, Throwable t) {
-                        Toast.makeText(getActivity(), "Время ожидание ответа от сервера истекло.",
+                        Toast.makeText(getActivity(), R.string.error_could_not_connect_to_server,
                                 Toast.LENGTH_LONG).show();
                         progressBar.setVisibility(View.GONE);
 
