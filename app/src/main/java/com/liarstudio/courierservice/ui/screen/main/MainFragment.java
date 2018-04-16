@@ -20,13 +20,13 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.liarstudio.courierservice.API.PackageAPI;
 import com.liarstudio.courierservice.API.ApiUtils;
-import com.liarstudio.courierservice.Activities.AuthActivity;
-import com.liarstudio.courierservice.Activities.MainActivity;
-import com.liarstudio.courierservice.Activities.PackageFieldsActivity;
-import com.liarstudio.courierservice.Adapters.PagerAdapterNew;
-import com.liarstudio.courierservice.BaseClasses.Package;
+import com.liarstudio.courierservice.Adapters.PagerAdapterNewPackages;
+import com.liarstudio.courierservice.ui.screen.auth.AuthActivity;
+import com.liarstudio.courierservice.ui.screen.main.MainActivity;
+import com.liarstudio.courierservice.ui.screen.pack.PackageFieldsActivity;
+import com.liarstudio.courierservice.entities.Package;
 import com.liarstudio.courierservice.Database.PackageList;
-import com.liarstudio.courierservice.Adapters.PagerAdapterMy;
+import com.liarstudio.courierservice.Adapters.PagerAdapterMyPackages;
 import com.liarstudio.courierservice.R;
 
 
@@ -42,7 +42,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import static android.app.Activity.RESULT_OK;
 import static com.liarstudio.courierservice.API.ApiUtils.CURRENT_USER;
 import static com.liarstudio.courierservice.API.ApiUtils.IS_ADMIN;
-import static com.liarstudio.courierservice.Activities.MainActivity.managerType;
+import static com.liarstudio.courierservice.ui.screen.main.MainActivity.managerType;
 
 public class HomeFragment extends Fragment {
 
@@ -80,9 +80,9 @@ public class HomeFragment extends Fragment {
 
 
         if (managerType == 0) {
-            manager = new PagerAdapterMy(getActivity().getSupportFragmentManager());
+            manager = new PagerAdapterMyPackages(getActivity().getSupportFragmentManager());
         } else {
-            manager = new PagerAdapterNew(getActivity().getSupportFragmentManager());
+            manager = new PagerAdapterNewPackages(getActivity().getSupportFragmentManager());
             tabLayout.setVisibility(View.GONE);
 
         }

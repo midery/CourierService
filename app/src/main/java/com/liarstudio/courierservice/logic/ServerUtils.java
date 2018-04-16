@@ -1,5 +1,7 @@
 package com.liarstudio.courierservice.API;
 
+import com.liarstudio.courierservice.entities.user.User;
+
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;

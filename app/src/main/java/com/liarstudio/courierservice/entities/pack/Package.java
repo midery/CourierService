@@ -1,4 +1,4 @@
-package com.liarstudio.courierservice.BaseClasses;
+package com.liarstudio.courierservice.entities;
 
 
 import com.orm.SugarRecord;

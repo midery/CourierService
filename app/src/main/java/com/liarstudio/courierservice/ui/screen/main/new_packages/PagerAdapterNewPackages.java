@@ -4,7 +4,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import com.liarstudio.courierservice.BaseClasses.Package;
+import com.liarstudio.courierservice.entities.Package;
 import com.liarstudio.courierservice.Database.PackageList;
 import com.liarstudio.courierservice.Fragments.PackageFragment;
 import com.orm.query.Condition;
@@ -13,10 +13,10 @@ import com.orm.query.Select;
 
 import java.util.Collections;
 
-public class PagerAdapterNew extends FragmentStatePagerAdapter {
+public class PagerAdapterNewPackages extends FragmentStatePagerAdapter {
 
 
-    public PagerAdapterNew(FragmentManager fm) {
+    public PagerAdapterNewPackages(FragmentManager fm) {
         super(fm);
     }
 

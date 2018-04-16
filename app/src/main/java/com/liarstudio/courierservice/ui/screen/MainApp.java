@@ -1,4 +1,4 @@
-package com.liarstudio.courierservice;
+package com.liarstudio.courierservice.app;
 
 
 import com.orm.SugarApp;

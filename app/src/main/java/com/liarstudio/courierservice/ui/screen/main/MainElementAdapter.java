@@ -11,9 +11,9 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.liarstudio.courierservice.Activities.MapsActivity;
+import com.liarstudio.courierservice.ui.screen.maps.MapsActivity;
 import com.liarstudio.courierservice.Database.PackageList;
-import com.liarstudio.courierservice.BaseClasses.Package;
+import com.liarstudio.courierservice.entities.Package;
 import com.liarstudio.courierservice.R;
 
 import static com.liarstudio.courierservice.API.ApiUtils.IS_ADMIN;

@@ -31,8 +31,8 @@ import com.google.gson.Gson;
 import com.liarstudio.courierservice.API.ApiUtils;
 import com.liarstudio.courierservice.API.User;
 import com.liarstudio.courierservice.API.UserAPI;
-import com.liarstudio.courierservice.BaseClasses.Person;
-import com.liarstudio.courierservice.BaseClasses.Package;
+import com.liarstudio.courierservice.entities.Person;
+import com.liarstudio.courierservice.entities.Package;
 import com.liarstudio.courierservice.R;
 import org.apache.commons.validator.routines.EmailValidator;
 

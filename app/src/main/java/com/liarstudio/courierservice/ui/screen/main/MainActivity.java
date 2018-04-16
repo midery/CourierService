@@ -21,7 +21,8 @@ import com.liarstudio.courierservice.API.ApiUtils;
 import com.liarstudio.courierservice.Fragments.HomeFragment;
 import com.liarstudio.courierservice.Fragments.SettingsFragment;
 import com.liarstudio.courierservice.R;
-import com.liarstudio.courierservice.BaseClasses.Package;
+import com.liarstudio.courierservice.entities.Package;
+import com.liarstudio.courierservice.ui.screen.auth.AuthActivity;
 
 
 import java.util.List;

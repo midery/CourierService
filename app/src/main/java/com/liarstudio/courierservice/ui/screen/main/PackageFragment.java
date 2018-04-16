@@ -14,11 +14,11 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.liarstudio.courierservice.API.PackageAPI;
 import com.liarstudio.courierservice.API.ApiUtils;
-import com.liarstudio.courierservice.Activities.MainActivity;
-import com.liarstudio.courierservice.Activities.PackageFieldsActivity;
-import com.liarstudio.courierservice.BaseClasses.Package;
+import com.liarstudio.courierservice.ui.screen.main.MainActivity;
+import com.liarstudio.courierservice.ui.screen.pack.PackageFieldsActivity;
+import com.liarstudio.courierservice.entities.Package;
 import com.liarstudio.courierservice.Database.PackageList;
-import com.liarstudio.courierservice.Adapters.PackageListElementAdapter;
+import com.liarstudio.courierservice.ui.screen.main.MainElementAdapter;
 import com.liarstudio.courierservice.R;
 
 import java.net.HttpURLConnection;
@@ -60,7 +60,7 @@ public class PackageFragment extends Fragment {
 
         ListView listView = (ListView) view.findViewById(R.id.lwShipmentList);
 
-        PackageListElementAdapter la = new PackageListElementAdapter(getContext(), packages);
+        MainElementAdapter la = new MainElementAdapter(getContext(), packages);
         listView.setAdapter(la);
 
 

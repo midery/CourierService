@@ -1,5 +1,7 @@
 package com.liarstudio.courierservice.API;
 
+import com.liarstudio.courierservice.entities.user.User;
+
 import java.util.List;
 
 import retrofit2.Call;
