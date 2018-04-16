@@ -4,7 +4,7 @@
 
     <uses-sdk
         android:minSdkVersion="19"
-        android:targetSdkVersion="25" />
+        android:targetSdkVersion="27" />
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -26,7 +26,7 @@
     <uses-permission android:name="android.permission.READ_CALL_LOG" />
 
     <application
-        android:name=".MainApp"
+        android:name=".ui.screen.MainApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -45,39 +45,36 @@
         <meta-data
             android:name="DOMAIN_PACKAGE_NAME"
             android:value="com.liarstudio.courierservice" />
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".Activities.MainActivity"
+            android:name=".ui.screen.main.MainActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:launchMode="singleTop">
-        </activity>
+            android:launchMode="singleTop"/>
         <activity
-            android:name=".Activities.PackageFieldsActivity"
+            android:name=".ui.screen.pack.PackageFieldsActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/package_activity_header"
-            android:parentActivityName=".Activities.MainActivity"
+            android:parentActivityName=".ui.screen.main.MainActivity"
             android:theme="@style/AppTheme.Base">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".Activities.MainActivity" />
+                android:value=".ui.screen.main.MainActivity" />
         </activity>
 
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_maps_key" />
-
         <activity
-            android:name=".Activities.MapsActivity"
+            android:name=".ui.screen.maps.MapsActivity"
             android:label="@string/title_activity_maps" />
 
 
-        <activity android:name=".Activities.AuthActivity"
-            android:theme="@style/AppTheme.Base"
+        <activity
+            android:name=".ui.screen.auth.AuthActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:label="@string/auth_activity_header">
+            android:label="@string/auth_activity_header"
+            android:theme="@style/AppTheme.Base">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

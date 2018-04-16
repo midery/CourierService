@@ -1,4 +1,4 @@
-package com.liarstudio.courierservice.entities;
+package com.liarstudio.courierservice.entities.person;
 
 
 import com.orm.SugarRecord;

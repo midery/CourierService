@@ -1,4 +1,4 @@
-package com.liarstudio.courierservice.Fragments;
+package com.liarstudio.courierservice.ui.screen.main;
 
 import android.content.Intent;
 import android.support.v4.app.Fragment;
@@ -12,13 +12,11 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.liarstudio.courierservice.API.PackageAPI;
-import com.liarstudio.courierservice.API.ApiUtils;
-import com.liarstudio.courierservice.ui.screen.main.MainActivity;
+import com.liarstudio.courierservice.logic.pack.PackageAPI;
+import com.liarstudio.courierservice.logic.ServerUtils;
 import com.liarstudio.courierservice.ui.screen.pack.PackageFieldsActivity;
-import com.liarstudio.courierservice.entities.Package;
-import com.liarstudio.courierservice.Database.PackageList;
-import com.liarstudio.courierservice.ui.screen.main.MainElementAdapter;
+import com.liarstudio.courierservice.entities.pack.Package;
+import com.liarstudio.courierservice.logic.pack.PackageRepository;
 import com.liarstudio.courierservice.R;
 
 import java.net.HttpURLConnection;
@@ -36,14 +34,14 @@ public class PackageFragment extends Fragment {
 
     private View view;
     //Количество посылок в текущем фрагменте
-    private PackageList packages;
+    private PackageRepository packages;
 
     public PackageFragment() {
 
     }
 
 
-    public void setPackages(PackageList packages) {
+    public void setPackages(PackageRepository packages) {
         this.packages = packages;
     }
 
@@ -68,19 +66,19 @@ public class PackageFragment extends Fragment {
                 loadPackageFromServer(packages.get(position).getId().intValue()));
 
 
-        return view;//super.onCreateView(inflater, container, savedInstanceState);
+        return view; //super.onCreateView(inflater, container, savedInstanceState);
 
 
     }
 
     void loadPackageFromServer(int id) {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(ApiUtils.BASE_URL)
+                .baseUrl(ServerUtils.BASE_SERVER_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         PackageAPI api = retrofit.create(PackageAPI.class);
 
-        api.loadOne(id).enqueue(
+        api.loadPackages(id).enqueue(
                 new Callback<Package>() {
                     @Override
                     public void onResponse(Call<Package> call, Response<Package> response) {

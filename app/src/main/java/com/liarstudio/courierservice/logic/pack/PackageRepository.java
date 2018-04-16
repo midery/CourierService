@@ -1,9 +1,9 @@
-package com.liarstudio.courierservice.Database;
+package com.liarstudio.courierservice.logic.pack;
 
 import android.support.annotation.NonNull;
 
-import com.liarstudio.courierservice.entities.Package;
-import com.liarstudio.courierservice.entities.Person;
+import com.liarstudio.courierservice.entities.pack.Package;
+import com.liarstudio.courierservice.entities.person.Person;
 import com.orm.SugarRecord;
 
 import java.util.ArrayList;

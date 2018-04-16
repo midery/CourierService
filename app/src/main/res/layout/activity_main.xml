@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:id="@+id/drawer_layout"
     android:fitsSystemWindows="true"
-    tools:context="com.liarstudio.courierservice.Activities.MainActivity">
+    tools:context="com.liarstudio.courierservice.ui.screen.main.MainActivity">
 
     <include
         layout="@layout/app_bar_main"

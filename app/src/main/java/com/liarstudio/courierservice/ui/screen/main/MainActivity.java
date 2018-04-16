@@ -1,4 +1,4 @@
-package com.liarstudio.courierservice.Activities;
+package com.liarstudio.courierservice.ui.screen.main;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -17,17 +17,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import com.liarstudio.courierservice.API.ApiUtils;
-import com.liarstudio.courierservice.Fragments.HomeFragment;
-import com.liarstudio.courierservice.Fragments.SettingsFragment;
+import com.liarstudio.courierservice.logic.ServerUtils;
+import com.liarstudio.courierservice.ui.screen.main.settings.SettingsFragment;
 import com.liarstudio.courierservice.R;
-import com.liarstudio.courierservice.entities.Package;
+import com.liarstudio.courierservice.entities.pack.Package;
 import com.liarstudio.courierservice.ui.screen.auth.AuthActivity;
 
 
 import java.util.List;
 
-import static com.liarstudio.courierservice.API.ApiUtils.CURRENT_USER;
+import static com.liarstudio.courierservice.logic.ServerUtils.CURRENT_USER;
 
 public class  MainActivity extends AppCompatActivity
     implements NavigationView.OnNavigationItemSelectedListener {
@@ -50,7 +49,7 @@ public class  MainActivity extends AppCompatActivity
     */
 
 
-    //Тип менеджера - PagerAdapterMy, если 0, и PagerAdapterNew, если 1
+    //Тип менеджера - PagerAdapterMyPackages, если 0, и PagerAdapterNewPackages, если 1
     //Переменная для экономии ресурсов
     public static int managerType = 0;
 
@@ -73,9 +72,9 @@ public class  MainActivity extends AppCompatActivity
         loadCoefficients();
 
 
-        //Создаем новый HomeFragment с менеджером PagerAdapterMy
+        //Создаем новый MainFragment с менеджером PagerAdapterMyPackages
         managerType = 0;
-        fragment = new HomeFragment();
+        fragment = new MainFragment();
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.content_main, fragment).commit();
 
@@ -105,7 +104,7 @@ public class  MainActivity extends AppCompatActivity
         MenuItem nav_my = navigationView.getMenu().findItem(R.id.nav_my);
         MenuItem nav_new = navigationView.getMenu().findItem(R.id.nav_new);
 
-        if (ApiUtils.IS_ADMIN) {
+        if (ServerUtils.IS_ADMIN) {
             nav_my.setTitle(R.string.nav_my_admin);
             nav_new.setVisible(false);
         } else {
@@ -138,11 +137,11 @@ public class  MainActivity extends AppCompatActivity
         switch (item.getItemId()) {
             case R.id.nav_my:
                 managerType = 0;
-                fragment = new HomeFragment();
+                fragment = new MainFragment();
                 break;
             case R.id.nav_new:
                 managerType = 1;
-                fragment = new HomeFragment();
+                fragment = new MainFragment();
                 break;
             case R.id.nav_settings:
                 fragment = new SettingsFragment();
@@ -163,7 +162,7 @@ public class  MainActivity extends AppCompatActivity
     public void replaceFragment(int type) {
         fragment = null;
         managerType = type;
-        fragment = new HomeFragment();
+        fragment = new MainFragment();
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.content_main, fragment).commit();

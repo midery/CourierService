@@ -1,4 +1,4 @@
-package com.liarstudio.courierservice.Adapters;
+package com.liarstudio.courierservice.ui.screen.main;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,13 +12,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.liarstudio.courierservice.ui.screen.maps.MapsActivity;
-import com.liarstudio.courierservice.Database.PackageList;
-import com.liarstudio.courierservice.entities.Package;
+import com.liarstudio.courierservice.logic.pack.PackageRepository;
+import com.liarstudio.courierservice.entities.pack.Package;
 import com.liarstudio.courierservice.R;
 
-import static com.liarstudio.courierservice.API.ApiUtils.IS_ADMIN;
+import static com.liarstudio.courierservice.logic.ServerUtils.IS_ADMIN;
 
-public class PackageListElementAdapter extends BaseAdapter {
+public class MainElementAdapter extends BaseAdapter {
 
 
     /*
@@ -27,10 +27,10 @@ public class PackageListElementAdapter extends BaseAdapter {
 
     private Context ctx;
     private LayoutInflater layoutInflater;
-    private PackageList packages;
+    private PackageRepository packages;
 
 
-    public PackageListElementAdapter(Context context, PackageList aPackages) {
+    public MainElementAdapter(Context context, PackageRepository aPackages) {
         ctx = context;
         this.packages = aPackages;
         layoutInflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);

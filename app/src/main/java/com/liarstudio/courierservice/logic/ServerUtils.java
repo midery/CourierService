@@ -1,4 +1,4 @@
-package com.liarstudio.courierservice.API;
+package com.liarstudio.courierservice.logic;
 
 import com.liarstudio.courierservice.entities.user.User;
 
@@ -7,10 +7,15 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-public class ApiUtils {
+public class ServerUtils {
 
     //URL, по которому расположен сервер
-    public static String BASE_URL = "http://52.169.182.251:8080";
+    public static String BASE_SERVER_URL = "http://192.168.0.106:8080";
+
+    //URL, по которому расположен сервер
+    public static String BASE_LOCAL_URL = "http://192.168.0.106:8080";
+
+
 
     //Текущий пользователь в системе
     public static User CURRENT_USER = null;

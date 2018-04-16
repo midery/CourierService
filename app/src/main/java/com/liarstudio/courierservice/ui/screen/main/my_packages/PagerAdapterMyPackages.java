@@ -1,12 +1,12 @@
-package com.liarstudio.courierservice.Adapters;
+package com.liarstudio.courierservice.ui.screen.main.my_packages;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import com.liarstudio.courierservice.entities.Package;
-import com.liarstudio.courierservice.Database.PackageList;
-import com.liarstudio.courierservice.Fragments.PackageFragment;
+import com.liarstudio.courierservice.entities.pack.Package;
+import com.liarstudio.courierservice.logic.pack.PackageRepository;
+import com.liarstudio.courierservice.ui.screen.main.PackageFragment;
 import com.orm.query.Condition;
 import com.orm.query.Select;
 
@@ -41,21 +41,21 @@ public class PagerAdapterMyPackages extends FragmentStatePagerAdapter {
 
         //Фильтруем посылки по заданному критерию и возвращаем фрагмент с отфильтрованным списком
 
-        PackageList packages;
+        PackageRepository packages;
 
         switch (position) {
             case 0:
-                packages = new PackageList(Select.from(Package.class)
+                packages = new PackageRepository(Select.from(Package.class)
                                 .where(Condition.prop("status").notEq(4)).list());
                 break;
             case 1:
-                packages = new PackageList(
+                packages = new PackageRepository(
                         Select.from(Package.class)
                                 .where(Condition.prop("status").eq(4))
                                 .list());
                 break;
             case 2:
-                packages = new PackageList(Package.listAll(Package.class));
+                packages = new PackageRepository(Package.listAll(Package.class));
                 break;
             default:
                 return null;

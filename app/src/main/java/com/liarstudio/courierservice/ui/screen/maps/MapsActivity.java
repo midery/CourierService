@@ -1,4 +1,4 @@
-package com.liarstudio.courierservice.Activities;
+package com.liarstudio.courierservice.ui.screen.maps;
 
 import android.Manifest;
 import android.content.Intent;

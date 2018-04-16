@@ -1,4 +1,4 @@
-package com.liarstudio.courierservice.Fragments;
+package com.liarstudio.courierservice.ui.screen.main;
 
 
 import android.content.Intent;
@@ -18,15 +18,14 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.liarstudio.courierservice.API.PackageAPI;
-import com.liarstudio.courierservice.API.ApiUtils;
-import com.liarstudio.courierservice.Adapters.PagerAdapterNewPackages;
+import com.liarstudio.courierservice.logic.pack.PackageAPI;
+import com.liarstudio.courierservice.logic.ServerUtils;
+import com.liarstudio.courierservice.ui.screen.main.new_packages.PagerAdapterNewPackages;
 import com.liarstudio.courierservice.ui.screen.auth.AuthActivity;
-import com.liarstudio.courierservice.ui.screen.main.MainActivity;
 import com.liarstudio.courierservice.ui.screen.pack.PackageFieldsActivity;
-import com.liarstudio.courierservice.entities.Package;
-import com.liarstudio.courierservice.Database.PackageList;
-import com.liarstudio.courierservice.Adapters.PagerAdapterMyPackages;
+import com.liarstudio.courierservice.entities.pack.Package;
+import com.liarstudio.courierservice.logic.pack.PackageRepository;
+import com.liarstudio.courierservice.ui.screen.main.my_packages.PagerAdapterMyPackages;
 import com.liarstudio.courierservice.R;
 
 
@@ -40,11 +39,11 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 import static android.app.Activity.RESULT_OK;
-import static com.liarstudio.courierservice.API.ApiUtils.CURRENT_USER;
-import static com.liarstudio.courierservice.API.ApiUtils.IS_ADMIN;
+import static com.liarstudio.courierservice.logic.ServerUtils.CURRENT_USER;
+import static com.liarstudio.courierservice.logic.ServerUtils.IS_ADMIN;
 import static com.liarstudio.courierservice.ui.screen.main.MainActivity.managerType;
 
-public class HomeFragment extends Fragment {
+public class MainFragment extends Fragment {
 
     /*
     ****** FIELDS AREA ******
@@ -57,7 +56,7 @@ public class HomeFragment extends Fragment {
     ****** CREATION AREA ******
     */
 
-    public HomeFragment() {
+    public MainFragment() {
 
     }
 
@@ -173,7 +172,7 @@ public class HomeFragment extends Fragment {
         progressBar.setVisibility(View.VISIBLE);
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(ApiUtils.BASE_URL)
+                .baseUrl(ServerUtils.BASE_SERVER_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         PackageAPI api = retrofit.create(PackageAPI.class);
@@ -217,7 +216,7 @@ public class HomeFragment extends Fragment {
         progressBar.setVisibility(View.VISIBLE);
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(ApiUtils.BASE_URL)
+                .baseUrl(ServerUtils.BASE_SERVER_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         PackageAPI api = retrofit.create(PackageAPI.class);
@@ -231,9 +230,9 @@ public class HomeFragment extends Fragment {
         // либо "Назначенные"/"В процессе"/"Завершенные"
 
         if (IS_ADMIN)
-            apiCall = api.loadForAdmin();
+            apiCall = api.loadAdminPackages();
         else
-            apiCall = api.loadForCourier(ApiUtils.CURRENT_USER.getId(), 1 - managerType);
+            apiCall = api.loadCourierPackages(ServerUtils.CURRENT_USER.getId(), 1 - managerType);
 
 
         apiCall.enqueue(
@@ -248,7 +247,7 @@ public class HomeFragment extends Fragment {
 
 
                                 if (response.body() != null) {
-                                    PackageList pkgList = new PackageList(response.body());
+                                    PackageRepository pkgList = new PackageRepository(response.body());
                                     pkgList.reloadAll();
                                     manager.notifyDataSetChanged();
                                 }
@@ -282,7 +281,7 @@ public class HomeFragment extends Fragment {
         progressBar.setVisibility(View.VISIBLE);
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(ApiUtils.BASE_URL)
+                .baseUrl(ServerUtils.BASE_SERVER_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         PackageAPI api = retrofit.create(PackageAPI.class);

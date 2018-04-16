@@ -1,4 +1,4 @@
-package com.liarstudio.courierservice.API;
+package com.liarstudio.courierservice.logic.pack;
 
 import com.liarstudio.courierservice.entities.pack.Package;
 

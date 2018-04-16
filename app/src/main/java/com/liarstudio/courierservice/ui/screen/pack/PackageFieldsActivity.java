@@ -1,4 +1,4 @@
-package com.liarstudio.courierservice.Activities;
+package com.liarstudio.courierservice.ui.screen.pack;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
@@ -28,13 +28,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.liarstudio.courierservice.API.ApiUtils;
-import com.liarstudio.courierservice.API.User;
-import com.liarstudio.courierservice.API.UserAPI;
-import com.liarstudio.courierservice.entities.Person;
-import com.liarstudio.courierservice.entities.Package;
+import com.liarstudio.courierservice.logic.ServerUtils;
+import com.liarstudio.courierservice.entities.user.User;
+import com.liarstudio.courierservice.logic.user.UserAPI;
+import com.liarstudio.courierservice.entities.person.Person;
+import com.liarstudio.courierservice.entities.pack.Package;
 import com.liarstudio.courierservice.R;
-import org.apache.commons.validator.routines.EmailValidator;
+import com.liarstudio.courierservice.ui.screen.maps.MapsActivity;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -42,7 +42,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-import static com.liarstudio.courierservice.API.ApiUtils.IS_ADMIN;
+import static com.liarstudio.courierservice.logic.ServerUtils.IS_ADMIN;
 
 
 public class PackageFieldsActivity extends AppCompatActivity {
@@ -149,7 +149,7 @@ public class PackageFieldsActivity extends AppCompatActivity {
             pack.setDate(c);
 
             //Загружаем ID курьера у текущего пользователя.
-            pack.setCourierId(ApiUtils.CURRENT_USER.getId());
+            pack.setCourierId(ServerUtils.CURRENT_USER.getId());
             pack.setStatus(0);
 
             TextView textViewPackDate = (TextView)findViewById(R.id.textViewPackDate);
@@ -510,10 +510,8 @@ public class PackageFieldsActivity extends AppCompatActivity {
 
         checkString = editTextSenderEmail.getText().toString();
 
-        if (!checkString.isEmpty() && !EmailValidator.getInstance().isValid(checkString))
+        if (!checkString.isEmpty() && !checkString.contains("@"))
         {
-
-
             valid = false;
             editTextSenderEmail.setError("Введен неверный e-mail.");
         }
@@ -551,7 +549,7 @@ public class PackageFieldsActivity extends AppCompatActivity {
 
         checkString = editTextRecipientEmail.getText().toString();
 
-        if (!checkString.isEmpty() && !EmailValidator.getInstance().isValid(checkString)) {
+        if (!checkString.isEmpty() && !checkString.contains("@")) {
             valid = false;
             editTextRecipientEmail.setError("Введен неверный e-mail.");
         } else
@@ -759,7 +757,7 @@ public class PackageFieldsActivity extends AppCompatActivity {
         progressBar.setVisibility(View.VISIBLE);
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(ApiUtils.BASE_URL)
+                .baseUrl(ServerUtils.BASE_SERVER_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         UserAPI api =retrofit.create(UserAPI.class);
@@ -839,7 +837,7 @@ public class PackageFieldsActivity extends AppCompatActivity {
         progressBar.setVisibility(View.VISIBLE);
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(ApiUtils.BASE_URL)
+                .baseUrl(ServerUtils.BASE_SERVER_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         UserAPI api =retrofit.create(UserAPI.class);
