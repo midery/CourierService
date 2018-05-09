@@ -1,7 +1,7 @@
-package com.liarstudio.courierservice.entities.pack;
+package com.liarstudio.courierservice.entitiy.pack;
 
 
-import com.liarstudio.courierservice.entities.person.Person;
+import com.liarstudio.courierservice.entitiy.person.Person;
 import com.orm.SugarRecord;
 import com.orm.dsl.Ignore;
 import com.orm.dsl.NotNull;

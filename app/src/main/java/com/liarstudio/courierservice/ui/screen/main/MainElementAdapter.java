@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import com.liarstudio.courierservice.ui.screen.maps.MapsActivity;
 import com.liarstudio.courierservice.logic.pack.PackageRepository;
-import com.liarstudio.courierservice.entities.pack.Package;
+import com.liarstudio.courierservice.entitiy.pack.Package;
 import com.liarstudio.courierservice.R;
 
 import static com.liarstudio.courierservice.logic.ServerUtils.IS_ADMIN;

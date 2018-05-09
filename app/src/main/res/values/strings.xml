@@ -5,6 +5,12 @@
     <string name="settings_fragment_header">Настройки</string>
     <string name="auth_activity_header">Аутентификация</string>
 
+    <string name="auth_email_error">Введен неверный E-mail!</string>
+    <string name="auth_password_error">Пароль слишком короткий</string>
+    <string name="auth_name_error">Имя не может быть пустым</string>
+    <string name="auth_input_error">Проверьте правильность ввода полей</string>
+
+
     <string-array name="person_type">
         <item>Компания</item>
         <item>Частное лицо</item>
@@ -66,7 +72,6 @@
     <string name="size_key">size_dimensions</string>
     <string name="title_activity_login">Sign in</string>
 
-
     <string name="error_could_not_connect_to_server">Истекло время ожидания от сервера. Проверьте подключение к интернету.</string>
     <string name="error_http_not_found">Ошибка работы с базой данных. Пожалуйста, повторите запрос. </string>
     <string name="error_add_http_not_found">Ошибка работы с базой данных. Пожалуйста, проверьте введенные данные. </string>
@@ -75,14 +80,9 @@
     <string name="error_auth">Ошибка авторизации. Повторите запрос.</string>
     <string name="error_db">Ошибка при подключении к базе данных. Повторите запрос.</string>
 
-
-
-
     <string name="nav_my">Мои посылки</string>
     <string name="nav_my_admin">Посылки</string>
     <string name="nav_new">Добавленные</string>
     <string name="nav_settings">Настройки</string>
-
-
 
 </resources>

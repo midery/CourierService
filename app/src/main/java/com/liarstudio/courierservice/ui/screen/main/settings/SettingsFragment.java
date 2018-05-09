@@ -6,7 +6,7 @@ import android.support.v7.preference.ListPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 
-import com.liarstudio.courierservice.entities.pack.Package;
+import com.liarstudio.courierservice.entitiy.pack.Package;
 import com.liarstudio.courierservice.R;
 
 public class SettingsFragment extends PreferenceFragmentCompat {

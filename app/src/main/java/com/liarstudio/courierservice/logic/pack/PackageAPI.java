@@ -1,6 +1,6 @@
 package com.liarstudio.courierservice.logic.pack;
 
-import com.liarstudio.courierservice.entities.pack.Package;
+import com.liarstudio.courierservice.entitiy.pack.Package;
 
 import java.util.List;
 
@@ -13,7 +13,6 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface PackageAPI {
-
 
     //Получаем список всех посылок
     @GET("/package")

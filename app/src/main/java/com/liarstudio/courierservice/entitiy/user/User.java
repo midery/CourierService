@@ -1,4 +1,4 @@
-package com.liarstudio.courierservice.entities.user;
+package com.liarstudio.courierservice.entitiy.user;
 
 /**
  * Created by M1DERY on 19.07.2017.

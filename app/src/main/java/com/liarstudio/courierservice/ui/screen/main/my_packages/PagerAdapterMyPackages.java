@@ -4,7 +4,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import com.liarstudio.courierservice.entities.pack.Package;
+import com.liarstudio.courierservice.entitiy.pack.Package;
 import com.liarstudio.courierservice.logic.pack.PackageRepository;
 import com.liarstudio.courierservice.ui.screen.main.PackageFragment;
 import com.orm.query.Condition;

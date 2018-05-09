@@ -15,7 +15,7 @@ import com.google.gson.GsonBuilder;
 import com.liarstudio.courierservice.logic.pack.PackageAPI;
 import com.liarstudio.courierservice.logic.ServerUtils;
 import com.liarstudio.courierservice.ui.screen.pack.PackageFieldsActivity;
-import com.liarstudio.courierservice.entities.pack.Package;
+import com.liarstudio.courierservice.entitiy.pack.Package;
 import com.liarstudio.courierservice.logic.pack.PackageRepository;
 import com.liarstudio.courierservice.R;
 
@@ -30,6 +30,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class PackageFragment extends Fragment {
     private static final int layout = R.layout.activity_list_package;
+    private int REQUEST_ADD_OR_EDIT = 1;
 
 
     private View view;
@@ -94,7 +95,7 @@ public class PackageFragment extends Fragment {
                                     Intent intent = new Intent(getContext(), PackageFieldsActivity.class);
                                     intent.putExtra("jsonPackage", jsonPackage);
 
-                                    getActivity().startActivityForResult(intent, MainActivity.REQUEST_ADD_OR_EDIT);
+                                    getActivity().startActivityForResult(intent, REQUEST_ADD_OR_EDIT);
                                 }
                                 break;
                             case HttpURLConnection.HTTP_NOT_FOUND:

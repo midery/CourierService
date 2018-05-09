@@ -29,10 +29,10 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.liarstudio.courierservice.logic.ServerUtils;
-import com.liarstudio.courierservice.entities.user.User;
-import com.liarstudio.courierservice.logic.user.UserAPI;
-import com.liarstudio.courierservice.entities.person.Person;
-import com.liarstudio.courierservice.entities.pack.Package;
+import com.liarstudio.courierservice.entitiy.user.User;
+import com.liarstudio.courierservice.logic.user.AuthApi;
+import com.liarstudio.courierservice.entitiy.person.Person;
+import com.liarstudio.courierservice.entitiy.pack.Package;
 import com.liarstudio.courierservice.R;
 import com.liarstudio.courierservice.ui.screen.maps.MapsActivity;
 
@@ -290,7 +290,7 @@ public class PackageFieldsActivity extends AppCompatActivity {
 
     void initButtons() {
 
-        buttonConfirm = (Button) findViewById(R.id.buttonConfirm);
+        buttonConfirm = (Button) findViewById(R.id.confirm_btn);
         buttonConfirm.setOnClickListener(v -> {
             //Проверяем поля
             //Если послылка завершенная, и readonly - просто закрываем activity
@@ -760,7 +760,7 @@ public class PackageFieldsActivity extends AppCompatActivity {
                 .baseUrl(ServerUtils.BASE_SERVER_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-        UserAPI api =retrofit.create(UserAPI.class);
+        AuthApi api =retrofit.create(AuthApi.class);
 
 
         api.loadUsers(0).enqueue(new Callback<List<User>>() {
@@ -840,7 +840,7 @@ public class PackageFieldsActivity extends AppCompatActivity {
                 .baseUrl(ServerUtils.BASE_SERVER_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-        UserAPI api =retrofit.create(UserAPI.class);
+        AuthApi api =retrofit.create(AuthApi.class);
 
         api.loadUser(pack.getCourierId()).enqueue(new Callback<User>() {
             @Override

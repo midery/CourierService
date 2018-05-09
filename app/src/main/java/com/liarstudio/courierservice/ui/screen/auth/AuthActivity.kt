@@ -1,110 +1,119 @@
 package com.liarstudio.courierservice.ui.screen.auth
 
 import android.os.Bundle
+import android.support.design.widget.Snackbar
+import android.support.design.widget.TextInputLayout
 import android.view.View
 import android.view.Window
-import android.view.WindowManager
 import android.widget.Button
+import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.ProgressBar
-import android.widget.Switch
-import android.widget.TextView
-
+import com.jakewharton.rxbinding2.widget.textChanges
 import com.liarstudio.courierservice.R
-import com.liarstudio.courierservice.logic.ServerUtils.BASE_LOCAL_URL
-import com.liarstudio.courierservice.logic.ServerUtils.BASE_SERVER_URL
 import com.liarstudio.courierservice.ui.base.BaseActivity
-
 import com.liarstudio.courierservice.ui.base.LoadState
+import javax.inject.Inject
 
 
 class AuthActivity : BaseActivity<AuthScreenModel>() {
-    /*
-     ****** FIELDS AREA ******
-     */
 
-    lateinit var editTextEmail: EditText
-    lateinit var editTextName: EditText
-    lateinit var editTextPassword: EditText
-
-    lateinit var buttonConfirm: Button
-    lateinit var switchRegister: Switch
-    lateinit var switchPreferredServer: Switch
-
-    lateinit var progressBar: ProgressBar
-    lateinit var textViewError: TextView
-
+    @Inject
     lateinit var presenter: AuthPresenter
+
+    lateinit var emailEt: EditText
+    lateinit var nameEt: EditText
+    lateinit var passwordEt: EditText
+
+    lateinit var emailTil: TextInputLayout
+    lateinit var passwordTil: TextInputLayout
+    lateinit var nameTil: TextInputLayout
+
+    lateinit var confirmBtn: Button
+    lateinit var typeCb: CheckBox
+    lateinit var authPb: ProgressBar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         requestWindowFeature(Window.FEATURE_ACTION_BAR)
         setContentView(R.layout.activity_auth)
-        window.setSoftInputMode(
-                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
-
 
         findViews()
-        presenter = AuthPresenter(this)
         initListeners()
 
     }
 
     private fun findViews() {
-        editTextEmail = findViewById(R.id.editTextEmail)
-        editTextName = findViewById(R.id.editTextName)
-        editTextPassword = findViewById(R.id.editTextPassword)
-        buttonConfirm = findViewById(R.id.buttonConfirm)
-        switchRegister = findViewById(R.id.switchRegister)
-        switchPreferredServer = findViewById(R.id.switchPreferredServer)
-        textViewError = findViewById(R.id.textViewError)
-        progressBar = findViewById(R.id.progressBarAuth)
+        emailEt = findViewById(R.id.email_et)
+        nameEt = findViewById(R.id.name_et)
+        passwordEt = findViewById(R.id.password_et)
 
+        emailTil = findViewById(R.id.email_til)
+        nameTil = findViewById(R.id.name_til)
+        passwordTil = findViewById(R.id.password_til)
+
+        confirmBtn = findViewById(R.id.confirm_btn)
+        typeCb = findViewById(R.id.type_cb)
+        authPb = findViewById(R.id.auth_pb)
     }
 
     private fun initListeners() {
-        switchRegister.setOnCheckedChangeListener { _, isChecked ->
+
+        presenter.observePasswordChanges(passwordEt.textChanges())
+        presenter.observeEmailChanges(emailEt.textChanges())
+        presenter.observeNameChanges(nameEt.textChanges())
+
+        typeCb.setOnCheckedChangeListener { _, isChecked ->
             presenter.registerChanged(isChecked)
         }
 
-        switchPreferredServer.setOnCheckedChangeListener { _, isChecked->
-            presenter.urlChanged(if (isChecked) BASE_LOCAL_URL else BASE_SERVER_URL)
-        }
-
-        buttonConfirm.setOnClickListener { _ -> presenter.authenticate() }
+        confirmBtn.setOnClickListener { _ -> presenter.authenticate() }
     }
 
     override fun render(screenModel: AuthScreenModel) {
 
         if (screenModel.isRegister) {
-            buttonConfirm.text = "Зарегистрироваться"
-            editTextName.visibility = View.VISIBLE
+            confirmBtn.text = "Зарегистрироваться"
+            nameTil.visibility = View.VISIBLE
         } else {
-            buttonConfirm.text = "Войти"
-            editTextName.visibility = View.GONE
+            confirmBtn.text = "Войти"
+            nameTil.visibility = View.GONE
         }
 
         when (screenModel.loadState) {
-            LoadState.NONE, LoadState.ERROR -> progressBar.visibility = View.GONE
-            LoadState.LOADING -> progressBar.visibility = View.VISIBLE
+            LoadState.NONE, LoadState.ERROR -> authPb.visibility = View.GONE
+            LoadState.LOADING -> authPb.visibility = View.VISIBLE
         }
+    }
 
-        if (screenModel.errorMessageRes == 0)
-            textViewError.text = ""
+
+    fun showEmailError(isError: Boolean) {
+        emailTil.error = if (isError)
+            getString(R.string.auth_email_error)
         else
-            textViewError.setText(screenModel.errorMessageRes)
+            ""
+        emailTil.isErrorEnabled = isError
     }
 
-    fun setEmailError(text: String) {
-        editTextEmail.error = text
+    fun showNameError(isError: Boolean) {
+        nameTil.error = if (isError)
+            getString(R.string.auth_name_error)
+        else
+            ""
+        nameTil.isErrorEnabled = isError
     }
 
-    fun setNameError(text: String) {
-        editTextName.error = text
+    fun showPasswordError(isError: Boolean) {
+        passwordTil.error = if (isError)
+            getString(R.string.auth_password_error)
+        else
+            ""
+        passwordTil.isErrorEnabled = isError
     }
 
-    fun setPasswordError(text: String) {
-        editTextPassword.error = text
+    fun showInputError() {
+        Snackbar.make(findViewById(android.R.id.content), "Ошибка при вводе данных. Пожалуйста, повторите ввод.", Snackbar.LENGTH_LONG)
+                .show()
     }
 }

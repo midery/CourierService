@@ -407,7 +407,7 @@
             android:visibility="gone"/>
 
         <Button
-            android:id="@+id/buttonConfirm"
+            android:id="@+id/confirm_btn"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_below="@+id/editTextCommentary"
@@ -418,7 +418,7 @@
             android:id="@+id/buttonDelete"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/buttonConfirm"
+            android:layout_below="@+id/confirm_btn"
             android:layout_centerInParent="true"
             android:layout_marginTop="20dp"
             android:backgroundTint="@android:color/holo_red_light"
