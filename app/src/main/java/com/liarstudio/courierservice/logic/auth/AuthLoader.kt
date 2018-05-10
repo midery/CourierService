@@ -1,4 +1,4 @@
-package com.liarstudio.courierservice.logic.user
+package com.liarstudio.courierservice.logic.auth
 
 import javax.inject.Inject
 

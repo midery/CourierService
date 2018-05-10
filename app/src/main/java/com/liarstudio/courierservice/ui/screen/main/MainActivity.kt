@@ -6,9 +6,7 @@ import android.support.v4.app.Fragment
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.support.v7.preference.PreferenceManager
 import android.support.v7.widget.Toolbar
 import android.view.MenuItem
 import android.widget.TextView
@@ -16,33 +14,25 @@ import android.widget.TextView
 import com.liarstudio.courierservice.logic.ServerUtils
 import com.liarstudio.courierservice.ui.screen.main.settings.SettingsFragment
 import com.liarstudio.courierservice.R
-import com.liarstudio.courierservice.entitiy.pack.Package
 import com.liarstudio.courierservice.ui.screen.auth.AuthActivity
 
 import com.liarstudio.courierservice.logic.ServerUtils.CURRENT_USER
+import com.liarstudio.courierservice.ui.base.BaseActivity
 import com.liarstudio.courierservice.ui.base.EXTRA_FIRST
+import javax.inject.Inject
 
-class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+class MainActivity : BaseActivity<MainScreenModel>(), NavigationView.OnNavigationItemSelectedListener {
 
-    val VOL_COEFFICIENT = "size_dimensions"
-    val WEIGHT_COEFFICIENT = "weight_dimensions"
-
+    @Inject
+    lateinit var presenter: MainActivityPresenter
     var tabType = MainTabType.MY
 
     lateinit var drawer: DrawerLayout
     lateinit var fragment: Fragment
 
-    /*
-    ****** METHODS AREA ******
-    */
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-
-        loadCoefficients()
 
 
         //Создаем новый MainFragment с менеджером PagerAdapterMyPackages
@@ -50,7 +40,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val fragmentTransaction = supportFragmentManager.beginTransaction()
         fragmentTransaction.replace(R.id.content_main, fragment).commit()
 
+        initNavigationDrawer()
 
+        presenter.loadCoeffs()
+    }
+
+    fun initNavigationDrawer() {
         //Назначаем toolBar
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
@@ -68,8 +63,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         //Меняем textView у заголовка drawer'a в соответствии с имененем пользователя
         val header = navigationView.getHeaderView(0)
         val textViewNavHeader = header.findViewById<TextView>(R.id.textViewNavHeader)
-        textViewNavHeader.text = CURRENT_USER.name
-
+        textViewNavHeader.text = CURRENT_USER?.name
 
         //Меняем названия и доступность пунктов меню drawer'а в зависимости от того, является ли
         //пользователь администратором
@@ -85,20 +79,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
-
-    /*
-    * Функция, вызываемая после завершения activity, запущенной для получения результата
-    * Вызываем onActivityResult с теми же параметрами у фрагментов
-     */
-    public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+    public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         //super.onActivityResult(requestCode,resultCode, data);
         fragment.onActivityResult(requestCode, resultCode, data)
 
     }
 
-    /*
-    * Функция, вызываемая при выборе одного из элементов меню drawer'а
-    */
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
 
         fragment = when (item.itemId) {
@@ -118,12 +104,5 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         return true
     }
 
-    /*
-    * Функция считывания коэффициентов из Preferences
-     */
-    private fun loadCoefficients() {
-        val sharedPref = PreferenceManager.getDefaultSharedPreferences(this)
-        Package.WEIGHT_PROGRAM_STATE = Integer.parseInt(sharedPref.getString(WEIGHT_COEFFICIENT, "0"))
-        Package.SIZE_PROGRAM_STATE = Integer.parseInt(sharedPref.getString(VOL_COEFFICIENT, "0"))
-    }
+    override fun render(screenModel: MainScreenModel) { /*без реализации*/ }
 }

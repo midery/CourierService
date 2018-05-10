@@ -1,12 +1,12 @@
 package com.liarstudio.courierservice.ui.screen.main.new_packages;
 
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.support.v13.app.FragmentStatePagerAdapter;
 
 import com.liarstudio.courierservice.entitiy.pack.Package;
 import com.liarstudio.courierservice.logic.pack.PackageRepository;
-import com.liarstudio.courierservice.ui.screen.main.PackageFragment;
+import com.liarstudio.courierservice.ui.screen.main.packages.PackageListFragment;
 import com.orm.query.Condition;
 import com.orm.query.Select;
 
@@ -23,7 +23,7 @@ public class PagerAdapterNewPackages extends FragmentStatePagerAdapter {
     @Override
     public Fragment getItem(int position) {
 
-        PackageFragment packageFragment = new PackageFragment();
+        PackageListFragment packageFragment = new PackageListFragment();
         PackageRepository packages;
 
         //Фильтруем посылки по заданному критерию и возвращаем фрагмент с отфильтрованным списком

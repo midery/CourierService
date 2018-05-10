@@ -30,10 +30,11 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.liarstudio.courierservice.logic.ServerUtils;
 import com.liarstudio.courierservice.entitiy.user.User;
-import com.liarstudio.courierservice.logic.user.AuthApi;
+import com.liarstudio.courierservice.logic.auth.AuthApi;
 import com.liarstudio.courierservice.entitiy.person.Person;
 import com.liarstudio.courierservice.entitiy.pack.Package;
 import com.liarstudio.courierservice.R;
+import com.liarstudio.courierservice.logic.user.UserApi;
 import com.liarstudio.courierservice.ui.screen.maps.MapsActivity;
 
 import retrofit2.Call;
@@ -42,7 +43,6 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-import static com.liarstudio.courierservice.logic.ServerUtils.IS_ADMIN;
 
 
 public class PackageFieldsActivity extends AppCompatActivity {
@@ -149,7 +149,7 @@ public class PackageFieldsActivity extends AppCompatActivity {
             pack.setDate(c);
 
             //Загружаем ID курьера у текущего пользователя.
-            pack.setCourierId(ServerUtils.CURRENT_USER.getId());
+            pack.setCourierId(ServerUtils.INSTANCE.getCURRENT_USER().getId());
             pack.setStatus(0);
 
             TextView textViewPackDate = (TextView)findViewById(R.id.textViewPackDate);
@@ -305,7 +305,7 @@ public class PackageFieldsActivity extends AppCompatActivity {
                     if (pack.getStatus() == 4)
                         packageFinalCheckDialog();
                     else
-                        if (IS_ADMIN) {
+                        if (ServerUtils.INSTANCE.getIS_ADMIN()) {
                             finishAndSend();
                         } else {
                             coordinatesEmptyCheckDialog();
@@ -330,7 +330,7 @@ public class PackageFieldsActivity extends AppCompatActivity {
         //Кнопка удалить, которая видна только администратору
         buttonDelete = (Button)findViewById(R.id.buttonDelete);
         buttonDelete.setOnClickListener(l -> deleteDialog());
-        if (IS_ADMIN)
+        if (ServerUtils.INSTANCE.getIS_ADMIN())
             buttonDelete.setVisibility(View.VISIBLE);
     }
 
@@ -375,7 +375,7 @@ public class PackageFieldsActivity extends AppCompatActivity {
 
         switch (pack.getStatus()) {
             case 0:
-                if (IS_ADMIN) {
+                if (ServerUtils.INSTANCE.getIS_ADMIN()) {
                     statuses = Arrays.asList("Новая", "Назначенная", "Завершенная");
                     loadCourierList();
                 } else {
@@ -383,7 +383,7 @@ public class PackageFieldsActivity extends AppCompatActivity {
                 }
                 break;
             case 1:
-                if (IS_ADMIN) {
+                if (ServerUtils.INSTANCE.getIS_ADMIN()) {
                     statuses = Arrays.asList("Назначенная", "Завершенная");
                     loadCourierList();
                 } else {
@@ -391,7 +391,7 @@ public class PackageFieldsActivity extends AppCompatActivity {
                 }
                 break;
             case 2:
-                if (IS_ADMIN) {
+                if (ServerUtils.INSTANCE.getIS_ADMIN()) {
                     statuses = Arrays.asList("В процессе", "Назначенная", "Завершенная");
                     loadCourierList();
                 } else {
@@ -406,7 +406,7 @@ public class PackageFieldsActivity extends AppCompatActivity {
             default:
                 statuses = Arrays.asList("Завершенная");
                 setReadOnlyView();
-                if (IS_ADMIN) {
+                if (ServerUtils.INSTANCE.getIS_ADMIN()) {
                     loadCourierByID();
                     spinnerCourierList.setEnabled(false);
                 }
@@ -580,7 +580,7 @@ public class PackageFieldsActivity extends AppCompatActivity {
         // Если spinner виден, посылку просматривает админ,
         // а так же статус посылки не "Назначенная" или "Завершенная" - выводим сообщение об ошибке.
         if (spinnerStatus.getVisibility() == View.VISIBLE) {
-            if (IS_ADMIN &&
+            if (ServerUtils.INSTANCE.getIS_ADMIN() &&
                     spinnerStatus.getSelectedItem().toString().compareTo(allStatuses.get(1)) != 0 &&
                     spinnerStatus.getSelectedItem().toString().compareTo(allStatuses.get(4)) != 0) {
                 valid = false;
@@ -757,13 +757,13 @@ public class PackageFieldsActivity extends AppCompatActivity {
         progressBar.setVisibility(View.VISIBLE);
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(ServerUtils.BASE_SERVER_URL)
+                .baseUrl("TODO")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-        AuthApi api =retrofit.create(AuthApi.class);
+        UserApi api =retrofit.create(UserApi.class);
 
 
-        api.loadUsers(0).enqueue(new Callback<List<User>>() {
+        api.loadUsersWithRole(0).enqueue(new Callback<List<User>>() {
             @Override
             public void onResponse(Call<List<User>> call, Response<List<User>> response) {
                 switch (response.code()) {
@@ -837,10 +837,10 @@ public class PackageFieldsActivity extends AppCompatActivity {
         progressBar.setVisibility(View.VISIBLE);
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(ServerUtils.BASE_SERVER_URL)
+                .baseUrl("TODO")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-        AuthApi api =retrofit.create(AuthApi.class);
+        UserApi api =retrofit.create(UserApi.class);
 
         api.loadUser(pack.getCourierId()).enqueue(new Callback<User>() {
             @Override

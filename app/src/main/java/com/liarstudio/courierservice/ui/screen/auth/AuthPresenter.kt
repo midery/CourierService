@@ -1,12 +1,11 @@
 package com.liarstudio.courierservice.ui.screen.auth
 
 import android.content.Intent
-import android.support.design.widget.Snackbar
 import com.jakewharton.rxbinding2.InitialValueObservable
 import com.liarstudio.courierservice.R
 import com.liarstudio.courierservice.injection.scope.PerScreen
 import com.liarstudio.courierservice.logic.ServerUtils
-import com.liarstudio.courierservice.logic.user.AuthLoader
+import com.liarstudio.courierservice.logic.auth.AuthLoader
 import com.liarstudio.courierservice.ui.base.BasePresenter
 import com.liarstudio.courierservice.ui.base.LoadState
 import com.liarstudio.courierservice.ui.base.SnackController
@@ -50,7 +49,6 @@ class AuthPresenter @Inject constructor(
                 {
                     model.loadState = LoadState.NONE
                     ServerUtils.CURRENT_USER = it
-                    ServerUtils.IS_ADMIN = ServerUtils.CURRENT_USER.role == 1
                     view.startActivity(Intent(view, MainActivity::class.java))
                     view.finish()
                 },

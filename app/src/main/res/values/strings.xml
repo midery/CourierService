@@ -10,6 +10,8 @@
     <string name="auth_name_error">Имя не может быть пустым</string>
     <string name="auth_input_error">Проверьте правильность ввода полей</string>
 
+    <string name="pack_item_date_tv">Дата: %s</string>
+    <string name="pack_item_status_tv">Статус: %s</string>
 
     <string-array name="person_type">
         <item>Компания</item>
@@ -45,9 +47,6 @@
         <item name="0">0</item>
         <item name="1">1</item>
     </string-array>
-
-
-
 
     <string-array name="size_entries_values">
         <item name="0">0</item>

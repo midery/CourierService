@@ -1,6 +1,6 @@
 package com.liarstudio.courierservice.injection.logic
 
-import com.liarstudio.courierservice.logic.user.AuthApi
+import com.liarstudio.courierservice.logic.auth.AuthApi
 import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit
