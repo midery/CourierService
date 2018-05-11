@@ -25,15 +25,18 @@ interface PackageApi {
 
     //Получаем все посылки по id курьера и статусу(либо новая, либо нет)
     @GET("package/courier/{courier_id}")
-    fun getPackagesFromCourier(@Path("courier_id") id: Long, @Query("status") status: Int): Observable<List<Package>>
+    fun getCourierPackages(@Path("courier_id") id: Long): Observable<List<Package>>
+
+    @GET("package/courier/new/{courier_id}")
+    fun getNewCourierPackages(@Path("courier_id") id: Long): Observable<List<Package>>
 
     //Получаем посылки для администратора(со статусом "Новая"/"Отклоненная"/"Завершенная"
     @GET(UrlPackage.GET_PACKAGES_ADMIN)
     fun getAdminPackages(): Observable<List<Package>>
 
     //Удаляем посылку
-    @DELETE(UrlPackage.DELETE_PACKAGE_ADMIN)
-    fun delete(@Path("pack_id") id: Long): Completable
+    @DELETE(UrlPackage.DELETE_PACKAGE)
+    fun delete(@Path("package_id") id: Long): Completable
 
     //Добавляем посылку
     @POST(UrlPackage.BASE_PACKAGE_URL)

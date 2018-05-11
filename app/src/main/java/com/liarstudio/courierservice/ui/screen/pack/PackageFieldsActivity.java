@@ -28,9 +28,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.liarstudio.courierservice.logic.ServerUtils;
+import com.liarstudio.courierservice.entitiy.person.Coordinates;
+import com.liarstudio.courierservice.logic.UrlServer;
 import com.liarstudio.courierservice.entitiy.user.User;
-import com.liarstudio.courierservice.logic.auth.AuthApi;
 import com.liarstudio.courierservice.entitiy.person.Person;
 import com.liarstudio.courierservice.entitiy.pack.Package;
 import com.liarstudio.courierservice.R;
@@ -54,7 +54,7 @@ public class PackageFieldsActivity extends AppCompatActivity {
 
     public static final int REQUEST_MAP = 2;
 
-    Package pack, packConst;
+    Package pack;
 
     List<String> allStatuses = Arrays.asList("Новая", "Назначенная", "В процессе",
             "Отклоненная", "Завершенная");
@@ -129,27 +129,19 @@ public class PackageFieldsActivity extends AppCompatActivity {
         {
             String jsonPackage = intent.getStringExtra("jsonPackage");
             pack = new Gson().fromJson(jsonPackage, Package.class);
-            try {
-                packConst = (Package) pack.clone();
-            } catch (CloneNotSupportedException e) {
-                packConst = null;
-            }
-
-
             initFieldsForEdit();
         }
         else {
 
 
             pack = new Package();
-            packConst = null;
             //Создаем календарь по-умолчанию с датой равной текущему дню + 1;
             Calendar c = Calendar.getInstance();
             c.add(Calendar.DAY_OF_YEAR, 1);
             pack.setDate(c);
 
             //Загружаем ID курьера у текущего пользователя.
-            pack.setCourierId(ServerUtils.INSTANCE.getCURRENT_USER().getId());
+            pack.setCourierId(User.Companion.getCURRENT().getId());
             pack.setStatus(0);
 
             TextView textViewPackDate = (TextView)findViewById(R.id.textViewPackDate);
@@ -300,12 +292,12 @@ public class PackageFieldsActivity extends AppCompatActivity {
                 finish();
             else {
                 if (validate()) {
-                    if (pack.equals(packConst))
+                    if (pack.equals(pack))
                         finish();
                     if (pack.getStatus() == 4)
                         packageFinalCheckDialog();
                     else
-                        if (ServerUtils.INSTANCE.getIS_ADMIN()) {
+                        if (User.Companion.getCURRENT().isAdmin()) {
                             finishAndSend();
                         } else {
                             coordinatesEmptyCheckDialog();
@@ -330,7 +322,7 @@ public class PackageFieldsActivity extends AppCompatActivity {
         //Кнопка удалить, которая видна только администратору
         buttonDelete = (Button)findViewById(R.id.buttonDelete);
         buttonDelete.setOnClickListener(l -> deleteDialog());
-        if (ServerUtils.INSTANCE.getIS_ADMIN())
+        if (User.Companion.getCURRENT().isAdmin())
             buttonDelete.setVisibility(View.VISIBLE);
     }
 
@@ -343,7 +335,7 @@ public class PackageFieldsActivity extends AppCompatActivity {
         editTextSenderEmail.setText(sender.getEmail());
         editTextSenderPhone.setText(sender.getPhone());
         editTextSenderCompanyName.setText(sender.getCompanyName());
-        spinner.setSelection(sender.getType());
+        spinner.setSelection(sender.getType().ordinal());
         editTextSenderCompanyName.setText(sender.getCompanyName());
 
 
@@ -353,7 +345,7 @@ public class PackageFieldsActivity extends AppCompatActivity {
         editTextRecipientEmail.setText(recipient.getEmail());
         editTextRecipientPhone.setText(recipient.getPhone());
         editTextRecipientCompanyName.setText(recipient.getCompanyName());
-        spinnerRecipient.setSelection(recipient.getType());
+        spinnerRecipient.setSelection(recipient.getType().ordinal());
         editTextRecipientCompanyName.setText(recipient.getCompanyName());
 
 
@@ -375,7 +367,7 @@ public class PackageFieldsActivity extends AppCompatActivity {
 
         switch (pack.getStatus()) {
             case 0:
-                if (ServerUtils.INSTANCE.getIS_ADMIN()) {
+                if (User.Companion.getCURRENT().isAdmin()) {
                     statuses = Arrays.asList("Новая", "Назначенная", "Завершенная");
                     loadCourierList();
                 } else {
@@ -383,7 +375,7 @@ public class PackageFieldsActivity extends AppCompatActivity {
                 }
                 break;
             case 1:
-                if (ServerUtils.INSTANCE.getIS_ADMIN()) {
+                if (User.Companion.getCURRENT().isAdmin()) {
                     statuses = Arrays.asList("Назначенная", "Завершенная");
                     loadCourierList();
                 } else {
@@ -391,7 +383,7 @@ public class PackageFieldsActivity extends AppCompatActivity {
                 }
                 break;
             case 2:
-                if (ServerUtils.INSTANCE.getIS_ADMIN()) {
+                if (User.Companion.getCURRENT().isAdmin()) {
                     statuses = Arrays.asList("В процессе", "Назначенная", "Завершенная");
                     loadCourierList();
                 } else {
@@ -406,7 +398,7 @@ public class PackageFieldsActivity extends AppCompatActivity {
             default:
                 statuses = Arrays.asList("Завершенная");
                 setReadOnlyView();
-                if (ServerUtils.INSTANCE.getIS_ADMIN()) {
+                if (User.Companion.getCURRENT().isAdmin()) {
                     loadCourierByID();
                     spinnerCourierList.setEnabled(false);
                 }
@@ -580,7 +572,7 @@ public class PackageFieldsActivity extends AppCompatActivity {
         // Если spinner виден, посылку просматривает админ,
         // а так же статус посылки не "Назначенная" или "Завершенная" - выводим сообщение об ошибке.
         if (spinnerStatus.getVisibility() == View.VISIBLE) {
-            if (ServerUtils.INSTANCE.getIS_ADMIN() &&
+            if (User.Companion.getCURRENT().isAdmin() &&
                     spinnerStatus.getSelectedItem().toString().compareTo(allStatuses.get(1)) != 0 &&
                     spinnerStatus.getSelectedItem().toString().compareTo(allStatuses.get(4)) != 0) {
                 valid = false;
@@ -680,8 +672,8 @@ public class PackageFieldsActivity extends AppCompatActivity {
     * Если координаты
      */
     void coordinatesEmptyCheckDialog() {
-        double[] coordinates = pack.getCoordinates();
-        if (coordinates[0] != 0 && coordinates[1] != 0) {
+        Coordinates coordinates= pack.getCoordinates();
+        if (coordinates.getX() != 0 && coordinates.getY()!= 0) {
             finishAndSend();
             return;
         }
@@ -737,7 +729,7 @@ public class PackageFieldsActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK && requestCode == REQUEST_MAP) {
-            pack.setCoordinates(data.getDoubleArrayExtra("coordinates"));
+            pack.setCoordinates((Coordinates) data.getSerializableExtra("coordinates"));
         }
     }
 

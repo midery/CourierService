@@ -3,10 +3,10 @@ package com.liarstudio.courierservice.ui.screen.auth
 import android.content.Intent
 import com.jakewharton.rxbinding2.InitialValueObservable
 import com.liarstudio.courierservice.R
-import com.liarstudio.courierservice.injection.scope.PerScreen
-import com.liarstudio.courierservice.logic.ServerUtils
+import com.liarstudio.courierservice.entitiy.user.User
+import com.liarstudio.courierservice.injection.scope.PerActivity
 import com.liarstudio.courierservice.logic.auth.AuthLoader
-import com.liarstudio.courierservice.ui.base.BasePresenter
+import com.liarstudio.courierservice.ui.base.screen.BasePresenter
 import com.liarstudio.courierservice.ui.base.LoadState
 import com.liarstudio.courierservice.ui.base.SnackController
 import com.liarstudio.courierservice.ui.screen.main.MainActivity
@@ -15,7 +15,7 @@ import retrofit2.HttpException
 import java.net.HttpURLConnection
 import javax.inject.Inject
 
-@PerScreen
+@PerActivity
 class AuthPresenter @Inject constructor(
         private val authLoader: AuthLoader,
         private val snackController: SnackController,
@@ -35,40 +35,9 @@ class AuthPresenter @Inject constructor(
             snackController.show(R.string.auth_input_error)
     }
 
-    private fun sendAuthRequest() {
-        model.loadState = LoadState.LOADING
-        model.errorMessageRes = 0
-        view.render(model)
-
-        val request = if (model.isRegister)
-            authLoader.register(model.email, model.name, model.encryptedPassword)
-        else
-            authLoader.login(model.email, model.encryptedPassword)
-
-        authDisposable = subscribe(request,
-                {
-                    model.loadState = LoadState.NONE
-                    ServerUtils.CURRENT_USER = it
-                    view.startActivity(Intent(view, MainActivity::class.java))
-                    view.finish()
-                },
-                {
-                    model.loadState = LoadState.ERROR
-                    view.render(model)
-                    if (it is HttpException) {
-                        snackController.show(
-                                when (it.code()) {
-                                    HttpURLConnection.HTTP_FORBIDDEN -> R.string.error_http_forbidden
-                                    HttpURLConnection.HTTP_CONFLICT -> R.string.error_http_conflict
-                                    else -> R.string.error_auth
-                                })
-                    }
-                })
-    }
-
     fun registerChanged(isRegister: Boolean) {
         model.isRegister = isRegister
-        view.render(model)
+        view.renderData(model)
     }
 
     fun observeEmailChanges(textObservable: InitialValueObservable<CharSequence>) {
@@ -97,4 +66,38 @@ class AuthPresenter @Inject constructor(
                     view.showNameError(!model.isNameValid)
                 })
     }
+
+    private fun sendAuthRequest() {
+        view.renderState(LoadState.LOADING)
+
+        val request = if (model.isRegister)
+            authLoader.register(model.email, model.name, model.encryptedPassword)
+        else
+            authLoader.login(model.email, model.encryptedPassword)
+
+        authDisposable = subscribe(request,
+                {
+                    model.loadState = LoadState.NONE
+                    User.CURRENT = it
+                    openMainActivity()
+                },
+                {
+                    model.loadState = LoadState.ERROR
+                    view.render(model)
+                    if (it is HttpException) {
+                        snackController.show(
+                                when (it.code()) {
+                                    HttpURLConnection.HTTP_FORBIDDEN -> R.string.error_http_forbidden
+                                    HttpURLConnection.HTTP_CONFLICT -> R.string.error_http_conflict
+                                    else -> R.string.error_auth
+                                })
+                    }
+                })
+    }
+
+    private fun openMainActivity() {
+        view.startActivity(Intent(view, MainActivity::class.java))
+        view.finish()
+    }
+
 }

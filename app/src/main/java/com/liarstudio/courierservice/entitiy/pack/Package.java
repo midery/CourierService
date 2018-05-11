@@ -1,6 +1,7 @@
 package com.liarstudio.courierservice.entitiy.pack;
 
 
+import com.liarstudio.courierservice.entitiy.person.Coordinates;
 import com.liarstudio.courierservice.entitiy.person.Person;
 import com.orm.SugarRecord;
 import com.orm.dsl.Ignore;
@@ -12,7 +13,7 @@ import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-public class Package extends SugarRecord implements Cloneable{
+public class Package extends SugarRecord {
 
     /*
     ****** FIELD AREA ******
@@ -142,11 +143,6 @@ public class Package extends SugarRecord implements Cloneable{
         return round(value, 2);
     }
 
-    public Object clone() throws CloneNotSupportedException {
-        return super.clone();
-    }
-
-
     /*
     ****** GETTER/SETTER AREA ******
     */
@@ -215,10 +211,10 @@ public class Package extends SugarRecord implements Cloneable{
 
     }
 
-    public double[] getCoordinates() {
+    public Coordinates getCoordinates() {
         return recipient.getCoordinates();
     }
-    public void setCoordinates(double[] coordinates) { recipient.setCoordinates(coordinates);}
+    public void setCoordinates(Coordinates coordinates) { recipient.setCoordinates(coordinates);}
 
     public void setPrice() {
 
@@ -254,7 +250,4 @@ public class Package extends SugarRecord implements Cloneable{
     public void setCourierId(int courierId) {
         this.courierId = courierId;
     }
-
-
-
 }

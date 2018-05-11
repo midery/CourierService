@@ -3,8 +3,8 @@ package com.liarstudio.courierservice.ui.screen.main.packages.controller
 import android.view.ViewGroup
 import android.widget.TextView
 import com.liarstudio.courierservice.R
-import com.liarstudio.courierservice.entitiy.coordinates.Coordinates
 import com.liarstudio.courierservice.entitiy.pack.Package
+import com.liarstudio.courierservice.entitiy.person.Coordinates
 import ru.surfstudio.easyadapter.recycler.controller.BindableItemController
 import ru.surfstudio.easyadapter.recycler.holder.BindableViewHolder
 
@@ -32,7 +32,7 @@ class PackageListElementController(
             statusTv.text = res.getString(R.string.pack_item_status_tv, pack.status)
 
             itemView.setOnClickListener { onPackageClick(pack.id) }
-            showOnMapBtn.setOnClickListener { onShowOnMapClick(Coordinates(pack.coordinates[0], pack.coordinates[1])) }
+            showOnMapBtn.setOnClickListener { onShowOnMapClick(pack.coordinates) }
         }
     }
 

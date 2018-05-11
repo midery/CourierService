@@ -1,6 +1,8 @@
-package com.liarstudio.courierservice.ui.base
+package com.liarstudio.courierservice.ui.base.screen
 
+import com.liarstudio.courierservice.ui.base.BaseView
 import com.liarstudio.courierservice.ui.base.rx.emptyAction
+import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -24,10 +26,21 @@ abstract class BasePresenter<V : BaseView>(val view: V) {
     protected open fun <T> subscribe(
             observable: Observable<T>,
             onNext: (t: T) -> Unit
-    ): Disposable = observable
+    ): Disposable = subscribe(observable, onNext, {})
+
+    protected open fun subscribe(
+            completable: Completable,
+            onComplete: () -> Unit
+    ): Disposable = subscribe(completable, onComplete, {})
+
+    protected open fun subscribe(
+            completable: Completable,
+            onComplete: () -> Unit,
+            onError: (Throwable) -> Unit
+    ): Disposable = completable
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribeWith(
-                    LambdaObserver(onNext, {}, emptyAction(), {})
-            )
+            .subscribe(onComplete, onError)
+            //.subscribeWith( LambdaObserver({}, onError, onComplete, {}) )
+
 }

@@ -1,37 +1,22 @@
 package com.liarstudio.courierservice.ui.screen.main.packages
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-
-import com.google.gson.GsonBuilder
-import com.liarstudio.courierservice.logic.pack.PackageApi
-import com.liarstudio.courierservice.logic.ServerUtils
-import com.liarstudio.courierservice.ui.screen.pack.PackageFieldsActivity
-import com.liarstudio.courierservice.entitiy.pack.Package
-import com.liarstudio.courierservice.logic.pack.PackageRepository
 import com.liarstudio.courierservice.R
-import com.liarstudio.courierservice.ui.base.BaseFragment
+import com.liarstudio.courierservice.logic.pack.PackageRepository
+import com.liarstudio.courierservice.ui.base.screen.BaseFragment
+import com.liarstudio.courierservice.ui.base.EXTRA_FIRST
+import com.liarstudio.courierservice.ui.base.LoadState
 import com.liarstudio.courierservice.ui.screen.main.packages.controller.PackageListElementController
 import kotlinx.android.synthetic.main.list_packages.*
-
-import java.net.HttpURLConnection
-
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import ru.surfstudio.easyadapter.recycler.EasyAdapter
 import ru.surfstudio.easyadapter.recycler.ItemList
 import javax.inject.Inject
 
 
 class PackageListFragment : BaseFragment<PackageListScreenModel>() {
-    private val REQUEST_ADD_OR_EDIT = 1
 
     @Inject
     lateinit var presenter: PackageListPresenter
@@ -45,29 +30,49 @@ class PackageListFragment : BaseFragment<PackageListScreenModel>() {
             { presenter.openMap(it) }
     )
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        retainInstance = true
-    }
-
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?) = inflater!!.inflate(R.layout.list_packages, container, false)
+    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?)
+            = inflater!!.inflate(R.layout.list_packages, container, false)
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initRecycler()
-        presenter.loadPackages()
+        initListeners()
+        presenter.init(arguments)
     }
 
-    fun initRecycler() {
+    private fun initRecycler() {
         adapter = EasyAdapter()
         recycler.adapter = adapter
     }
 
-    override fun render(screenModel: PackageListScreenModel) {
+    private fun initListeners() {
+        packages_swr.setOnRefreshListener { presenter.reloadPackages() }
+    }
+
+    override fun renderState(loadState: LoadState) {
+        when (loadState) {
+            LoadState.NONE, LoadState.ERROR -> packages_pb.visibility = View.GONE
+            LoadState.LOADING -> packages_pb.visibility = View.VISIBLE
+        }
+    }
+
+    override fun renderData(screenModel: PackageListScreenModel) {
+        packages_swr.isRefreshing = screenModel.isRefreshing
+
         adapter.setItems(
                 ItemList.create()
                         .addAll(screenModel.packages, packageController)
         )
     }
 
+    fun renderRefreshState(isRefreshing: Boolean) {
+        packages_swr.isRefreshing = isRefreshing
+    }
+
+    companion object {
+        fun newInstance(status: PackTabType) =
+                PackageListFragment().apply {
+                    arguments = Bundle().apply { putSerializable(EXTRA_FIRST, status) }
+                }
+    }
 }

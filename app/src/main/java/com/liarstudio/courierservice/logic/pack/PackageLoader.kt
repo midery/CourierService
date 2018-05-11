@@ -8,7 +8,8 @@ class PackageLoader @Inject constructor(
 ){
     fun getPackages() = packageApi.getPackages()
     fun getPackage(id: Long) = packageApi.getPackage(id)
-    fun getPackagesFromCourier(userId: Long, status: Int) = packageApi.getPackagesFromCourier(userId, status)
+    fun getCourierPackages(id: Long) = packageApi.getCourierPackages(id)
+    fun getNewCourierPackages(id: Long) = packageApi.getNewCourierPackages(id)
     fun getAdminPackages() = packageApi.getAdminPackages()
     fun delete(id: Long) = packageApi.delete(id)
     fun add(p: Package) = packageApi.add(p)

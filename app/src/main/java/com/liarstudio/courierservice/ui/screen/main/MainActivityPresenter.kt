@@ -2,7 +2,7 @@ package com.liarstudio.courierservice.ui.screen.main
 
 import android.support.v7.preference.PreferenceManager
 import com.liarstudio.courierservice.entitiy.pack.Package
-import com.liarstudio.courierservice.ui.base.BasePresenter
+import com.liarstudio.courierservice.ui.base.screen.BasePresenter
 import com.liarstudio.courierservice.ui.base.VOL_COEFFICIENT
 import com.liarstudio.courierservice.ui.base.WEIGHT_COEFFICIENT
 import javax.inject.Inject

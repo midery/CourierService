@@ -7,7 +7,6 @@ import com.liarstudio.courierservice.injection.scope.PerScreen
 import com.liarstudio.courierservice.ui.screen.auth.AuthActivity
 import javax.inject.Inject
 
-@PerScreen
 class SnackController @Inject constructor(val view: AppCompatActivity) {
 
     fun show(message: String, duration: Int = Snackbar.LENGTH_LONG) {

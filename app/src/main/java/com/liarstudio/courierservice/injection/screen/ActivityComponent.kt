@@ -4,6 +4,7 @@ import com.liarstudio.courierservice.injection.app.AppComponent
 import com.liarstudio.courierservice.injection.scope.PerActivity
 import com.liarstudio.courierservice.logic.auth.AuthLoader
 import com.liarstudio.courierservice.logic.pack.PackageLoader
+import com.liarstudio.courierservice.ui.base.SnackController
 import dagger.Component
 
 @PerActivity
@@ -12,5 +13,5 @@ import dagger.Component
 interface ActivityComponent {
     fun authLoader(): AuthLoader
     fun packageLoader(): PackageLoader
-
+    fun snackController(): SnackController
 }

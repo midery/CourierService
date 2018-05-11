@@ -2,6 +2,7 @@ package com.liarstudio.courierservice.ui.screen.main.new_packages;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v13.app.FragmentStatePagerAdapter;
 
 import com.liarstudio.courierservice.entitiy.pack.Package;
@@ -13,7 +14,7 @@ import com.orm.query.Select;
 
 import java.util.Collections;
 
-public class PagerAdapterNewPackages extends FragmentStatePagerAdapter {
+public class PagerAdapterNewPackages extends FragmentPagerAdapter {
 
 
     public PagerAdapterNewPackages(FragmentManager fm) {
@@ -50,9 +51,10 @@ public class PagerAdapterNewPackages extends FragmentStatePagerAdapter {
         return 1;
     }
 
-    //Для корректного отображения при обновлении
+    /*//Для корректного отображения при обновлении
     @Override
     public int getItemPosition(Object object) {
         return POSITION_NONE;
     }
+    */
 }

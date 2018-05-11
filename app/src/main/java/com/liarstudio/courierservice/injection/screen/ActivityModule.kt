@@ -6,9 +6,10 @@ import com.liarstudio.courierservice.ui.base.SnackController
 import dagger.Module
 import dagger.Provides
 
+
 @Module
-class ActivityModule {
-    @PerScreen
+class ActivityModule(val activity: AppCompatActivity) {
+
     @Provides
-    fun provideSnackController(activity: AppCompatActivity) = SnackController(activity)
+    fun provideSnackController() = SnackController(activity)
 }

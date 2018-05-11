@@ -2,7 +2,7 @@ package com.liarstudio.courierservice.injection.logic
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import com.liarstudio.courierservice.logic.ServerUtils
+import com.liarstudio.courierservice.logic.UrlServer
 import com.liarstudio.courierservice.injection.scope.PerApplication
 import dagger.Module
 import dagger.Provides
@@ -24,7 +24,7 @@ class NetworkModule {
     ): Retrofit {
         return Retrofit.Builder()
                 .client(okHttpClient)
-                .baseUrl(ServerUtils.BASE_SERVER_URL)
+                .baseUrl(UrlServer.BASE_SERVER_URL)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build()
@@ -52,7 +52,7 @@ class NetworkModule {
     @Provides
     @PerApplication
     internal fun provideHttpLoggingInterceptor(): HttpLoggingInterceptor =
-            HttpLoggingInterceptor { message -> print("OkHttp $message") }
+            HttpLoggingInterceptor { message -> println("OkHttp $message") }
                     .setLevel(HttpLoggingInterceptor.Level.BODY)
 
 }

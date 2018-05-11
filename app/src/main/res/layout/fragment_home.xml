@@ -26,6 +26,7 @@
             android:layout_below="@+id/tabLayout"/>
 
         <ProgressBar
+            android:visibility="gone"
             android:id="@+id/main_pb"
             style="?android:attr/progressBarStyle"
             android:layout_width="wrap_content"

@@ -53,7 +53,12 @@
         <activity
             android:name=".ui.screen.main.MainActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:launchMode="singleTop"/>
+            android:launchMode="singleTop">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".ui.screen.pack.PackageFieldsActivity"
             android:configChanges="orientation|keyboardHidden"
@@ -76,10 +81,6 @@
             android:label="@string/auth_activity_header"
             android:theme="@style/AppTheme.Base"
             android:windowSoftInputMode="adjustResize">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
 
         </activity>
     </application>

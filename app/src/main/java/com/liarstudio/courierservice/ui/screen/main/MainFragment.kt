@@ -1,57 +1,33 @@
 package com.liarstudio.courierservice.ui.screen.main
 
 
+import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.TabLayout
-import android.support.v4.app.Fragment
-import android.support.v13.app.FragmentStatePagerAdapter
 import android.support.v4.view.ViewPager
-import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
-import android.widget.Toast
-
+import android.view.*
 import com.google.gson.Gson
 import com.liarstudio.courierservice.R
 import com.liarstudio.courierservice.entitiy.pack.Package
-import com.liarstudio.courierservice.logic.ServerUtils
-import com.liarstudio.courierservice.logic.pack.PackageApi
-import com.liarstudio.courierservice.logic.pack.PackageRepository
+import com.liarstudio.courierservice.entitiy.user.User
+import com.liarstudio.courierservice.ui.base.screen.BaseFragment
+import com.liarstudio.courierservice.ui.base.EXTRA_FIRST
+import com.liarstudio.courierservice.ui.base.LoadState
 import com.liarstudio.courierservice.ui.screen.auth.AuthActivity
 import com.liarstudio.courierservice.ui.screen.main.my_packages.PagerAdapterMyPackages
 import com.liarstudio.courierservice.ui.screen.main.new_packages.PagerAdapterNewPackages
 import com.liarstudio.courierservice.ui.screen.pack.PackageFieldsActivity
 
-import java.net.HttpURLConnection
-
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-
-import android.app.Activity.RESULT_OK
-import com.liarstudio.courierservice.logic.ServerUtils.CURRENT_USER
-import com.liarstudio.courierservice.logic.ServerUtils.IS_ADMIN
-import com.liarstudio.courierservice.ui.base.EXTRA_FIRST
-import kotlinx.android.synthetic.main.fragment_home.*
-
-class MainFragment : Fragment() {
+class MainFragment : BaseFragment<MainScreenModel>() {
 
     private val REQUEST_ADD_OR_EDIT = 1
     lateinit var tabType: MainTabType
-
-    lateinit var adapter: FragmentStatePagerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
     }
-
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -64,16 +40,15 @@ class MainFragment : Fragment() {
 
         tabType = arguments.get(EXTRA_FIRST) as MainTabType
 
-        when (tabType) {
-            MainTabType.MY -> adapter = PagerAdapterMyPackages(activity.fragmentManager)
+        viewPager.adapter = when (tabType) {
+            MainTabType.MY -> PagerAdapterMyPackages(activity.fragmentManager)
             MainTabType.NEW -> {
-                adapter = PagerAdapterNewPackages(activity.fragmentManager)
                 tabLayout.visibility = View.GONE
+                PagerAdapterNewPackages(activity.fragmentManager)
             }
         }
 
-        viewPager.adapter = adapter
-
+        viewPager.offscreenPageLimit = 3
         tabLayout.setupWithViewPager(viewPager)
         return view
     }
@@ -87,7 +62,7 @@ class MainFragment : Fragment() {
 
         //Скрываем кнопку добавления для администратора
         val item = menu!!.findItem(R.id.item_add)
-        item.isVisible = !IS_ADMIN
+        item.isVisible = User.CURRENT.isAdmin
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
@@ -101,9 +76,9 @@ class MainFragment : Fragment() {
                 activity.startActivityForResult(addIntent, REQUEST_ADD_OR_EDIT)
             }
 
-            R.id.item_refresh -> {}//loadListFromServer()
+            R.id.item_refresh -> { }//loadListFromServer()
             R.id.item_logout -> {
-                CURRENT_USER = null
+                User.CURRENT.id = -1
                 startActivity(Intent(activity, AuthActivity::class.java))
                 activity.finish()
             }
@@ -118,12 +93,12 @@ class MainFragment : Fragment() {
             if (data!!.hasExtra("packageToAdd")) {
                 val jsonPackage = data.getStringExtra("packageToAdd")
                 val pack = Gson().fromJson(jsonPackage, Package::class.java)
-        //        addToServer(pack)
+                //        addToServer(pack)
             } else {
                 if (data.hasExtra("packageToDelete")) {
                     val jsonPackage = data.getStringExtra("packageToDelete")
                     val pack = Gson().fromJson(jsonPackage, Package::class.java)
-      //              deleteFromServer(pack.id!!.toInt())
+                    //              deleteFromServer(pack.id!!.toInt())
                 }
             }
         }
@@ -133,7 +108,7 @@ class MainFragment : Fragment() {
         main_pb.visibility = View.VISIBLE
 
         val retrofit = Retrofit.Builder()
-                .baseUrl(ServerUtils.BASE_SERVER_URL)
+                .baseUrl(UrlServer.BASE_SERVER_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
         val api = retrofit.create(PackageApi::class.java)
@@ -173,7 +148,7 @@ class MainFragment : Fragment() {
         main_pb.visibility = View.VISIBLE
 
         val retrofit = Retrofit.Builder()
-                .baseUrl(ServerUtils.BASE_SERVER_URL)
+                .baseUrl(UrlServer.BASE_SERVER_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
         val api = retrofit.create(PackageApi::class.java)
@@ -186,7 +161,7 @@ class MainFragment : Fragment() {
         if (IS_ADMIN)
             apiCall = api.getAdminPackages()
         else
-            apiCall = api.getPackagesFromCourier(ServerUtils.CURRENT_USER!!.id, 1 - tabType!!.ordinal)
+            apiCall = api.getCourierPackages(UrlServer.CURRENT_USER!!.id, 1 - tabType!!.ordinal)
 
 
         apiCall.enqueue(
@@ -226,7 +201,7 @@ class MainFragment : Fragment() {
         main_pb.visibility = View.VISIBLE
 
         val retrofit = Retrofit.Builder()
-                .baseUrl(ServerUtils.BASE_SERVER_URL)
+                .baseUrl(UrlServer.BASE_SERVER_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
         val api = retrofit.create(PackageApi::class.java)
@@ -262,4 +237,11 @@ class MainFragment : Fragment() {
         )
     }*/
 
+    override fun renderData(screenModel: MainScreenModel) {
+        //
+    }
+
+    override fun renderState(loadState: LoadState) {
+
+    }
 }

@@ -1,17 +1,11 @@
 package com.liarstudio.courierservice.ui.screen.auth
 
 import android.os.Bundle
-import android.support.design.widget.Snackbar
-import android.support.design.widget.TextInputLayout
 import android.view.View
 import android.view.Window
-import android.widget.Button
-import android.widget.CheckBox
-import android.widget.EditText
-import android.widget.ProgressBar
 import com.jakewharton.rxbinding2.widget.textChanges
 import com.liarstudio.courierservice.R
-import com.liarstudio.courierservice.ui.base.BaseActivity
+import com.liarstudio.courierservice.ui.base.screen.BaseActivity
 import com.liarstudio.courierservice.ui.base.LoadState
 import kotlinx.android.synthetic.main.activity_auth.*
 import javax.inject.Inject
@@ -44,7 +38,14 @@ class AuthActivity : BaseActivity<AuthScreenModel>() {
         confirm_btn.setOnClickListener { _ -> presenter.authenticate() }
     }
 
-    override fun render(screenModel: AuthScreenModel) {
+    override fun renderState(loadState: LoadState) {
+        when (loadState) {
+            LoadState.NONE, LoadState.ERROR -> auth_pb.visibility = View.GONE
+            LoadState.LOADING -> auth_pb.visibility = View.VISIBLE
+
+        }
+    }
+    override fun renderData(screenModel: AuthScreenModel) {
 
         if (screenModel.isRegister) {
             confirm_btn.text = "Зарегистрироваться"
@@ -52,11 +53,6 @@ class AuthActivity : BaseActivity<AuthScreenModel>() {
         } else {
             confirm_btn.text = "Войти"
             name_til.visibility = View.GONE
-        }
-
-        when (screenModel.loadState) {
-            LoadState.NONE, LoadState.ERROR -> auth_pb.visibility = View.GONE
-            LoadState.LOADING -> auth_pb.visibility = View.VISIBLE
         }
     }
 
