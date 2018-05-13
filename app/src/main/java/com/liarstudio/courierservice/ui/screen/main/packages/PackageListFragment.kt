@@ -1,6 +1,9 @@
 package com.liarstudio.courierservice.ui.screen.main.packages
 
 import android.os.Bundle
+import android.support.v7.widget.DividerItemDecoration
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -43,6 +46,9 @@ class PackageListFragment : BaseFragment<PackageListScreenModel>() {
     private fun initRecycler() {
         adapter = EasyAdapter()
         recycler.adapter = adapter
+        val layoutManager = LinearLayoutManager(activity)
+        recycler.layoutManager = layoutManager
+        recycler.addItemDecoration(DividerItemDecoration(recycler.context, layoutManager.orientation))
     }
 
     private fun initListeners() {
@@ -59,10 +65,8 @@ class PackageListFragment : BaseFragment<PackageListScreenModel>() {
     override fun renderData(screenModel: PackageListScreenModel) {
         packages_swr.isRefreshing = screenModel.isRefreshing
 
-        adapter.setItems(
-                ItemList.create()
-                        .addAll(screenModel.packages, packageController)
-        )
+        adapter.setData(screenModel.packages, packageController)
+        adapter.notifyDataSetChanged()
     }
 
     fun renderRefreshState(isRefreshing: Boolean) {

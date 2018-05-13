@@ -2,7 +2,7 @@ package com.liarstudio.courierservice.logic.pack;
 
 import android.support.annotation.NonNull;
 
-import com.liarstudio.courierservice.entitiy.pack.Package;
+import com.liarstudio.courierservice.entitiy.pack.Pack;
 import com.liarstudio.courierservice.entitiy.person.Person;
 import com.orm.SugarRecord;
 
@@ -10,12 +10,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 
-public class PackageRepository extends ArrayList<Package> {
+public class PackageRepository extends ArrayList<Pack> {
 
 
     public PackageRepository() {}
 
-    public PackageRepository(@NonNull Collection<? extends Package> c) {
+    public PackageRepository(@NonNull Collection<? extends Pack> c) {
         super(c);
     }
 
@@ -27,9 +27,9 @@ public class PackageRepository extends ArrayList<Package> {
      */
     public void reloadAll() {
         SugarRecord.deleteAll(Person.class);
-        SugarRecord.deleteAll(Package.class);
+        SugarRecord.deleteAll(Pack.class);
 
-        for (Package pack : this) {
+        for (Pack pack : this) {
             pack.getSender().save();
             pack.getRecipient().save();
             pack.save();

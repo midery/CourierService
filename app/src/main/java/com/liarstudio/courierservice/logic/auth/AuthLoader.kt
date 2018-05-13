@@ -1,5 +1,6 @@
 package com.liarstudio.courierservice.logic.auth
 
+import com.liarstudio.courierservice.logic.auth.request.UserRequest
 import javax.inject.Inject
 
 class AuthLoader @Inject constructor(
@@ -25,5 +26,5 @@ class AuthLoader @Inject constructor(
      * @return Observable с созданным пользователем
      */
     fun register(email: String, name: String, encryptedPassword: String) =
-            api.register(email, name, encryptedPassword)
+            api.register(UserRequest(email, name, encryptedPassword))
 }

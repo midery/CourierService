@@ -3,9 +3,8 @@ package com.liarstudio.courierservice.ui.screen.main.new_packages;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.support.v13.app.FragmentPagerAdapter;
-import android.support.v13.app.FragmentStatePagerAdapter;
 
-import com.liarstudio.courierservice.entitiy.pack.Package;
+import com.liarstudio.courierservice.entitiy.pack.Pack;
 import com.liarstudio.courierservice.logic.pack.PackageRepository;
 import com.liarstudio.courierservice.ui.screen.main.packages.PackageListFragment;
 import com.orm.query.Condition;
@@ -32,7 +31,7 @@ public class PagerAdapterNewPackages extends FragmentPagerAdapter {
         switch (position) {
             case 0:
                 packages = new PackageRepository(
-                        Select.from(Package.class).where(Condition.prop("status").eq(0)).list());
+                        Select.from(Pack.class).where(Condition.prop("status").eq(0)).list());
                 break;
             default:
                 return null;

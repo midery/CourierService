@@ -28,21 +28,22 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.liarstudio.courierservice.entitiy.pack.Dimensions;
+import com.liarstudio.courierservice.entitiy.pack.Pack;
+import com.liarstudio.courierservice.entitiy.pack.PackStatus;
 import com.liarstudio.courierservice.entitiy.person.Coordinates;
-import com.liarstudio.courierservice.logic.UrlServer;
 import com.liarstudio.courierservice.entitiy.user.User;
 import com.liarstudio.courierservice.entitiy.person.Person;
-import com.liarstudio.courierservice.entitiy.pack.Package;
 import com.liarstudio.courierservice.R;
 import com.liarstudio.courierservice.logic.user.UserApi;
-import com.liarstudio.courierservice.ui.screen.maps.MapsActivity;
+import com.liarstudio.courierservice.ui.screen.maps.MapActivity;
+import com.liarstudio.courierservice.ui.utils.DateFormatter;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-
 
 
 public class PackageFieldsActivity extends AppCompatActivity {
@@ -54,7 +55,7 @@ public class PackageFieldsActivity extends AppCompatActivity {
 
     public static final int REQUEST_MAP = 2;
 
-    Package pack;
+    Pack pack;
 
     List<String> allStatuses = Arrays.asList("Новая", "Назначенная", "В процессе",
             "Отклоненная", "Завершенная");
@@ -128,24 +129,24 @@ public class PackageFieldsActivity extends AppCompatActivity {
         if (intent.hasExtra("jsonPackage"))
         {
             String jsonPackage = intent.getStringExtra("jsonPackage");
-            pack = new Gson().fromJson(jsonPackage, Package.class);
+            pack = new Gson().fromJson(jsonPackage, Pack.class);
             initFieldsForEdit();
         }
         else {
 
 
-            pack = new Package();
+            pack = new Pack();
             //Создаем календарь по-умолчанию с датой равной текущему дню + 1;
             Calendar c = Calendar.getInstance();
             c.add(Calendar.DAY_OF_YEAR, 1);
-            pack.setDate(c);
+            pack.setDate(DateFormatter.INSTANCE.toString(c.getTime()));
 
             //Загружаем ID курьера у текущего пользователя.
             pack.setCourierId(User.Companion.getCURRENT().getId());
-            pack.setStatus(0);
+            pack.setStatus(PackStatus.NEW);
 
             TextView textViewPackDate = (TextView)findViewById(R.id.textViewPackDate);
-            textViewPackDate.setText(Package.getStringDate(c));
+            textViewPackDate.setText(pack.getDate());
         }
     }
 
@@ -194,7 +195,7 @@ public class PackageFieldsActivity extends AppCompatActivity {
 
         progressBar = (ProgressBar) findViewById(R.id.progressBarPackageField);
 
-        switch (Package.WEIGHT_PROGRAM_STATE) {
+        switch (Pack.Companion.getWEIGHT_PROGRAM_STATE()) {
             case 0:
                 textViewPackWeightDimension.setText(R.string.weight_kg);
                 break;
@@ -205,7 +206,7 @@ public class PackageFieldsActivity extends AppCompatActivity {
                 break;
         }
 
-        switch (Package.SIZE_PROGRAM_STATE) {
+        switch (Pack.Companion.getSIZE_PROGRAM_STATE()) {
             case 0:
                 textViewPackSizeDimension.setText(R.string.size_sm);
                 break;
@@ -265,16 +266,20 @@ public class PackageFieldsActivity extends AppCompatActivity {
             //Если выбранная дата не раньше, чем завтра, обновляем дату у редактируемой посылки
             if (chosenDate.compareTo(Calendar.getInstance()) > 0)
             {
-                pack.setDate(chosenDate);
-                textViewPackDate.setText(Package.getStringDate(pack.getDate()));
+                pack.setDate(DateFormatter.INSTANCE.toString(chosenDate));
+                textViewPackDate.setText(pack.getDate());
             }
             else
                 Toast.makeText(this,"Невозможно установить дату раньше сегодняшней.", Toast.LENGTH_LONG).show();
         };
 
         buttonPickDate.setOnClickListener(e -> {
-            DatePickerDialog dpd = new DatePickerDialog(this, listener, pack.getDate().get(Calendar.YEAR),
-                    pack.getDate().get(Calendar.MONTH), pack.getDate().get(Calendar.DAY_OF_MONTH));
+            Calendar current = DateFormatter.INSTANCE.parseCalendar(pack.getDate());
+            DatePickerDialog dpd = new DatePickerDialog(this, listener,
+                    current.get(Calendar.YEAR),
+                    current.get(Calendar.MONTH),
+                    current.get(Calendar.DAY_OF_MONTH)
+            );
             dpd.show();
         });
 
@@ -294,7 +299,7 @@ public class PackageFieldsActivity extends AppCompatActivity {
                 if (validate()) {
                     if (pack.equals(pack))
                         finish();
-                    if (pack.getStatus() == 4)
+                    if (pack.getStatus() == PackStatus.DELIVERED)
                         packageFinalCheckDialog();
                     else
                         if (User.Companion.getCURRENT().isAdmin()) {
@@ -314,7 +319,7 @@ public class PackageFieldsActivity extends AppCompatActivity {
         //Запускаем MapActivity и ждем от нее результата
         buttonSetCoordinates = (Button)findViewById(R.id.buttonSetCoordinates);
         buttonSetCoordinates.setOnClickListener(l -> {
-            Intent mapIntent = new Intent(this, MapsActivity.class);
+            Intent mapIntent = new Intent(this, MapActivity.class);
             mapIntent.putExtra("coordinates", pack.getCoordinates());
             startActivityForResult(mapIntent, REQUEST_MAP);
         });
@@ -349,14 +354,14 @@ public class PackageFieldsActivity extends AppCompatActivity {
         editTextRecipientCompanyName.setText(recipient.getCompanyName());
 
 
-        textViewPackDate.setText(pack.getStringDate());
+        textViewPackDate.setText(pack.getDate());
 
         editTextPackName.setText(pack.getName());
-        double[] dimensions = pack.getSizes();
-        editTextPackW.setText(Double.toString(dimensions[0]));
-        editTextPackH.setText(Double.toString(dimensions[1]));
-        editTextPackD.setText(Double.toString(dimensions[2]));
-        editTextPackWeight.setText(Double.toString(pack.getWeight()));
+        Dimensions dimens = pack.getDimensions();
+        editTextPackW.setText(Double.toString(dimens.getX()));
+        editTextPackH.setText(Double.toString(dimens.getY()));
+        editTextPackD.setText(Double.toString(dimens.getZ()));
+        editTextPackWeight.setText(Double.toString(dimens.getWeight()));
 
 
         buttonConfirm.setText("Обновить");
@@ -366,7 +371,7 @@ public class PackageFieldsActivity extends AppCompatActivity {
         List<String> statuses;
 
         switch (pack.getStatus()) {
-            case 0:
+            case NEW:
                 if (User.Companion.getCURRENT().isAdmin()) {
                     statuses = Arrays.asList("Новая", "Назначенная", "Завершенная");
                     loadCourierList();
@@ -374,7 +379,7 @@ public class PackageFieldsActivity extends AppCompatActivity {
                     statuses = Arrays.asList("Новая");
                 }
                 break;
-            case 1:
+            case SET:
                 if (User.Companion.getCURRENT().isAdmin()) {
                     statuses = Arrays.asList("Назначенная", "Завершенная");
                     loadCourierList();
@@ -382,7 +387,7 @@ public class PackageFieldsActivity extends AppCompatActivity {
                     statuses = Arrays.asList("Назначенная", "В процессе", "Отклоненная");
                 }
                 break;
-            case 2:
+            case IN_PROCESS:
                 if (User.Companion.getCURRENT().isAdmin()) {
                     statuses = Arrays.asList("В процессе", "Назначенная", "Завершенная");
                     loadCourierList();
@@ -390,7 +395,7 @@ public class PackageFieldsActivity extends AppCompatActivity {
                     statuses = Arrays.asList("В процессе", "Отклоненная", "Завершенная");
                 }
                 break;
-            case 3:
+            case REJECTED:
                 statuses = Arrays.asList("Отклоненная", "Назначенная", "Завершенная");
                 loadCourierList();
                 editTextCommentary.setVisibility(View.VISIBLE);
@@ -578,10 +583,10 @@ public class PackageFieldsActivity extends AppCompatActivity {
                 valid = false;
                 Toast.makeText(PackageFieldsActivity.this, "Выберите статус Назначенная либо Завершенная.", Toast.LENGTH_LONG).show();
             } else
-                pack.setStatus(allStatuses.indexOf(spinnerStatus.getSelectedItem().toString()));
+                pack.setStatus(PackStatus.Companion.getByPos(allStatuses.indexOf(spinnerStatus.getSelectedItem().toString())));
         }
         checkString = editTextCommentary.getText().toString();
-        if ((pack.getStatus() == 3 || pack.getStatus() == 4) && checkString.isEmpty()) {
+        if ((pack.getStatus() == PackStatus.REJECTED || pack.getStatus() == PackStatus.DELIVERED) && checkString.isEmpty()) {
             valid = false;
             editTextCommentary.setError("Неверный комментарий.");
         } else
@@ -603,7 +608,7 @@ public class PackageFieldsActivity extends AppCompatActivity {
             editTextPackWeight.setError("Некорректный вес.");
             valid = false;
         } else
-            pack.setWeight(numericValue);
+            pack.getDimensions().setWeight(numericValue);
 
         double[] dimensions = new double[3];
 
@@ -629,8 +634,8 @@ public class PackageFieldsActivity extends AppCompatActivity {
             editTextPackD.setError("Некорректные размеры посылки.");
         } else dimensions[2] = numericValue;
         if (valid) {
-            pack.setSizes(dimensions);
-            pack.setPrice();
+            pack.setDimensions(new Dimensions(dimensions[0], dimensions[1], dimensions[2], pack.getDimensions().getWeight()));
+            //pack.setPrice();
         }
 
         return valid;
@@ -661,7 +666,7 @@ public class PackageFieldsActivity extends AppCompatActivity {
             builder.setNeutralButton("E-mail", (dialog, which) -> {
                 Intent intentEmail = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", editTextSenderEmail.getText().toString(), null));
                 startActivity(intentEmail);
-                finishAndSend();
+                 finishAndSend();
             });
 
         builder.create().show();

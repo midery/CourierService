@@ -3,13 +3,14 @@ package com.liarstudio.courierservice.ui.screen.main.packages
 import android.content.Intent
 import android.os.Bundle
 import com.liarstudio.courierservice.entitiy.person.Coordinates
-import com.liarstudio.courierservice.entitiy.user.User
 import com.liarstudio.courierservice.injection.scope.PerScreen
 import com.liarstudio.courierservice.logic.pack.PackageLoader
+import com.liarstudio.courierservice.logic.pack.PackageRepository
 import com.liarstudio.courierservice.ui.base.EXTRA_FIRST
 import com.liarstudio.courierservice.ui.base.LoadState
 import com.liarstudio.courierservice.ui.base.SnackController
 import com.liarstudio.courierservice.ui.base.screen.BasePresenter
+import com.liarstudio.courierservice.ui.screen.maps.MapActivity
 import com.liarstudio.courierservice.ui.screen.pack.PackageFieldsActivity
 import io.reactivex.disposables.Disposables
 import retrofit2.HttpException
@@ -32,10 +33,10 @@ class PackageListPresenter @Inject constructor(
 
     fun reloadPackages() {
         model.isRefreshing = true
-        loadPackagesDisposable = subscribe(packageLoader.getCourierPackages(User.CURRENT.id.toLong()),
+        loadPackagesDisposable = subscribe(packageLoader.getCourierPackages(1),
                 {
                     model.isRefreshing = false
-                    //model.packages = PackageRepository(it)
+                    model.packages = PackageRepository(it.map { it.toEntity() })
                     view.render(model)
                     snackController.show("Данные загружены корректно.")
                 },
@@ -57,16 +58,16 @@ class PackageListPresenter @Inject constructor(
 
     fun openMap(coordinates: Coordinates) {
         view.startActivity(
-                Intent(view.activity, PackageFieldsActivity::class.java)
+                Intent(view.activity, MapActivity::class.java)
                         .apply { putExtra(EXTRA_FIRST, coordinates) }
         )
     }
 
     private fun loadPackages() {
-        loadPackagesDisposable = subscribe(packageLoader.getCourierPackages(User.CURRENT.id.toLong()),
+        loadPackagesDisposable = subscribe(packageLoader.getCourierPackages(1),
                 {
                     model.loadState = LoadState.NONE
-                    //model.packages = PackageRepository(it)
+                    model.packages = PackageRepository(it.map { it.toEntity() })
                     view.render(model)
                     snackController.show("Данные загружены корректно.")
                 },

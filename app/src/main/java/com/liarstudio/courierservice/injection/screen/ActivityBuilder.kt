@@ -11,9 +11,11 @@ import dagger.android.ContributesAndroidInjector
 import android.app.Activity
 import com.liarstudio.courierservice.injection.scope.PerActivity
 import com.liarstudio.courierservice.injection.screen.activity.MainActivityModule
+import com.liarstudio.courierservice.injection.screen.activity.MapActivityModule
 import com.liarstudio.courierservice.injection.screen.fragment.FragmentBuilder
 import dagger.android.AndroidInjector
 import com.liarstudio.courierservice.ui.screen.main.MainActivity
+import com.liarstudio.courierservice.ui.screen.maps.MapActivity
 import dagger.android.ActivityKey
 import dagger.multibindings.IntoMap
 import dagger.Binds
@@ -30,4 +32,9 @@ abstract class ActivityBuilder {
     @PerActivity
     @ContributesAndroidInjector(modules = [MainActivityModule::class, FragmentBuilder::class])
     abstract fun provideMainActivityInjector(): MainActivity
+
+    @PerActivity
+    @ContributesAndroidInjector(modules = [MapActivityModule::class])
+    abstract fun provideMapActivityInjector(): MapActivity
+
 }

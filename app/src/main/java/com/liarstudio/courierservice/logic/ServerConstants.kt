@@ -4,11 +4,12 @@ import com.liarstudio.courierservice.entitiy.user.User
 
 object UrlServer {
 
-    //URL, по которому расположен сервер
-    const val BASE_SERVER_URL = "http://207.154.210.82:8080/"
-
     //URL, по которому расположен локальный сервер
     const val BASE_LOCAL_URL = "http://192.168.0.106:8080/"
+
+    //URL, по которому расположен сервер
+    const val BASE_SERVER_URL = BASE_LOCAL_URL //"http://207.154.210.82:8080/"
+
 }
 
 object UrlAuth {

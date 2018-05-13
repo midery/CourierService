@@ -5,5 +5,11 @@ enum class PackStatus(val pos: Int) {
     SET(1),
     IN_PROCESS(2),
     REJECTED(3),
-    DELIVERED(4)
+    DELIVERED(4);
+
+    companion object {
+        fun getByPos(pos: Int): PackStatus =
+                PackStatus.values().firstOrNull { it.pos == pos } ?: PackStatus.NEW
+    }
+
 }

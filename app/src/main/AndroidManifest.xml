@@ -71,7 +71,7 @@
         </activity>
 
         <activity
-            android:name=".ui.screen.maps.MapsActivity"
+            android:name=".ui.screen.maps.MapActivity"
             android:label="@string/title_activity_maps" />
 
 

@@ -1,6 +1,6 @@
 package com.liarstudio.courierservice.logic.pack
 
-import com.liarstudio.courierservice.entitiy.pack.Package
+import com.liarstudio.courierservice.entitiy.pack.Pack
 import javax.inject.Inject
 
 class PackageLoader @Inject constructor(
@@ -12,5 +12,5 @@ class PackageLoader @Inject constructor(
     fun getNewCourierPackages(id: Long) = packageApi.getNewCourierPackages(id)
     fun getAdminPackages() = packageApi.getAdminPackages()
     fun delete(id: Long) = packageApi.delete(id)
-    fun add(p: Package) = packageApi.add(p)
+    fun add(p: Pack) = packageApi.add(p)
 }

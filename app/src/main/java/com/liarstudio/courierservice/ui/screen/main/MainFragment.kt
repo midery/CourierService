@@ -9,7 +9,7 @@ import android.support.v4.view.ViewPager
 import android.view.*
 import com.google.gson.Gson
 import com.liarstudio.courierservice.R
-import com.liarstudio.courierservice.entitiy.pack.Package
+import com.liarstudio.courierservice.entitiy.pack.Pack
 import com.liarstudio.courierservice.entitiy.user.User
 import com.liarstudio.courierservice.ui.base.screen.BaseFragment
 import com.liarstudio.courierservice.ui.base.EXTRA_FIRST
@@ -92,19 +92,19 @@ class MainFragment : BaseFragment<MainScreenModel>() {
         if (resultCode == RESULT_OK && requestCode == REQUEST_ADD_OR_EDIT) {
             if (data!!.hasExtra("packageToAdd")) {
                 val jsonPackage = data.getStringExtra("packageToAdd")
-                val pack = Gson().fromJson(jsonPackage, Package::class.java)
+                val pack = Gson().fromJson(jsonPackage, Pack::class.java)
                 //        addToServer(pack)
             } else {
                 if (data.hasExtra("packageToDelete")) {
                     val jsonPackage = data.getStringExtra("packageToDelete")
-                    val pack = Gson().fromJson(jsonPackage, Package::class.java)
+                    val pack = Gson().fromJson(jsonPackage, Pack::class.java)
                     //              deleteFromServer(pack.id!!.toInt())
                 }
             }
         }
     }
 
-    /*private fun addToServer(pkg: Package) {
+    /*private fun addToServer(pkg: Pack) {
         main_pb.visibility = View.VISIBLE
 
         val retrofit = Retrofit.Builder()
@@ -152,7 +152,7 @@ class MainFragment : BaseFragment<MainScreenModel>() {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
         val api = retrofit.create(PackageApi::class.java)
-        val apiCall: Call<List<Package>>
+        val apiCall: Call<List<Pack>>
 
         // Если пользователь - администратор, то загружаем "Новые"/"Отмененные"/"Завершенные"
         // Если курьер - то в зависимости от статуса(типа adapter'а) загружаем либо только новые,
@@ -165,8 +165,8 @@ class MainFragment : BaseFragment<MainScreenModel>() {
 
 
         apiCall.enqueue(
-                object : Callback<List<Package>> {
-                    override fun onResponse(call: Call<List<Package>>, response: Response<List<Package>>) {
+                object : Callback<List<Pack>> {
+                    override fun onResponse(call: Call<List<Pack>>, response: Response<List<Pack>>) {
                         when (response.code()) {
                             HttpURLConnection.HTTP_OK ->
 
@@ -186,7 +186,7 @@ class MainFragment : BaseFragment<MainScreenModel>() {
                         main_pb.visibility = View.GONE
                     }
 
-                    override fun onFailure(call: Call<List<Package>>, t: Throwable) {
+                    override fun onFailure(call: Call<List<Pack>>, t: Throwable) {
                         Toast.makeText(activity, R.string.error_could_not_connect_to_server,
                                 Toast.LENGTH_LONG).show()
                         main_pb.visibility = View.GONE

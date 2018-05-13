@@ -11,7 +11,7 @@
     <string name="auth_input_error">Проверьте правильность ввода полей</string>
 
     <string name="pack_item_date_tv">Дата: %s</string>
-    <string name="pack_item_status_tv">Статус: %s</string>
+    <string name="pack_item_status_tv">Статус: %d</string>
 
     <string-array name="person_type">
         <item>Компания</item>

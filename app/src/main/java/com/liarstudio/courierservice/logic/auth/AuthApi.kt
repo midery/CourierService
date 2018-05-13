@@ -2,16 +2,12 @@ package com.liarstudio.courierservice.logic.auth
 
 import com.liarstudio.courierservice.entitiy.user.User
 import com.liarstudio.courierservice.logic.UrlAuth
+import com.liarstudio.courierservice.logic.auth.request.UserRequest
 
 import io.reactivex.Observable
 
 import retrofit2.Call
-import retrofit2.http.Field
-import retrofit2.http.FormUrlEncoded
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.Path
-import retrofit2.http.Query
+import retrofit2.http.*
 
 
 interface AuthApi {
@@ -30,16 +26,14 @@ interface AuthApi {
     /**
      * Регистрация пользователя
      *
-     * @param email    электронный адрес
-     * @param name     имя пользователя
-     * @param password зашифрованный пароль
+     * @param userRequest    маппинг-модель пользователя
      * @return Observable с созданным пользователем
      */
-    @FormUrlEncoded
+    //@FormUrlEncoded
     @POST(UrlAuth.BASE_AUTH_URL)
-    fun register(
-            @Field("email") email: String,
-            @Field("name") name: String,
-            @Field("password") password: String): Observable<User>
+    fun register(@Body userRequest: UserRequest) : Observable<User>
+            //@Field("email") email: String,
+            //@Field("name") name: String,
+            //@Field("password") password: String): Observable<User>
 
 }
