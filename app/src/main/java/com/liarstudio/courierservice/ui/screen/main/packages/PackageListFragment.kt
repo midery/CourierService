@@ -12,6 +12,7 @@ import com.liarstudio.courierservice.logic.pack.PackageRepository
 import com.liarstudio.courierservice.ui.base.screen.BaseFragment
 import com.liarstudio.courierservice.ui.base.EXTRA_FIRST
 import com.liarstudio.courierservice.ui.base.LoadState
+import com.liarstudio.courierservice.ui.base.screen.BasePresenter
 import com.liarstudio.courierservice.ui.screen.main.packages.controller.PackageListElementController
 import kotlinx.android.synthetic.main.list_packages.*
 import ru.surfstudio.easyadapter.recycler.EasyAdapter
@@ -26,15 +27,16 @@ class PackageListFragment : BaseFragment<PackageListScreenModel>() {
 
     //Количество посылок в текущем фрагменте
     lateinit var packages: PackageRepository
-    lateinit var adapter: EasyAdapter
+    private lateinit var adapter: EasyAdapter
 
-    val packageController = PackageListElementController(
+    private val packageController = PackageListElementController(
             { presenter.openPackageScreen(it) },
             { presenter.openMap(it) }
     )
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?)
-            = inflater!!.inflate(R.layout.list_packages, container, false)
+    override fun requestPresenter() = presenter
+
+    override fun getLayout() = R.layout.list_packages
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

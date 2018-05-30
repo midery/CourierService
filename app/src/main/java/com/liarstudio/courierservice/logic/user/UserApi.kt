@@ -1,6 +1,8 @@
 package com.liarstudio.courierservice.logic.user
 
 import com.liarstudio.courierservice.entitiy.user.User
+import com.liarstudio.courierservice.logic.UrlUser.GET_USER
+import com.liarstudio.courierservice.logic.UrlUser.GET_USERS_ROLE
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -15,7 +17,7 @@ interface UserApi {
      *
      * @return  Call со списком пользователей
      */
-    @GET("/users/role/{role}")
+    @GET(GET_USERS_ROLE)
     fun loadUsersWithRole(@Path("role") role: Int): Call<List<User>>
 
 
@@ -26,6 +28,6 @@ interface UserApi {
      *
      * @return Call с пользователем
      */
-    @GET()
+    @GET(GET_USER)
     fun loadUser(@Path("user_id") id: Int): Call<User>
 }

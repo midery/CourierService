@@ -22,6 +22,4 @@ class PagerAdapterMyPackages(fm: FragmentManager) : FragmentPagerAdapter(fm) {
     override fun getPageTitle(position: Int): CharSequence {
         return tabs[position]
     }
-
-
 }

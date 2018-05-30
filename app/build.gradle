@@ -40,7 +40,7 @@ dependencies {
     //compile 'com.android.support:design:25.3.1 '
     implementation "com.android.support:appcompat-v7:$library_version"
     implementation "com.android.support:support-v13:$library_version"
-    //compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
     implementation "com.android.support:design:$library_version"
     implementation "com.google.code.gson:gson:$gson_version"
     implementation "com.google.android.gms:play-services-maps:$gmaps_version"

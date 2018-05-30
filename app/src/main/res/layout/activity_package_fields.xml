@@ -7,13 +7,14 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:padding="16dp">
 
         <TextView
             android:id="@+id/textViewSender"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Отправитель:"/>
+            android:text="Отправитель:" />
 
 
         <EditText
@@ -31,26 +32,26 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/editTextSenderAddress"
-            android:inputType="text"
-            android:hint="ФИО*" />
-
+            android:hint="ФИО*"
+            android:inputType="text" />
 
 
         <EditText
             android:id="@+id/editTextSenderEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/editTextSenderName"
             android:ems="10"
-            android:inputType="textEmailAddress"
             android:hint="Email"
-            android:layout_below="@id/editTextSenderName"/>
+            android:inputType="textEmailAddress" />
+
         <TextView
-            android:paddingLeft="5dp"
-            android:paddingTop="10dp"
             android:id="@+id/textViewPhone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/editTextSenderEmail"
+            android:paddingLeft="5dp"
+            android:paddingTop="10dp"
             android:text="Телефон*"
             android:textSize="18sp" />
 
@@ -59,46 +60,47 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/editTextSenderEmail"
+            android:layout_toEndOf="@id/textViewPhone"
             android:ems="10"
             android:hint="(9**) ***-****"
-            android:layout_toEndOf="@id/textViewPhone"
             android:inputType="phone"
             android:maxLength="14" />
 
         <TextView
-            android:paddingLeft="5dp"
             android:id="@+id/textViewType"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:layout_below="@+id/editTextSenderPhone"
+            android:paddingLeft="5dp"
             android:text="Тип"
             android:textSize="18sp" />
+
         <Spinner
             android:id="@+id/spinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:entries="@array/person_type"
+            android:layout_below="@+id/editTextSenderPhone"
             android:layout_toEndOf="@+id/textViewType"
-            android:layout_below="@+id/editTextSenderPhone"/>
+            android:entries="@array/person_type" />
 
         <EditText
             android:id="@+id/editTextSenderCompanyName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/spinner"
             android:ems="10"
-            android:inputType="textPersonName"
             android:hint="Название компании"
-            android:layout_below="@id/spinner"/>
+            android:inputType="textPersonName" />
 
-    <!--RECIPIENT-->
+        <!--RECIPIENT-->
 
         <TextView
-            android:layout_marginTop="15dp"
             android:id="@+id/textViewRecipient"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Получатель:"
-            android:layout_below="@+id/editTextSenderCompanyName"/>
+            android:layout_below="@+id/editTextSenderCompanyName"
+            android:layout_marginTop="15dp"
+            android:text="Получатель:" />
 
 
         <EditText
@@ -116,8 +118,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/editTextRecipientAddress"
-            android:inputType="text"
-            android:hint="ФИО*" />
+            android:hint="ФИО*"
+            android:inputType="text" />
 
 
         <EditText
@@ -130,12 +132,12 @@
             android:inputType="textEmailAddress" />
 
         <TextView
-            android:paddingLeft="5dp"
-            android:paddingTop="10dp"
             android:id="@+id/textViewPhoneRecipient"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/editTextRecipientEmail"
+            android:paddingLeft="5dp"
+            android:paddingTop="10dp"
             android:text="Телефон*"
             android:textSize="18sp" />
 
@@ -144,56 +146,57 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/editTextRecipientEmail"
+            android:layout_toEndOf="@id/textViewPhone"
             android:ems="10"
             android:hint="(9**) ***-****"
-            android:layout_toEndOf="@id/textViewPhone"
             android:inputType="phone"
             android:maxLength="14" />
 
         <TextView
-            android:paddingLeft="5dp"
             android:id="@+id/textViewRecipientType"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
-            android:text="Тип"
-            android:textSize="18sp"
+            android:layout_alignParentStart="true"
             android:layout_alignTop="@+id/spinnerRecipient"
-            android:layout_alignParentStart="true" />
+            android:paddingLeft="5dp"
+            android:text="Тип"
+            android:textSize="18sp" />
+
         <Spinner
             android:id="@+id/spinnerRecipient"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:entries="@array/person_type"
+            android:layout_below="@+id/editTextRecipientPhone"
             android:layout_toEndOf="@+id/textViewRecipientType"
-            android:layout_below="@+id/editTextRecipientPhone"/>
+            android:entries="@array/person_type" />
 
         <EditText
             android:id="@+id/editTextRecipientCompanyName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:hint="Название компании"
+            android:layout_alignParentStart="true"
             android:layout_below="@+id/spinnerRecipient"
-            android:layout_alignParentStart="true" />
+            android:ems="10"
+            android:hint="Название компании"
+            android:inputType="textPersonName" />
 
         <Button
             android:id="@+id/buttonSetCoordinates"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Указать координаты"
             android:layout_below="@+id/editTextRecipientCompanyName"
-            android:layout_centerHorizontal="true" />
+            android:layout_centerHorizontal="true"
+            android:text="Указать координаты" />
 
 
         <!--PACKAGE-->
         <TextView
-            android:layout_marginTop="15dp"
             android:id="@+id/textViewPack"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Посылка:"
-            android:layout_below="@+id/buttonSetCoordinates"/>
+            android:layout_below="@+id/buttonSetCoordinates"
+            android:layout_marginTop="15dp"
+            android:text="Посылка:" />
 
 
         <EditText
@@ -206,15 +209,15 @@
             android:inputType="textPersonName" />
 
         <TextView
-            android:paddingLeft="5dp"
             android:id="@+id/textViewPackSizes"
             android:layout_width="170dp"
-            android:layout_height="wrap_content"
-            android:text="Размеры посылки:"
-            android:textSize="18sp"
+            android:layout_height="match_parent"
             android:layout_alignBaseline="@+id/editTextPackW"
             android:layout_alignBottom="@+id/editTextPackW"
-            android:layout_alignParentStart="true" />
+            android:layout_alignParentStart="true"
+            android:paddingLeft="5dp"
+            android:text="Размеры посылки:"
+            android:textSize="18sp" />
 
         <EditText
             android:id="@+id/editTextPackW"
@@ -254,15 +257,15 @@
             android:textAlignment="center" />
 
         <TextView
-            android:layout_marginTop="9dp"
-            android:paddingLeft="3dp"
             android:id="@+id/textViewPackSizeDimension"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="см"
-            android:textSize="18sp"
+            android:layout_below="@id/editTextPackName"
+            android:layout_marginTop="9dp"
             android:layout_toEndOf="@+id/editTextPackD"
-            android:layout_below="@id/editTextPackName" />
+            android:paddingLeft="3dp"
+            android:text="см"
+            android:textSize="18sp" />
 
 
         <TextView
@@ -280,131 +283,135 @@
             android:id="@+id/editTextPackWeight"
             android:layout_width="60dp"
             android:layout_height="wrap_content"
+            android:layout_below="@id/editTextPackD"
+            android:layout_toEndOf="@+id/textViewPackWeight"
             android:ems="10"
             android:inputType="numberDecimal"
-            android:layout_toEndOf="@+id/textViewPackWeight"
-            android:layout_below="@id/editTextPackD"
-            android:textAlignment="center"/>
+            android:textAlignment="center" />
+
         <TextView
             android:id="@+id/textViewPackWeightDimension"
-            android:layout_marginTop="9dp"
-            android:paddingLeft="3dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="кг"
-            android:textSize="18sp"
+            android:layout_below="@id/editTextPackD"
+            android:layout_marginTop="9dp"
             android:layout_toEndOf="@+id/editTextPackWeight"
-            android:layout_below="@id/editTextPackD" />
+            android:paddingLeft="3dp"
+            android:text="кг"
+            android:textSize="18sp" />
 
 
         <TextView
-            android:paddingTop="8dp"
-            android:paddingLeft="5dp"
             android:id="@+id/textViewPackDateName"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:text="Дата доставки:"
-            android:textSize="18sp"
+            android:layout_alignParentStart="true"
             android:layout_below="@+id/editTextPackWeight"
-            android:layout_alignParentStart="true" />
-        <TextView
-            android:paddingTop="8dp"
             android:paddingLeft="5dp"
+            android:paddingTop="8dp"
+            android:text="Дата доставки:"
+            android:textSize="18sp" />
+
+        <TextView
             android:id="@+id/textViewPackDate"
             android:layout_width="110dp"
             android:layout_height="wrap_content"
-            android:textSize="18sp"
             android:layout_below="@+id/editTextPackWeight"
-            android:layout_toEndOf="@+id/textViewPackDateName" />
+            android:layout_toEndOf="@+id/textViewPackDateName"
+            android:paddingLeft="5dp"
+            android:paddingTop="8dp"
+            android:textSize="18sp" />
+
         <Button
             android:id="@+id/buttonPickDate"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
             android:layout_below="@id/editTextPackWeight"
             android:layout_toEndOf="@+id/textViewPackDate"
-            android:text="Изменить"
-            />
+            android:text="Изменить" />
 
         <TextView
             android:id="@+id/textViewPackPriceTitle"
-            android:layout_marginTop="14dp"
-            android:paddingLeft="5dp"
-            android:layout_marginBottom="14dp"
             android:layout_width="60dp"
             android:layout_height="match_parent"
             android:layout_below="@id/buttonPickDate"
-            android:text="Цена: "
-            android:textSize="18sp"
-            android:textStyle="bold"/>
-        <TextView
-            android:id="@+id/textViewPackPrice"
+            android:layout_marginBottom="14dp"
             android:layout_marginTop="14dp"
             android:paddingLeft="5dp"
-            android:layout_marginBottom="14dp"
+            android:text="Цена: "
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textViewPackPrice"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_below="@id/buttonPickDate"
+            android:layout_marginBottom="14dp"
+            android:layout_marginTop="14dp"
             android:layout_toEndOf="@+id/textViewPackPriceTitle"
+            android:paddingLeft="5dp"
             android:textSize="18sp"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
+
         <Button
-            android:layout_marginTop="5dp"
             android:id="@+id/buttonCalculatePrice"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
             android:layout_below="@id/buttonPickDate"
+            android:layout_marginTop="5dp"
             android:layout_toEndOf="@+id/textViewPackPrice"
-            android:text="Рассчитать"
-            />
+            android:text="Рассчитать" />
 
         <TextView
-            android:paddingLeft="5dp"
             android:id="@+id/textViewCourierList"
-            android:paddingTop="11dp"
             android:layout_width="70dp"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/textViewPackPrice"
             android:layout_alignTop="@+id/spinnerCourierList"
+            android:layout_below="@+id/textViewPackPrice"
+            android:paddingLeft="5dp"
+            android:paddingTop="11dp"
             android:text="Курьер:"
             android:textSize="18sp"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <Spinner
             android:id="@+id/spinnerCourierList"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_toEndOf="@+id/textViewStatus"
             android:layout_below="@+id/textViewPackPrice"
-            android:visibility="gone"/>
+            android:layout_toEndOf="@+id/textViewStatus"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/textViewStatus"
-            android:paddingLeft="5dp"
-            android:paddingTop="11dp"
             android:layout_width="70dp"
             android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/spinnerCourierList"
+            android:paddingLeft="5dp"
+            android:paddingTop="11dp"
             android:text="Статус:"
             android:textSize="18sp"
-            android:visibility="gone"
-            android:layout_below="@+id/spinnerCourierList"
-            android:layout_alignParentStart="true" />
+            android:visibility="gone" />
 
         <Spinner
             android:id="@+id/spinnerStatus"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_toEndOf="@+id/textViewStatus"
             android:layout_below="@+id/spinnerCourierList"
-            android:visibility="gone"/>
+            android:layout_toEndOf="@+id/textViewStatus"
+            android:visibility="gone" />
+
         <EditText
             android:id="@+id/editTextCommentary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/spinnerStatus"
             android:ems="10"
-            android:inputType="textPersonName"
             android:hint="Комментарий*"
-            android:visibility="gone"/>
+            android:inputType="textPersonName"
+            android:visibility="gone" />
 
         <Button
             android:id="@+id/confirm_btn"
@@ -426,13 +433,14 @@
             android:textColor="#FFFFFF"
             android:textColorHighlight="@color/colorAccent"
             android:visibility="gone" />
+
         <ProgressBar
             android:id="@+id/progressBarPackageField"
             style="?android:attr/progressBarStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:visibility="gone"/>
+            android:visibility="gone" />
     </RelativeLayout>
 
 </ScrollView>

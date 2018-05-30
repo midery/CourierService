@@ -1,6 +1,7 @@
 package com.liarstudio.courierservice.ui.screen.main.packages.controller
 
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import com.liarstudio.courierservice.R
@@ -23,7 +24,7 @@ class PackageListElementController(
         val nameTv = itemView.findViewById<TextView>(R.id.name_tv)
         val dateTv = itemView.findViewById<TextView>(R.id.date_tv)
         val statusTv = itemView.findViewById<TextView>(R.id.status_tv)
-        val showOnMapBtn = itemView.findViewById<ImageView>(R.id.show_on_map_btn)
+        val showOnMapBtn = itemView.findViewById<Button>(R.id.show_on_map_btn)
 
 
         override fun bind(pack: Pack) {

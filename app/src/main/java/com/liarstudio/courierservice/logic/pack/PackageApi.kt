@@ -2,6 +2,8 @@ package com.liarstudio.courierservice.logic.pack
 
 import com.liarstudio.courierservice.entitiy.pack.Pack
 import com.liarstudio.courierservice.logic.UrlPackage
+import com.liarstudio.courierservice.logic.UrlPackage.GET_COURIER_PACKAGES
+import com.liarstudio.courierservice.logic.UrlPackage.GET_NEW_COURIER_PACKAGES
 import com.liarstudio.courierservice.logic.pack.response.PackResponse
 import io.reactivex.Completable
 
@@ -23,10 +25,10 @@ interface PackageApi {
     fun getPackage(@Path("package_id") id: Long): Observable<PackResponse>
 
     //Получаем все посылки по id курьера и статусу(либо новая, либо нет)
-    @GET("package/courier/{courier_id}")
+    @GET(GET_COURIER_PACKAGES)
     fun getCourierPackages(@Path("courier_id") id: Long): Observable<List<PackResponse>>
 
-    @GET("package/courier/new/{courier_id}")
+    @GET(GET_NEW_COURIER_PACKAGES)
     fun getNewCourierPackages(@Path("courier_id") id: Long): Observable<List<PackResponse>>
 
     //Получаем посылки для администратора(со статусом "Новая"/"Отклоненная"/"Завершенная"

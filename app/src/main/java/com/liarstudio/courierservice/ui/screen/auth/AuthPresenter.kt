@@ -3,12 +3,12 @@ package com.liarstudio.courierservice.ui.screen.auth
 import android.content.Intent
 import com.jakewharton.rxbinding2.InitialValueObservable
 import com.liarstudio.courierservice.R
-import com.liarstudio.courierservice.entitiy.user.User
 import com.liarstudio.courierservice.injection.scope.PerActivity
 import com.liarstudio.courierservice.logic.auth.AuthLoader
-import com.liarstudio.courierservice.ui.base.screen.BasePresenter
+import com.liarstudio.courierservice.logic.user.UserLoader
 import com.liarstudio.courierservice.ui.base.LoadState
 import com.liarstudio.courierservice.ui.base.SnackController
+import com.liarstudio.courierservice.ui.base.screen.BasePresenter
 import com.liarstudio.courierservice.ui.screen.main.MainActivity
 import io.reactivex.disposables.Disposables
 import retrofit2.HttpException
@@ -18,6 +18,7 @@ import javax.inject.Inject
 @PerActivity
 class AuthPresenter @Inject constructor(
         private val authLoader: AuthLoader,
+        private val userLoader: UserLoader,
         private val snackController: SnackController,
         view: AuthActivity
 ) : BasePresenter<AuthActivity>(view) {
@@ -78,7 +79,8 @@ class AuthPresenter @Inject constructor(
         authDisposable = subscribe(request,
                 {
                     model.loadState = LoadState.NONE
-                    User.CURRENT = it
+                    userLoader.putCurrentUser(it)
+                    //User.CURRENT = it
                     openMainActivity()
                 },
                 {

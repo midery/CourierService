@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <group android:checkableBehavior="single"
-        >
+    <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_my"
             android:icon="@drawable/ic_home_black_24dp"
@@ -18,13 +17,12 @@
 
     </group>
 
-    <item android:title="Аутентификация">
+    <item android:title="@string/auth_activity_header">
         <menu>
             <item
                 android:id="@+id/nav_logout"
-                android:title="Выход"
-                android:icon="@drawable/ic_exit_to_app_black_24dp">
-            </item>
+                android:icon="@drawable/ic_exit_to_app_black_24dp"
+                android:title="Выход"/>
         </menu>
     </item>
 

@@ -8,12 +8,6 @@ import com.orm.SugarRecord
 import com.orm.dsl.Ignore
 import com.orm.dsl.NotNull
 
-import java.math.BigDecimal
-import java.math.RoundingMode
-import java.text.Format
-import java.text.SimpleDateFormat
-import java.util.Calendar
-
 class Pack(
         var status: PackStatus,
         var courierId: Int,

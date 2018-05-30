@@ -54,10 +54,7 @@
             android:name=".ui.screen.main.MainActivity"
             android:configChanges="orientation|keyboardHidden"
             android:launchMode="singleTop">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+
         </activity>
         <activity
             android:name=".ui.screen.pack.PackageFieldsActivity"
@@ -65,10 +62,7 @@
             android:label="@string/package_activity_header"
             android:parentActivityName=".ui.screen.main.MainActivity"
             android:theme="@style/AppTheme.Base">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.screen.main.MainActivity" />
-        </activity>
+            </activity>
 
         <activity
             android:name=".ui.screen.maps.MapActivity"
@@ -81,7 +75,10 @@
             android:label="@string/auth_activity_header"
             android:theme="@style/AppTheme.Base"
             android:windowSoftInputMode="adjustResize">
-
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
     </application>
 

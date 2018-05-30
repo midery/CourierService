@@ -1,51 +1,45 @@
 package com.liarstudio.courierservice.ui.screen.maps
 
-import android.content.Context
-import android.content.pm.PackageManager
-import android.location.Criteria
 import android.location.Location
 import android.location.LocationListener
-import android.location.LocationManager
 import android.os.Bundle
-import android.widget.Button
-import android.widget.TextView
-import com.google.android.gms.maps.CameraUpdateFactory
+import android.os.PersistableBundle
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
 import com.liarstudio.courierservice.R
 import com.liarstudio.courierservice.ui.base.LoadState
 import com.liarstudio.courierservice.ui.base.screen.BaseActivity
+import com.liarstudio.courierservice.ui.base.screen.BasePresenter
 import kotlinx.android.synthetic.main.activity_maps.*
 import javax.inject.Inject
 
 
 class MapActivity : BaseActivity<MapScreenModel>(), OnMapReadyCallback, LocationListener {
     @Inject
-    lateinit var presenter: MapPresenter
+    lateinit var loadPresenter: MapPresenter
 
+    override fun requestPresenter() = loadPresenter
+
+    override fun getLayout() = R.layout.activity_maps
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_maps)
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager
                 .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
     }
-
     override fun onMapReady(googleMap: GoogleMap) {
-        presenter.init(intent, googleMap)
+        loadPresenter.init(intent, googleMap)
         initListeners()
     }
 
     fun initListeners() {
-        ready_btn.setOnClickListener { presenter.finish() }
+        ready_btn.setOnClickListener { loadPresenter.finish() }
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
-        presenter.onRequestPermissionResult(requestCode, permissions, grantResults)
+        loadPresenter.onRequestPermissionResult(requestCode, permissions, grantResults)
     }
 
     override fun onLocationChanged(location: Location) {

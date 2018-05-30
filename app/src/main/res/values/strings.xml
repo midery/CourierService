@@ -3,7 +3,7 @@
 
     <string name="package_activity_header">Посылка</string>
     <string name="settings_fragment_header">Настройки</string>
-    <string name="auth_activity_header">Аутентификация</string>
+    <string name="auth_activity_header">Авторизация</string>
 
     <string name="auth_email_error">Введен неверный E-mail!</string>
     <string name="auth_password_error">Пароль слишком короткий</string>

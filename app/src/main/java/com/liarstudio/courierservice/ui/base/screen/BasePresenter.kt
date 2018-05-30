@@ -12,6 +12,9 @@ import io.reactivex.schedulers.Schedulers
 
 abstract class BasePresenter<V : BaseView>(val view: V) {
 
+    open fun viewCreated() {
+
+    }
     protected open fun <T> subscribe(
             observable: Observable<T>,
             onNext: (T) -> Unit,

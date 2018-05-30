@@ -4,65 +4,51 @@ package com.liarstudio.courierservice.ui.screen.main
 import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.TabLayout
-import android.support.v4.view.ViewPager
-import android.view.*
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
 import com.google.gson.Gson
 import com.liarstudio.courierservice.R
 import com.liarstudio.courierservice.entitiy.pack.Pack
 import com.liarstudio.courierservice.entitiy.user.User
-import com.liarstudio.courierservice.ui.base.screen.BaseFragment
 import com.liarstudio.courierservice.ui.base.EXTRA_FIRST
 import com.liarstudio.courierservice.ui.base.LoadState
+import com.liarstudio.courierservice.ui.base.screen.BaseFragment
 import com.liarstudio.courierservice.ui.screen.auth.AuthActivity
 import com.liarstudio.courierservice.ui.screen.main.my_packages.PagerAdapterMyPackages
 import com.liarstudio.courierservice.ui.screen.main.new_packages.PagerAdapterNewPackages
 import com.liarstudio.courierservice.ui.screen.pack.PackageFieldsActivity
+import kotlinx.android.synthetic.main.fragment_home.*
+import javax.inject.Inject
 
 class MainFragment : BaseFragment<MainScreenModel>() {
 
+
+    @Inject
+    lateinit var presenter: MainFragmentPresenter
+
     private val REQUEST_ADD_OR_EDIT = 1
-    lateinit var tabType: MainTabType
+
+    override fun requestPresenter() = presenter
+
+    override fun getLayout() = R.layout.fragment_home
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-
-        val view = inflater.inflate(R.layout.fragment_home, container, false)
-
-
-        val viewPager = view.findViewById<View>(R.id.viewPager) as ViewPager
-        val tabLayout = view.findViewById<View>(R.id.tabLayout) as TabLayout
-
-        tabType = arguments.get(EXTRA_FIRST) as MainTabType
-
-        viewPager.adapter = when (tabType) {
-            MainTabType.MY -> PagerAdapterMyPackages(activity.fragmentManager)
-            MainTabType.NEW -> {
-                tabLayout.visibility = View.GONE
-                PagerAdapterNewPackages(activity.fragmentManager)
-            }
-        }
-
-        viewPager.offscreenPageLimit = 3
-        tabLayout.setupWithViewPager(viewPager)
-        return view
-    }
-
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        //loadListFromServer()
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        initPager()
     }
 
     override fun onPrepareOptionsMenu(menu: Menu?) {
-
         //Скрываем кнопку добавления для администратора
         val item = menu!!.findItem(R.id.item_add)
-        item.isVisible = User.CURRENT.isAdmin
+        item.isVisible = !User.CURRENT.isAdmin
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
@@ -76,7 +62,8 @@ class MainFragment : BaseFragment<MainScreenModel>() {
                 activity.startActivityForResult(addIntent, REQUEST_ADD_OR_EDIT)
             }
 
-            R.id.item_refresh -> { }//loadListFromServer()
+            R.id.item_refresh -> {
+            }//loadListFromServer()
             R.id.item_logout -> {
                 User.CURRENT.id = -1
                 startActivity(Intent(activity, AuthActivity::class.java))
@@ -104,6 +91,21 @@ class MainFragment : BaseFragment<MainScreenModel>() {
         }
     }
 
+    private fun initPager() {
+        val tabType = arguments[EXTRA_FIRST] as MainTabType
+        viewPager.adapter = createPagerAdapter(tabType)
+        viewPager.offscreenPageLimit = 3
+        tabLayout.setupWithViewPager(viewPager)
+    }
+
+    private fun createPagerAdapter(tabType: MainTabType) = when (tabType) {
+        MainTabType.MY ->
+            PagerAdapterMyPackages(activity.fragmentManager)
+        MainTabType.NEW -> {
+            tabLayout.visibility = View.GONE
+            PagerAdapterNewPackages(activity.fragmentManager)
+        }
+    }
     /*private fun addToServer(pkg: Pack) {
         main_pb.visibility = View.VISIBLE
 
@@ -237,11 +239,7 @@ class MainFragment : BaseFragment<MainScreenModel>() {
         )
     }*/
 
-    override fun renderData(screenModel: MainScreenModel) {
-        //
-    }
+    override fun renderData(screenModel: MainScreenModel) { /*без реализации*/}
 
-    override fun renderState(loadState: LoadState) {
-
-    }
+    override fun renderState(loadState: LoadState) { /*без реализации*/ }
 }

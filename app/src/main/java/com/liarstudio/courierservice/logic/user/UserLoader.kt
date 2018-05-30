@@ -5,7 +5,8 @@ import retrofit2.Call
 import javax.inject.Inject
 
 class UserLoader @Inject constructor(
-        private val userApi: UserApi
+        private val userApi: UserApi,
+        private val userStorage: UserStorage
 ){
 
     /**
@@ -28,4 +29,8 @@ class UserLoader @Inject constructor(
      */
     fun loadUser(id: Int): Call<User> =
             userApi.loadUser(id)
+
+    fun getCurrentUser() = userStorage.get()
+
+    fun putCurrentUser(current: User) = userStorage.put(current)
 }

@@ -1,12 +1,14 @@
 package com.liarstudio.courierservice.ui.screen.auth
 
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.view.View
 import android.view.Window
 import com.jakewharton.rxbinding2.widget.textChanges
 import com.liarstudio.courierservice.R
 import com.liarstudio.courierservice.ui.base.screen.BaseActivity
 import com.liarstudio.courierservice.ui.base.LoadState
+import com.liarstudio.courierservice.ui.base.screen.BasePresenter
 import kotlinx.android.synthetic.main.activity_auth.*
 import javax.inject.Inject
 
@@ -16,13 +18,14 @@ class AuthActivity : BaseActivity<AuthScreenModel>() {
     @Inject
     lateinit var presenter: AuthPresenter
 
+    override fun requestPresenter() = presenter
+
+    override fun getLayout() = R.layout.activity_auth
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        requestWindowFeature(Window.FEATURE_ACTION_BAR)
-        setContentView(R.layout.activity_auth)
         initListeners()
     }
-
 
     private fun initListeners() {
 
@@ -34,7 +37,6 @@ class AuthActivity : BaseActivity<AuthScreenModel>() {
             presenter.registerChanged(isChecked)
         }
 
-
         confirm_btn.setOnClickListener { _ -> presenter.authenticate() }
     }
 
@@ -42,7 +44,6 @@ class AuthActivity : BaseActivity<AuthScreenModel>() {
         when (loadState) {
             LoadState.NONE, LoadState.ERROR -> auth_pb.visibility = View.GONE
             LoadState.LOADING -> auth_pb.visibility = View.VISIBLE
-
         }
     }
     override fun renderData(screenModel: AuthScreenModel) {
