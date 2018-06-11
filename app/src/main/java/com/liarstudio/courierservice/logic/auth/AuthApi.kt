@@ -19,9 +19,11 @@ interface AuthApi {
      * @param password зашифрованный пароль
      * @return Observable с пользователем
      */
-    @GET(UrlAuth.BASE_AUTH_URL)
-    fun login(@Query("email") email: String, @Query("password") password: String): Observable<User>
-
+    @GET(UrlAuth.AUTH_LOGIN)
+    fun login(
+            @Query("email") email: String,
+            @Query("password") password: String
+    ): Observable<User>
 
     /**
      * Регистрация пользователя
@@ -30,7 +32,7 @@ interface AuthApi {
      * @return Observable с созданным пользователем
      */
     //@FormUrlEncoded
-    @POST(UrlAuth.BASE_AUTH_URL)
+    @POST(UrlAuth.AUTH_REGISTER)
     fun register(@Body userRequest: UserRequest) : Observable<User>
             //@Field("email") email: String,
             //@Field("name") name: String,

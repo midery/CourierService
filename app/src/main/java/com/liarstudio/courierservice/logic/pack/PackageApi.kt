@@ -1,18 +1,13 @@
 package com.liarstudio.courierservice.logic.pack
 
-import com.liarstudio.courierservice.entitiy.pack.Pack
 import com.liarstudio.courierservice.logic.UrlPackage
-import com.liarstudio.courierservice.logic.UrlPackage.GET_COURIER_PACKAGES
-import com.liarstudio.courierservice.logic.UrlPackage.GET_NEW_COURIER_PACKAGES
+import com.liarstudio.courierservice.logic.UrlPackage.GET_USER_PACKAGES
+import com.liarstudio.courierservice.logic.pack.request.PackageRequest
 import com.liarstudio.courierservice.logic.pack.response.PackResponse
 import io.reactivex.Completable
 
-import retrofit2.http.Body
-import retrofit2.http.DELETE
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.Path
 import io.reactivex.Observable
+import retrofit2.http.*
 
 interface PackageApi {
 
@@ -25,21 +20,17 @@ interface PackageApi {
     fun getPackage(@Path("package_id") id: Long): Observable<PackResponse>
 
     //Получаем все посылки по id курьера и статусу(либо новая, либо нет)
-    @GET(GET_COURIER_PACKAGES)
-    fun getCourierPackages(@Path("courier_id") id: Long): Observable<List<PackResponse>>
-
-    @GET(GET_NEW_COURIER_PACKAGES)
-    fun getNewCourierPackages(@Path("courier_id") id: Long): Observable<List<PackResponse>>
-
-    //Получаем посылки для администратора(со статусом "Новая"/"Отклоненная"/"Завершенная"
-    @GET(UrlPackage.GET_PACKAGES_ADMIN)
-    fun getAdminPackages(): Observable<List<PackResponse>>
+    @GET(GET_USER_PACKAGES)
+    fun getUserPackages(
+            @Path("user_id") id: Long,
+            @Query("status") vararg statuses: Int
+    ): Observable<List<PackResponse>>
 
     //Удаляем посылку
-    @DELETE(UrlPackage.DELETE_PACKAGE)
+    @DELETE(UrlPackage.BASE_PACKAGE_URL)
     fun delete(@Path("package_id") id: Long): Completable
 
     //Добавляем посылку
     @POST(UrlPackage.BASE_PACKAGE_URL)
-    fun add(@Body pack: Pack): Completable
+    fun add(@Body packageRequest: PackageRequest): Completable
 }

@@ -1,6 +1,8 @@
 package com.liarstudio.courierservice.ui.base
 
-import com.liarstudio.courierservice.entitiy.person.Coordinates
+/**
+ * Файл с константами представления
+ */
 
 const val EMPTY_STRING = ""
 
@@ -12,3 +14,5 @@ const val VOL_COEFFICIENT = "size_dimensions"
 const val WEIGHT_COEFFICIENT = "weight_dimensions"
 
 const val COORDINATES = "coordinates"
+
+const val REQUEST_MAP = 2

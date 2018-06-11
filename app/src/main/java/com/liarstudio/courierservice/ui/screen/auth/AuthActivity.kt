@@ -1,18 +1,17 @@
 package com.liarstudio.courierservice.ui.screen.auth
 
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.view.View
-import android.view.Window
 import com.jakewharton.rxbinding2.widget.textChanges
 import com.liarstudio.courierservice.R
-import com.liarstudio.courierservice.ui.base.screen.BaseActivity
-import com.liarstudio.courierservice.ui.base.LoadState
-import com.liarstudio.courierservice.ui.base.screen.BasePresenter
+import com.liarstudio.courierservice.ui.base.screen.view.BaseActivity
+import com.liarstudio.courierservice.ui.base.screen.LoadState
 import kotlinx.android.synthetic.main.activity_auth.*
 import javax.inject.Inject
 
-
+/**
+ * Экран авторизации
+ */
 class AuthActivity : BaseActivity<AuthScreenModel>() {
 
     @Inject
@@ -27,6 +26,9 @@ class AuthActivity : BaseActivity<AuthScreenModel>() {
         initListeners()
     }
 
+    /**
+     * Инициализация listeners
+     */
     private fun initListeners() {
 
         presenter.observePasswordChanges(password_et.textChanges())
@@ -34,10 +36,10 @@ class AuthActivity : BaseActivity<AuthScreenModel>() {
         presenter.observeNameChanges(name_et.textChanges())
 
         type_cb.setOnCheckedChangeListener { _, isChecked ->
-            presenter.registerChanged(isChecked)
+            presenter.observeRegisterChanged(isChecked)
         }
 
-        confirm_btn.setOnClickListener { _ -> presenter.authenticate() }
+        confirm_btn.setOnClickListener { _ -> presenter.validateAndAuthorize() }
     }
 
     override fun renderState(loadState: LoadState) {
@@ -58,7 +60,12 @@ class AuthActivity : BaseActivity<AuthScreenModel>() {
     }
 
 
-    fun showEmailError(isError: Boolean) {
+    /**
+     * Переключатель ошибки ввода email
+     *
+     * @param isError флаг, показывающий есть ли ошибка
+     */
+    fun toggleEmailError(isError: Boolean) {
         email_til.error = if (isError)
             getString(R.string.auth_email_error)
         else
@@ -66,7 +73,12 @@ class AuthActivity : BaseActivity<AuthScreenModel>() {
         email_til.isErrorEnabled = isError
     }
 
-    fun showNameError(isError: Boolean) {
+    /**
+     * Показ ошибки ввода имени
+     *
+     * @param isError флаг, показывающий есть ли ошибка
+     */
+    fun toggleNameError(isError: Boolean) {
         name_til.error = if (isError)
             getString(R.string.auth_name_error)
         else
@@ -74,7 +86,12 @@ class AuthActivity : BaseActivity<AuthScreenModel>() {
         name_til.isErrorEnabled = isError
     }
 
-    fun showPasswordError(isError: Boolean) {
+    /**
+     * Переключатель ошибки ввода пароля
+     *
+     * @param isError флаг, показывающий есть ли ошибка
+     */
+    fun togglePasswordError(isError: Boolean) {
         password_til.error = if (isError)
             getString(R.string.auth_password_error)
         else

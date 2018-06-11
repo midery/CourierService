@@ -12,10 +12,10 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
-import com.liarstudio.courierservice.entitiy.person.Coordinates
+import com.liarstudio.courierservice.entitiy.pack.Coordinates
 import com.liarstudio.courierservice.ui.base.COORDINATES
 import com.liarstudio.courierservice.ui.base.EXTRA_FIRST
-import com.liarstudio.courierservice.ui.base.screen.BasePresenter
+import com.liarstudio.courierservice.ui.base.screen.presenter.BasePresenter
 import javax.inject.Inject
 
 
@@ -29,8 +29,9 @@ class MapPresenter @Inject constructor(
     val model = MapScreenModel(EMPTY_LOCATION)
 
     fun init(extra: Intent, map: GoogleMap) {
-        val coordinates = extra.getSerializableExtra(EXTRA_FIRST) as? Coordinates ?: Coordinates()
-        model.location = LatLng(coordinates.x, coordinates.y)
+        val coordinates = extra.getSerializableExtra(EXTRA_FIRST) as? Coordinates
+                ?: Coordinates()
+        model.location = LatLng(coordinates.latitude, coordinates.longitude)
         model.map = map
         model.hasParent = view.callingActivity != null
 
@@ -50,7 +51,7 @@ class MapPresenter @Inject constructor(
         if (model.hasParent) {
             if (model.location != EMPTY_LOCATION) {
                 view.setResult(Activity.RESULT_OK,
-                        Intent().putExtra(COORDINATES, Coordinates(
+                        Intent().putExtra(COORDINATES, Coordinates(0L,
                                 model.location.latitude,
                                 model.location.longitude
                         )))

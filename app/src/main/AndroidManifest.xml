@@ -57,11 +57,12 @@
 
         </activity>
         <activity
-            android:name=".ui.screen.pack.PackageFieldsActivity"
+            android:name=".ui.screen.pack.PackageActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/package_activity_header"
             android:parentActivityName=".ui.screen.main.MainActivity"
-            android:theme="@style/AppTheme.Base">
+            android:theme="@style/AppTheme.Base"
+            android:windowSoftInputMode="stateAlwaysHidden">
             </activity>
 
         <activity

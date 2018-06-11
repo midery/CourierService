@@ -7,10 +7,9 @@ import com.liarstudio.courierservice.R
 import com.liarstudio.courierservice.entitiy.pack.Pack
 import com.liarstudio.courierservice.entitiy.user.User
 import com.liarstudio.courierservice.injection.scope.PerActivity
-import com.liarstudio.courierservice.injection.scope.PerScreen
 import com.liarstudio.courierservice.logic.user.UserLoader
 import com.liarstudio.courierservice.ui.base.EXTRA_FIRST
-import com.liarstudio.courierservice.ui.base.screen.BasePresenter
+import com.liarstudio.courierservice.ui.base.screen.presenter.BasePresenter
 import com.liarstudio.courierservice.ui.base.VOL_COEFFICIENT
 import com.liarstudio.courierservice.ui.base.WEIGHT_COEFFICIENT
 import com.liarstudio.courierservice.ui.screen.auth.AuthActivity
@@ -53,13 +52,13 @@ class MainActivityPresenter @Inject constructor(
             }
 
             else -> {
-                User.CURRENT.id = -1
+                userLoader.putCurrentUser(User())
                 view.startActivity(Intent(view, AuthActivity::class.java))
                 view.finish()
                 return true
             }
         }
+        view.render(screenModel)
         return true
     }
-
 }

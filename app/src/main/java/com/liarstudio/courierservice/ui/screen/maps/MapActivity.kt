@@ -3,14 +3,12 @@ package com.liarstudio.courierservice.ui.screen.maps
 import android.location.Location
 import android.location.LocationListener
 import android.os.Bundle
-import android.os.PersistableBundle
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.liarstudio.courierservice.R
-import com.liarstudio.courierservice.ui.base.LoadState
-import com.liarstudio.courierservice.ui.base.screen.BaseActivity
-import com.liarstudio.courierservice.ui.base.screen.BasePresenter
+import com.liarstudio.courierservice.ui.base.screen.LoadState
+import com.liarstudio.courierservice.ui.base.screen.view.BaseActivity
 import kotlinx.android.synthetic.main.activity_maps.*
 import javax.inject.Inject
 

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="status_names">
+        <item>Новая</item>
+        <item>Назначенная</item>
+        <item>В процессе</item>
+        <item>Отклоненная</item>
+        <item>Завершенная</item>
+    </string-array>
+</resources>

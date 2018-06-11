@@ -11,7 +11,7 @@
     <string name="auth_input_error">Проверьте правильность ввода полей</string>
 
     <string name="pack_item_date_tv">Дата: %s</string>
-    <string name="pack_item_status_tv">Статус: %d</string>
+    <string name="pack_item_status_tv">Статус: %s</string>
 
     <string-array name="person_type">
         <item>Компания</item>
@@ -78,6 +78,8 @@
     <string name="error_http_conflict">Пользователь с данным Email уже зарегистрирован.</string>
     <string name="error_auth">Ошибка авторизации. Повторите запрос.</string>
     <string name="error_db">Ошибка при подключении к базе данных. Повторите запрос.</string>
+
+    <string name="validation_error">Данные ввеедены неверно!</string>
 
     <string name="nav_my">Мои посылки</string>
     <string name="nav_my_admin">Посылки</string>

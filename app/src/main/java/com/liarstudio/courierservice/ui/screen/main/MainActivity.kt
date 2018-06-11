@@ -3,20 +3,14 @@ package com.liarstudio.courierservice.ui.screen.main
 import android.app.Fragment
 import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
-import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.widget.Toolbar
-import android.view.MenuItem
 import android.widget.TextView
 import com.liarstudio.courierservice.R
-import com.liarstudio.courierservice.entitiy.user.User
 import com.liarstudio.courierservice.ui.base.EXTRA_FIRST
-import com.liarstudio.courierservice.ui.base.LoadState
-import com.liarstudio.courierservice.ui.base.screen.BaseActivity
-import com.liarstudio.courierservice.ui.screen.auth.AuthActivity
-import com.liarstudio.courierservice.ui.screen.main.settings.SettingsFragment
+import com.liarstudio.courierservice.ui.base.screen.LoadState
+import com.liarstudio.courierservice.ui.base.screen.view.BaseActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 

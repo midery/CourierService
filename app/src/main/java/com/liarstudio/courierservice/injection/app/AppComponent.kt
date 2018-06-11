@@ -1,10 +1,7 @@
 package com.liarstudio.courierservice.injection.app
 
 import android.content.Context
-import com.liarstudio.courierservice.injection.logic.AuthModule
-import com.liarstudio.courierservice.injection.logic.NetworkModule
-import com.liarstudio.courierservice.injection.logic.PackageModule
-import com.liarstudio.courierservice.injection.logic.UserModule
+import com.liarstudio.courierservice.injection.logic.*
 import com.liarstudio.courierservice.injection.scope.PerApplication
 import com.liarstudio.courierservice.injection.screen.ActivityBuilder
 import com.liarstudio.courierservice.injection.screen.fragment.FragmentBuilder
@@ -24,6 +21,7 @@ import dagger.android.support.AndroidSupportInjectionModule
     AndroidInjectionModule::class,
     AndroidSupportInjectionModule::class,
     NetworkModule::class,
+    StorageModule::class,
     AuthModule::class,
     PackageModule::class,
     UserModule::class,

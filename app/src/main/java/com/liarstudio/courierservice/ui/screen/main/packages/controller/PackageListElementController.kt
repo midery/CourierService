@@ -2,11 +2,10 @@ package com.liarstudio.courierservice.ui.screen.main.packages.controller
 
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.ImageView
 import android.widget.TextView
 import com.liarstudio.courierservice.R
 import com.liarstudio.courierservice.entitiy.pack.Pack
-import com.liarstudio.courierservice.entitiy.person.Coordinates
+import com.liarstudio.courierservice.entitiy.pack.Coordinates
 import ru.surfstudio.easyadapter.recycler.controller.BindableItemController
 import ru.surfstudio.easyadapter.recycler.holder.BindableViewHolder
 
@@ -31,7 +30,8 @@ class PackageListElementController(
             val res = itemView.resources
             nameTv.text = pack.name
             dateTv.text = res.getString(R.string.pack_item_date_tv, pack.date)
-            statusTv.text = res.getString(R.string.pack_item_status_tv, pack.status.pos)
+            val statusName = itemView.resources.getStringArray(R.array.status_names)[pack.status.pos]
+            statusTv.text = res.getString(R.string.pack_item_status_tv, statusName)
 
             itemView.setOnClickListener { onPackageClick(pack.id) }
             showOnMapBtn.setOnClickListener { onShowOnMapClick(pack.coordinates) }

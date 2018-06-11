@@ -6,20 +6,23 @@ import com.liarstudio.courierservice.R
 import com.liarstudio.courierservice.injection.scope.PerActivity
 import com.liarstudio.courierservice.logic.auth.AuthLoader
 import com.liarstudio.courierservice.logic.user.UserLoader
-import com.liarstudio.courierservice.ui.base.LoadState
-import com.liarstudio.courierservice.ui.base.SnackController
-import com.liarstudio.courierservice.ui.base.screen.BasePresenter
+import com.liarstudio.courierservice.ui.base.screen.LoadState
+import com.liarstudio.courierservice.ui.base.MessageShower
+import com.liarstudio.courierservice.ui.base.screen.presenter.BasePresenter
 import com.liarstudio.courierservice.ui.screen.main.MainActivity
 import io.reactivex.disposables.Disposables
 import retrofit2.HttpException
 import java.net.HttpURLConnection
 import javax.inject.Inject
 
+/**
+ * Презентер экрана авторизации [AuthActivity]
+ */
 @PerActivity
 class AuthPresenter @Inject constructor(
         private val authLoader: AuthLoader,
         private val userLoader: UserLoader,
-        private val snackController: SnackController,
+        private val messageShower: MessageShower,
         view: AuthActivity
 ) : BasePresenter<AuthActivity>(view) {
 
@@ -29,45 +32,72 @@ class AuthPresenter @Inject constructor(
     var nameChangesDisposable = Disposables.disposed()
     var authDisposable = Disposables.disposed()
 
-    fun authenticate() {
+    /**
+     * Функция валидации полей ввода и авторизации в случае успеха
+     */
+    fun validateAndAuthorize() {
         if (model.isValid)
             sendAuthRequest()
         else
-            snackController.show(R.string.auth_input_error)
+            messageShower.show(R.string.auth_input_error)
     }
 
-    fun registerChanged(isRegister: Boolean) {
+    /**
+     * Подписка на изменение статуса флага регистрации
+     *
+     * @param isRegister логическое состояние флага
+     */
+    fun observeRegisterChanged(isRegister: Boolean) {
         model.isRegister = isRegister
         view.renderData(model)
     }
 
+    /**
+     * Подписка на изменение email
+     *
+     * @param textObservable Observable с новым email
+     */
     fun observeEmailChanges(textObservable: InitialValueObservable<CharSequence>) {
         emailChangesDisposable = subscribe(textObservable.skipInitialValue()
                 .map { it.toString() },
                 {
                     model.email = it
-                    view.showEmailError(!model.isEmailValid)
+                    view.toggleEmailError(!model.isEmailValid)
                 })
     }
 
+    /**
+     * Подписка на изменение пароля
+     *
+     * @param textObservable Observable с новым паролем
+     */
     fun observePasswordChanges(textObservable: InitialValueObservable<CharSequence>) {
         passwordChangesDisposable = subscribe(textObservable.skipInitialValue()
                 .map { it.toString() },
                 {
                     model.password = it
-                    view.showPasswordError(!model.isPasswordValid)
+                    view.togglePasswordError(!model.isPasswordValid)
                 })
     }
 
+    /**
+     * Подписка на изменение имени
+     *
+     * @param textObservable Observable с новым именем
+     */
     fun observeNameChanges(textObservable: InitialValueObservable<CharSequence>) {
         nameChangesDisposable = subscribe(textObservable.skipInitialValue()
                 .map { it.toString() },
                 {
                     model.name = it
-                    view.showNameError(!model.isNameValid)
+                    view.toggleNameError(!model.isNameValid)
                 })
     }
 
+    /**
+     * Отправка запроса на авторизацию
+     * В зависимости от флага isRegister выполняется либо регистрация, либо вход в уже существующий аккаунт
+     */
     private fun sendAuthRequest() {
         view.renderState(LoadState.LOADING)
 
@@ -78,16 +108,16 @@ class AuthPresenter @Inject constructor(
 
         authDisposable = subscribe(request,
                 {
+                    //В случае успеха текущий пользователь сохраняется в локальное хранилище, а экран закрывается
                     model.loadState = LoadState.NONE
                     userLoader.putCurrentUser(it)
-                    //User.CURRENT = it
                     openMainActivity()
                 },
                 {
                     model.loadState = LoadState.ERROR
                     view.render(model)
                     if (it is HttpException) {
-                        snackController.show(
+                        messageShower.show(
                                 when (it.code()) {
                                     HttpURLConnection.HTTP_FORBIDDEN -> R.string.error_http_forbidden
                                     HttpURLConnection.HTTP_CONFLICT -> R.string.error_http_conflict
@@ -97,6 +127,9 @@ class AuthPresenter @Inject constructor(
                 })
     }
 
+    /**
+     * Открытие главного экрана
+     */
     private fun openMainActivity() {
         view.startActivity(Intent(view, MainActivity::class.java))
         view.finish()

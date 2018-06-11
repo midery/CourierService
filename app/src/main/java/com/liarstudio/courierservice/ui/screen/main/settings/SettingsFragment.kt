@@ -1,20 +1,10 @@
 package com.liarstudio.courierservice.ui.screen.main.settings
 
-import android.app.Fragment
 import android.os.Bundle
 import android.preference.*
-import android.support.v7.preference.PreferenceGroup
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 
 import com.liarstudio.courierservice.entitiy.pack.Pack
 import com.liarstudio.courierservice.R
-import com.liarstudio.courierservice.ui.base.LoadState
-import com.liarstudio.courierservice.ui.base.screen.BaseFragment
-import com.liarstudio.courierservice.ui.base.screen.BasePresenter
-import java.util.prefs.PreferenceChangeListener
-import java.util.prefs.PreferencesFactory
 
 class SettingsFragment : PreferenceFragment() {
 

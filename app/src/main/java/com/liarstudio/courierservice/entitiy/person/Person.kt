@@ -9,16 +9,15 @@ class Person(var type: PersonType,
              var name: String,
              var email: String,
              var phone: String,
-             var companyName: String,
-             var coordinates: Coordinates
+             var companyName: String
 ) : SugarRecord() {
 
-    constructor(): this(
-            PersonType.RECEIVER,
+    constructor() : this(
+            PersonType.COMPANY,
             EMPTY_STRING,
             EMPTY_STRING,
             EMPTY_STRING,
             EMPTY_STRING,
-            EMPTY_STRING,
-            Coordinates())
+            EMPTY_STRING
+    )
 }

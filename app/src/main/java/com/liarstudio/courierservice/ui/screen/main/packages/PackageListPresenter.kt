@@ -2,16 +2,18 @@ package com.liarstudio.courierservice.ui.screen.main.packages
 
 import android.content.Intent
 import android.os.Bundle
-import com.liarstudio.courierservice.entitiy.person.Coordinates
+import com.liarstudio.courierservice.entitiy.pack.Coordinates
 import com.liarstudio.courierservice.injection.scope.PerScreen
 import com.liarstudio.courierservice.logic.pack.PackageLoader
-import com.liarstudio.courierservice.logic.pack.PackageRepository
+import com.liarstudio.courierservice.logic.user.UserLoader
 import com.liarstudio.courierservice.ui.base.EXTRA_FIRST
-import com.liarstudio.courierservice.ui.base.LoadState
-import com.liarstudio.courierservice.ui.base.SnackController
-import com.liarstudio.courierservice.ui.base.screen.BasePresenter
+import com.liarstudio.courierservice.ui.base.EXTRA_SECOND
+import com.liarstudio.courierservice.ui.base.screen.LoadState
+import com.liarstudio.courierservice.ui.base.MessageShower
+import com.liarstudio.courierservice.ui.base.screen.presenter.BasePresenter
 import com.liarstudio.courierservice.ui.screen.maps.MapActivity
-import com.liarstudio.courierservice.ui.screen.pack.PackageFieldsActivity
+import com.liarstudio.courierservice.ui.screen.pack.PackageAction
+import com.liarstudio.courierservice.ui.screen.pack.PackageActivity
 import io.reactivex.disposables.Disposables
 import retrofit2.HttpException
 import javax.inject.Inject
@@ -19,7 +21,8 @@ import javax.inject.Inject
 @PerScreen
 class PackageListPresenter @Inject constructor(
         private val packageLoader: PackageLoader,
-        private val snackController: SnackController,
+        private val userLoader: UserLoader,
+        private val messageShower: MessageShower,
         view: PackageListFragment
 ) : BasePresenter<PackageListFragment>(view) {
 
@@ -27,32 +30,33 @@ class PackageListPresenter @Inject constructor(
     private var loadPackagesDisposable = Disposables.disposed()
 
     fun init(args: Bundle) {
+        model.isAdminMode = userLoader.getCurrentUser().isAdmin
         model.tabType = args.getSerializable(EXTRA_FIRST) as PackTabType
-        loadPackages()
+        initStatuses()
+        loadUserPackages()
+    }
+
+
+    fun initStatuses() {
+        model.statuses = when (model.tabType) {
+            PackTabType.ACTIVE -> if (model.isAdminMode) listOf(0, 2, 3) else listOf(1, 2)
+            PackTabType.DELIVERED -> listOf(4)
+            PackTabType.ALL -> if (model.isAdminMode) listOf(0, 2, 3, 4) else listOf(1, 2, 4)
+            null -> listOf(0)
+        }
     }
 
     fun reloadPackages() {
-        model.isRefreshing = true
-        loadPackagesDisposable = subscribe(packageLoader.getCourierPackages(1),
-                {
-                    model.isRefreshing = false
-                    model.packages = PackageRepository(it.map { it.toEntity() })
-                    view.render(model)
-                    snackController.show("Данные загружены корректно.")
-                },
-                {
-                    model.isRefreshing = false
-                    view.render(model)
-                    if (it is HttpException) {
-                        snackController.show("Произошла ошибка загрузки данных.")
-                    }
-                })
+        loadUserPackages()
     }
 
     fun openPackageScreen(id: Long) {
         view.startActivity(
-                Intent(view.activity, PackageFieldsActivity::class.java)
-                        .apply { putExtra(EXTRA_FIRST, id) }
+                Intent(view.activity, PackageActivity::class.java)
+                        .apply {
+                            putExtra(EXTRA_FIRST, PackageAction.EDIT)
+                            putExtra(EXTRA_SECOND, id)
+                        }
         )
     }
 
@@ -63,20 +67,24 @@ class PackageListPresenter @Inject constructor(
         )
     }
 
-    private fun loadPackages() {
-        loadPackagesDisposable = subscribe(packageLoader.getCourierPackages(1),
+    private fun loadUserPackages() {
+        model.loadState = LoadState.LOADING
+        loadPackagesDisposable = subscribe(packageLoader.getUserPackages(
+                userLoader.getCurrentUser().id,
+                *model.statuses.toIntArray()),
                 {
                     model.loadState = LoadState.NONE
-                    model.packages = PackageRepository(it.map { it.toEntity() })
+                    model.packages = it.map { it.toEntity() }
                     view.render(model)
-                    snackController.show("Данные загружены корректно.")
+                    messageShower.show("Данные загружены корректно.")
                 },
                 {
                     model.loadState = LoadState.ERROR
                     view.render(model)
                     if (it is HttpException) {
-                        snackController.show("Произошла ошибка загрузки данных.")
+                        messageShower.show("Произошла ошибка загрузки данных.")
                     }
                 })
     }
+
 }

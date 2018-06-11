@@ -11,14 +11,11 @@ import android.view.View
 import com.google.gson.Gson
 import com.liarstudio.courierservice.R
 import com.liarstudio.courierservice.entitiy.pack.Pack
-import com.liarstudio.courierservice.entitiy.user.User
 import com.liarstudio.courierservice.ui.base.EXTRA_FIRST
-import com.liarstudio.courierservice.ui.base.LoadState
-import com.liarstudio.courierservice.ui.base.screen.BaseFragment
-import com.liarstudio.courierservice.ui.screen.auth.AuthActivity
+import com.liarstudio.courierservice.ui.base.screen.LoadState
+import com.liarstudio.courierservice.ui.base.screen.view.BaseFragment
 import com.liarstudio.courierservice.ui.screen.main.my_packages.PagerAdapterMyPackages
 import com.liarstudio.courierservice.ui.screen.main.new_packages.PagerAdapterNewPackages
-import com.liarstudio.courierservice.ui.screen.pack.PackageFieldsActivity
 import kotlinx.android.synthetic.main.fragment_home.*
 import javax.inject.Inject
 
@@ -28,12 +25,13 @@ class MainFragment : BaseFragment<MainScreenModel>() {
     @Inject
     lateinit var presenter: MainFragmentPresenter
 
+    var isAdmin = false
+
     private val REQUEST_ADD_OR_EDIT = 1
 
     override fun requestPresenter() = presenter
 
     override fun getLayout() = R.layout.fragment_home
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,7 +46,7 @@ class MainFragment : BaseFragment<MainScreenModel>() {
     override fun onPrepareOptionsMenu(menu: Menu?) {
         //Скрываем кнопку добавления для администратора
         val item = menu!!.findItem(R.id.item_add)
-        item.isVisible = !User.CURRENT.isAdmin
+        item.isVisible = !isAdmin
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
@@ -58,20 +56,16 @@ class MainFragment : BaseFragment<MainScreenModel>() {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item!!.itemId) {
             R.id.item_add -> {
-                val addIntent = Intent(activity, PackageFieldsActivity::class.java)
-                activity.startActivityForResult(addIntent, REQUEST_ADD_OR_EDIT)
+                presenter.openPackageScreen()
             }
-
             R.id.item_refresh -> {
-            }//loadListFromServer()
+
+            }
             R.id.item_logout -> {
-                User.CURRENT.id = -1
-                startActivity(Intent(activity, AuthActivity::class.java))
-                activity.finish()
+                presenter.logout()
             }
         }
         return true
-
     }
 
 
@@ -100,10 +94,10 @@ class MainFragment : BaseFragment<MainScreenModel>() {
 
     private fun createPagerAdapter(tabType: MainTabType) = when (tabType) {
         MainTabType.MY ->
-            PagerAdapterMyPackages(activity.fragmentManager)
+            PagerAdapterMyPackages(childFragmentManager)
         MainTabType.NEW -> {
             tabLayout.visibility = View.GONE
-            PagerAdapterNewPackages(activity.fragmentManager)
+            PagerAdapterNewPackages(childFragmentManager)
         }
     }
     /*private fun addToServer(pkg: Pack) {
@@ -239,7 +233,9 @@ class MainFragment : BaseFragment<MainScreenModel>() {
         )
     }*/
 
-    override fun renderData(screenModel: MainScreenModel) { /*без реализации*/}
+    override fun renderData(screenModel: MainScreenModel) {
+        isAdmin = screenModel.user?.isAdmin ?: false
+    }
 
     override fun renderState(loadState: LoadState) { /*без реализации*/ }
 }

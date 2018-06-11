@@ -18,4 +18,12 @@ object DateFormatter {
     fun toString(date: Date): String = simpleDateFormat.format(date)
 
     fun toString(calendar: Calendar) = toString(calendar.time)
+
+    fun today() = Calendar.getInstance()
+
+    fun tomorrow() : Calendar {
+        val cal = today()
+        cal.add(Calendar.DATE, 1)
+        return cal
+    }
 }

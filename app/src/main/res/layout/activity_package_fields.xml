@@ -1,446 +1,435 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/package_container">
 
-
-    <RelativeLayout
+    <ScrollView
         android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/sender_tv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Отправитель:" />
+
+
+            <EditText
+                android:id="@+id/sender_address_et"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/sender_tv"
+                android:layout_marginTop="16dp"
+                android:ems="10"
+                android:hint="Адрес*"
+                android:inputType="textPostalAddress" />
+
+
+            <EditText
+                android:id="@+id/sender_name_et"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:hint="ФИО*"
+                android:inputType="text" />
+
+
+            <EditText
+                android:id="@+id/sender_email_et"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:ems="10"
+                android:hint="Email"
+                android:inputType="textEmailAddress" />
+
+            <TextView
+                android:id="@+id/sender_phone_hint_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:paddingLeft="8dp"
+                android:paddingTop="10dp"
+                android:text="Телефон*" />
+
+            <EditText
+                android:id="@+id/sender_phone_et"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="(9**) ***-****"
+                android:inputType="phone"
+                android:maxLength="14" />
+
+            <TextView
+                android:id="@+id/sender_type_tv"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:paddingLeft="8dp"
+                android:text="Тип" />
+
+            <Spinner
+                android:id="@+id/sender_type_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:entries="@array/person_type" />
+
+            <EditText
+                android:id="@+id/sender_company_name_et"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:ems="10"
+                android:hint="Название компании"
+                android:inputType="textPersonName" />
+
+            <!--RECIPIENT-->
+
+            <TextView
+                android:id="@+id/recipient_tv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="Получатель:" />
+
+
+            <EditText
+                android:id="@+id/recipient_address_et"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:ems="10"
+                android:hint="Адрес*"
+                android:inputType="textPostalAddress" />
+
+
+            <EditText
+                android:id="@+id/recipient_name_et"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:hint="ФИО*"
+                android:inputType="text" />
+
+
+            <EditText
+                android:id="@+id/recipient_email_et"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:ems="10"
+                android:hint="Email"
+                android:inputType="textEmailAddress" />
+
+            <TextView
+                android:id="@+id/recipient_phone_hint_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:paddingLeft="8dp"
+                android:text="Телефон*" />
+
+            <EditText
+                android:id="@+id/recipient_phone_et"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="(9**) ***-****"
+                android:inputType="phone"
+                android:maxLength="14" />
+
+            <TextView
+                android:id="@+id/recipient_type_title_tv"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:paddingLeft="8dp"
+                android:text="Тип" />
+
+            <Spinner
+                android:id="@+id/recipient_type_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:entries="@array/person_type" />
+
+            <EditText
+                android:id="@+id/recipient_company_et"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/recipient_type_spinner"
+                android:layout_marginTop="16dp"
+                android:ems="10"
+                android:hint="Название компании"
+                android:inputType="textPersonName" />
+
+
+            <!--PACKAGE-->
+            <TextView
+                android:id="@+id/textViewPack"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/buttonSetCoordinates"
+                android:layout_marginTop="16dp"
+                android:text="Посылка:" />
+
+            <Button
+                android:id="@+id/buttonSetCoordinates"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="16dp"
+                android:backgroundTint="@color/colorPrimary"
+                android:text="Указать координаты"
+                android:textColor="@color/textColorPrimary" />
+
+            <EditText
+                android:id="@+id/package_name_et"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/textViewPack"
+                android:ems="10"
+                android:hint="Название посылки*"
+                android:inputType="textPersonName" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/size_hint_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="8dp"
+                    android:text="Размеры:  "
+                    android:textSize="18sp" />
+
+                <EditText
+                    android:id="@+id/package_size_w_et"
+                    android:layout_width="60dp"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:hint="Ш"
+                    android:inputType="numberDecimal"
+                    android:nextFocusDown="@+id/package_size_h_et"
+                    android:textAlignment="center" />
+
+                <EditText
+                    android:id="@+id/package_size_h_et"
+                    android:layout_width="60dp"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:hint="В"
+                    android:inputType="numberDecimal"
+                    android:nextFocusDown="@+id/package_size_d_et"
+                    android:textAlignment="center" />
+
+                <EditText
+                    android:id="@+id/package_size_d_et"
+                    android:layout_width="60dp"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:hint="Г"
+                    android:inputType="numberDecimal"
+                    android:nextFocusDown="@+id/package_weight_et"
+                    android:textAlignment="center" />
+
+                <TextView
+                    android:id="@+id/package_size_dim_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=" см"
+                    android:textSize="18sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/package_weight_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="8dp"
+                    android:text="Вес: "
+                    android:textSize="18sp" />
+
+                <EditText
+                    android:id="@+id/package_weight_et"
+                    android:layout_width="60dp"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:inputType="numberDecimal"
+                    android:textAlignment="center" />
+
+                <TextView
+                    android:id="@+id/package_weight_dim_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="3dp"
+                    android:text=" кг"
+                    android:textSize="18sp" />
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/date_title_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="5dp"
+                    android:text="Дата доставки:"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/date_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="5dp"
+                    android:textSize="18sp" />
+
+                <Button
+                    android:id="@+id/date_pick_btn"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="end"
+                    android:layout_marginStart="60dp"
+                    android:background="@drawable/ic_mode_edit_black_24dp"
+                    android:backgroundTint="@color/colorPrimary" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/package_price_title_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="8dp"
+                    android:text="Цена: "
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/package_price_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="8dp"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:id="@+id/package_calc_price_btn"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginStart="60dp"
+                    android:background="@drawable/ic_refresh_black_24dp"
+                    android:backgroundTint="@color/colorPrimary" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/courier_list_title_tv"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="16dp"
+                android:paddingLeft="8dp"
+                android:text="Курьер"
+                android:visibility="gone" />
+
+            <Spinner
+                android:id="@+id/courier_list_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/status_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:paddingLeft="8dp"
+                android:text="Статус"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+            <Spinner
+                android:id="@+id/status_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+            <EditText
+                android:id="@+id/commentary_et"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/status_spinner"
+                android:layout_marginTop="16dp"
+                android:ems="10"
+                android:hint="Комментарий*"
+                android:inputType="textPersonName"
+                android:visibility="gone" />
+
+            <Button
+                android:id="@+id/confirm_btn"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="16dp"
+                android:backgroundTint="@color/colorPrimary"
+                android:text="Подтвердить"
+                android:textColor="@color/textColorPrimary" />
+
+            <Button
+
+                android:id="@+id/delete_btn"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="16dp"
+                android:backgroundTint="@android:color/holo_red_light"
+                android:text="Удалить"
+                android:textColor="@color/textColorPrimary"
+                android:textColorHighlight="@color/colorAccent"
+                android:visibility="gone" />
+
+        </LinearLayout>
+    </ScrollView>
+
+    <ProgressBar
+        android:id="@+id/package_pb"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="16dp">
+        android:layout_centerHorizontal="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/textViewSender"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Отправитель:" />
-
-
-        <EditText
-            android:id="@+id/editTextSenderAddress"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/textViewSender"
-            android:ems="10"
-            android:hint="Адрес*"
-            android:inputType="textPostalAddress" />
-
-
-        <EditText
-            android:id="@+id/editTextSenderName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/editTextSenderAddress"
-            android:hint="ФИО*"
-            android:inputType="text" />
-
-
-        <EditText
-            android:id="@+id/editTextSenderEmail"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/editTextSenderName"
-            android:ems="10"
-            android:hint="Email"
-            android:inputType="textEmailAddress" />
-
-        <TextView
-            android:id="@+id/textViewPhone"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/editTextSenderEmail"
-            android:paddingLeft="5dp"
-            android:paddingTop="10dp"
-            android:text="Телефон*"
-            android:textSize="18sp" />
-
-        <EditText
-            android:id="@+id/editTextSenderPhone"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/editTextSenderEmail"
-            android:layout_toEndOf="@id/textViewPhone"
-            android:ems="10"
-            android:hint="(9**) ***-****"
-            android:inputType="phone"
-            android:maxLength="14" />
-
-        <TextView
-            android:id="@+id/textViewType"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/editTextSenderPhone"
-            android:paddingLeft="5dp"
-            android:text="Тип"
-            android:textSize="18sp" />
-
-        <Spinner
-            android:id="@+id/spinner"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/editTextSenderPhone"
-            android:layout_toEndOf="@+id/textViewType"
-            android:entries="@array/person_type" />
-
-        <EditText
-            android:id="@+id/editTextSenderCompanyName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/spinner"
-            android:ems="10"
-            android:hint="Название компании"
-            android:inputType="textPersonName" />
-
-        <!--RECIPIENT-->
-
-        <TextView
-            android:id="@+id/textViewRecipient"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/editTextSenderCompanyName"
-            android:layout_marginTop="15dp"
-            android:text="Получатель:" />
-
-
-        <EditText
-            android:id="@+id/editTextRecipientAddress"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/textViewRecipient"
-            android:ems="10"
-            android:hint="Адрес*"
-            android:inputType="textPostalAddress" />
-
-
-        <EditText
-            android:id="@+id/editTextRecipientName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/editTextRecipientAddress"
-            android:hint="ФИО*"
-            android:inputType="text" />
-
-
-        <EditText
-            android:id="@+id/editTextRecipientEmail"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/editTextRecipientName"
-            android:ems="10"
-            android:hint="Email"
-            android:inputType="textEmailAddress" />
-
-        <TextView
-            android:id="@+id/textViewPhoneRecipient"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/editTextRecipientEmail"
-            android:paddingLeft="5dp"
-            android:paddingTop="10dp"
-            android:text="Телефон*"
-            android:textSize="18sp" />
-
-        <EditText
-            android:id="@+id/editTextRecipientPhone"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/editTextRecipientEmail"
-            android:layout_toEndOf="@id/textViewPhone"
-            android:ems="10"
-            android:hint="(9**) ***-****"
-            android:inputType="phone"
-            android:maxLength="14" />
-
-        <TextView
-            android:id="@+id/textViewRecipientType"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignTop="@+id/spinnerRecipient"
-            android:paddingLeft="5dp"
-            android:text="Тип"
-            android:textSize="18sp" />
-
-        <Spinner
-            android:id="@+id/spinnerRecipient"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/editTextRecipientPhone"
-            android:layout_toEndOf="@+id/textViewRecipientType"
-            android:entries="@array/person_type" />
-
-        <EditText
-            android:id="@+id/editTextRecipientCompanyName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/spinnerRecipient"
-            android:ems="10"
-            android:hint="Название компании"
-            android:inputType="textPersonName" />
-
-        <Button
-            android:id="@+id/buttonSetCoordinates"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/editTextRecipientCompanyName"
-            android:layout_centerHorizontal="true"
-            android:text="Указать координаты" />
-
-
-        <!--PACKAGE-->
-        <TextView
-            android:id="@+id/textViewPack"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/buttonSetCoordinates"
-            android:layout_marginTop="15dp"
-            android:text="Посылка:" />
-
-
-        <EditText
-            android:id="@+id/editTextPackName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/textViewPack"
-            android:ems="10"
-            android:hint="Название посылки*"
-            android:inputType="textPersonName" />
-
-        <TextView
-            android:id="@+id/textViewPackSizes"
-            android:layout_width="170dp"
-            android:layout_height="match_parent"
-            android:layout_alignBaseline="@+id/editTextPackW"
-            android:layout_alignBottom="@+id/editTextPackW"
-            android:layout_alignParentStart="true"
-            android:paddingLeft="5dp"
-            android:text="Размеры посылки:"
-            android:textSize="18sp" />
-
-        <EditText
-            android:id="@+id/editTextPackW"
-            android:layout_width="60dp"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/editTextPackName"
-            android:layout_toEndOf="@+id/textViewPackSizes"
-            android:ems="10"
-            android:hint="Ш"
-            android:inputType="numberDecimal"
-            android:nextFocusDown="@+id/editTextPackH"
-            android:textAlignment="center" />
-
-        <EditText
-            android:id="@+id/editTextPackH"
-            android:layout_width="60dp"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/textViewPackSizeDimension"
-            android:layout_alignBottom="@+id/textViewPackSizeDimension"
-            android:layout_toEndOf="@+id/editTextPackW"
-            android:ems="10"
-            android:hint="В"
-            android:inputType="numberDecimal"
-            android:nextFocusDown="@+id/editTextPackD"
-            android:textAlignment="center" />
-
-        <EditText
-            android:id="@+id/editTextPackD"
-            android:layout_width="60dp"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/editTextPackName"
-            android:layout_toEndOf="@+id/editTextPackH"
-            android:ems="10"
-            android:hint="Г"
-            android:inputType="numberDecimal"
-            android:nextFocusDown="@+id/editTextPackWeight"
-            android:textAlignment="center" />
-
-        <TextView
-            android:id="@+id/textViewPackSizeDimension"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/editTextPackName"
-            android:layout_marginTop="9dp"
-            android:layout_toEndOf="@+id/editTextPackD"
-            android:paddingLeft="3dp"
-            android:text="см"
-            android:textSize="18sp" />
-
-
-        <TextView
-            android:id="@+id/textViewPackWeight"
-            android:layout_width="150dp"
-            android:layout_height="match_parent"
-            android:layout_alignBaseline="@+id/editTextPackWeight"
-            android:layout_alignBottom="@+id/editTextPackWeight"
-            android:layout_alignParentStart="true"
-            android:paddingLeft="5dp"
-            android:text="Вес посылки:"
-            android:textSize="18sp" />
-
-        <EditText
-            android:id="@+id/editTextPackWeight"
-            android:layout_width="60dp"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/editTextPackD"
-            android:layout_toEndOf="@+id/textViewPackWeight"
-            android:ems="10"
-            android:inputType="numberDecimal"
-            android:textAlignment="center" />
-
-        <TextView
-            android:id="@+id/textViewPackWeightDimension"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/editTextPackD"
-            android:layout_marginTop="9dp"
-            android:layout_toEndOf="@+id/editTextPackWeight"
-            android:paddingLeft="3dp"
-            android:text="кг"
-            android:textSize="18sp" />
-
-
-        <TextView
-            android:id="@+id/textViewPackDateName"
-            android:layout_width="150dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/editTextPackWeight"
-            android:paddingLeft="5dp"
-            android:paddingTop="8dp"
-            android:text="Дата доставки:"
-            android:textSize="18sp" />
-
-        <TextView
-            android:id="@+id/textViewPackDate"
-            android:layout_width="110dp"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/editTextPackWeight"
-            android:layout_toEndOf="@+id/textViewPackDateName"
-            android:paddingLeft="5dp"
-            android:paddingTop="8dp"
-            android:textSize="18sp" />
-
-        <Button
-            android:id="@+id/buttonPickDate"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:layout_below="@id/editTextPackWeight"
-            android:layout_toEndOf="@+id/textViewPackDate"
-            android:text="Изменить" />
-
-        <TextView
-            android:id="@+id/textViewPackPriceTitle"
-            android:layout_width="60dp"
-            android:layout_height="match_parent"
-            android:layout_below="@id/buttonPickDate"
-            android:layout_marginBottom="14dp"
-            android:layout_marginTop="14dp"
-            android:paddingLeft="5dp"
-            android:text="Цена: "
-            android:textSize="18sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/textViewPackPrice"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/buttonPickDate"
-            android:layout_marginBottom="14dp"
-            android:layout_marginTop="14dp"
-            android:layout_toEndOf="@+id/textViewPackPriceTitle"
-            android:paddingLeft="5dp"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-
-        <Button
-            android:id="@+id/buttonCalculatePrice"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:layout_below="@id/buttonPickDate"
-            android:layout_marginTop="5dp"
-            android:layout_toEndOf="@+id/textViewPackPrice"
-            android:text="Рассчитать" />
-
-        <TextView
-            android:id="@+id/textViewCourierList"
-            android:layout_width="70dp"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/spinnerCourierList"
-            android:layout_below="@+id/textViewPackPrice"
-            android:paddingLeft="5dp"
-            android:paddingTop="11dp"
-            android:text="Курьер:"
-            android:textSize="18sp"
-            android:visibility="gone" />
-
-        <Spinner
-            android:id="@+id/spinnerCourierList"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/textViewPackPrice"
-            android:layout_toEndOf="@+id/textViewStatus"
-            android:visibility="gone" />
-
-        <TextView
-            android:id="@+id/textViewStatus"
-            android:layout_width="70dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/spinnerCourierList"
-            android:paddingLeft="5dp"
-            android:paddingTop="11dp"
-            android:text="Статус:"
-            android:textSize="18sp"
-            android:visibility="gone" />
-
-        <Spinner
-            android:id="@+id/spinnerStatus"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/spinnerCourierList"
-            android:layout_toEndOf="@+id/textViewStatus"
-            android:visibility="gone" />
-
-        <EditText
-            android:id="@+id/editTextCommentary"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/spinnerStatus"
-            android:ems="10"
-            android:hint="Комментарий*"
-            android:inputType="textPersonName"
-            android:visibility="gone" />
-
-        <Button
-            android:id="@+id/confirm_btn"
-            android:layout_width="150dp"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/editTextCommentary"
-            android:layout_centerInParent="true"
-            android:text="Подтвердить" />
-
-        <Button
-            android:id="@+id/buttonDelete"
-            android:layout_width="150dp"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/confirm_btn"
-            android:layout_centerInParent="true"
-            android:layout_marginTop="20dp"
-            android:backgroundTint="@android:color/holo_red_light"
-            android:text="Удалить"
-            android:textColor="#FFFFFF"
-            android:textColorHighlight="@color/colorAccent"
-            android:visibility="gone" />
-
-        <ProgressBar
-            android:id="@+id/progressBarPackageField"
-            style="?android:attr/progressBarStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:visibility="gone" />
-    </RelativeLayout>
-
-</ScrollView>
+</android.support.constraint.ConstraintLayout>

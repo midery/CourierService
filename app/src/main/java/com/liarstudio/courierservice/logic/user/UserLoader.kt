@@ -1,7 +1,7 @@
 package com.liarstudio.courierservice.logic.user
 
 import com.liarstudio.courierservice.entitiy.user.User
-import retrofit2.Call
+import io.reactivex.Observable
 import javax.inject.Inject
 
 class UserLoader @Inject constructor(
@@ -12,13 +12,10 @@ class UserLoader @Inject constructor(
     /**
      * Получение списка пользователей
      *
-     * @param role роль пользователя
-     *
      * @return  Observable со списком пользователей
      */
-    fun loadUsers(role: Int): Call<List<User>>
-        = userApi.loadUsersWithRole(role)
-
+    fun loadUsers(): Observable<List<User>>
+        = userApi.loadUsers()
 
     /**
      * Получение пользователя по id
@@ -27,10 +24,10 @@ class UserLoader @Inject constructor(
      *
      * @return Observable с пользователем
      */
-    fun loadUser(id: Int): Call<User> =
+    fun loadUser(id: Long): Observable<User> =
             userApi.loadUser(id)
 
-    fun getCurrentUser() = userStorage.get()
+    fun getCurrentUser(): User = userStorage.get()
 
     fun putCurrentUser(current: User) = userStorage.put(current)
 }
