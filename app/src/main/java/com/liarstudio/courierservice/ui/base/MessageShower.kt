@@ -1,14 +1,11 @@
 package com.liarstudio.courierservice.ui.base
 
 import android.support.annotation.StringRes
-import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.view.Gravity
 import android.widget.TextView
 import android.widget.Toast
 import com.liarstudio.courierservice.R
-import com.liarstudio.courierservice.injection.scope.PerScreen
-import com.liarstudio.courierservice.ui.screen.auth.AuthActivity
 import javax.inject.Inject
 
 /**

@@ -9,7 +9,7 @@ import com.liarstudio.courierservice.ui.base.screen.model.BaseScreenModel
  * Модель экрана создания/редактирования посылки [PackageActivity]
  *
  */
-class PackageScreenModel: BaseScreenModel() {
+class PackageScreenModel : BaseScreenModel() {
 
     var packId: Long = 0
     var pack: Pack? = null

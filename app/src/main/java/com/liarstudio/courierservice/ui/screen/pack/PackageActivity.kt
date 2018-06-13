@@ -12,9 +12,9 @@ import com.liarstudio.courierservice.entitiy.pack.PackStatus
 import com.liarstudio.courierservice.entitiy.person.Person
 import com.liarstudio.courierservice.entitiy.person.PersonType
 import com.liarstudio.courierservice.entitiy.user.User
-import com.liarstudio.courierservice.ui.base.screen.LoadState
 import com.liarstudio.courierservice.ui.base.isVisible
 import com.liarstudio.courierservice.ui.base.positionChanges
+import com.liarstudio.courierservice.ui.base.screen.LoadState
 import com.liarstudio.courierservice.ui.base.screen.view.BaseActivity
 import kotlinx.android.synthetic.main.activity_package_fields.*
 import javax.inject.Inject
@@ -42,7 +42,8 @@ class PackageActivity : BaseActivity<PackageScreenModel>() {
 
     override fun renderData(screenModel: PackageScreenModel) {
 
-        screenModel.pack?.let {//Показ данных происходит только когда pack != null
+        screenModel.pack?.let {
+            //Показ данных происходит только когда pack != null
 
             //Если модель необходимо полностью перерисовать - перерисовываем
             //все составные части и инвертируем значение параметра
@@ -87,28 +88,48 @@ class PackageActivity : BaseActivity<PackageScreenModel>() {
     /**
      * Показ ошибки валидации адреса отпраавителя
      */
-    fun showSenderAddressError() { sender_address_et.error = getString(R.string.validation_error) }
+    fun showSenderAddressError() {
+        sender_address_et.error = getString(R.string.validation_error)
+    }
 
     /**
      * Показ ошибки валидации имени отправителя
      */
-    fun showSenderNameError() { sender_name_et.error = getString(R.string.validation_error)  }
+    fun showSenderNameError() {
+        sender_name_et.error = getString(R.string.validation_error)
+    }
 
-    fun showSenderEmailError() { sender_email_et.error = getString(R.string.validation_error)  }
+    fun showSenderEmailError() {
+        sender_email_et.error = getString(R.string.validation_error)
+    }
 
-    fun showSenderPhoneError() { sender_phone_et.error = getString(R.string.validation_error)  }
+    fun showSenderPhoneError() {
+        sender_phone_et.error = getString(R.string.validation_error)
+    }
 
-    fun showRecipientAddressError() { recipient_address_et.error = getString(R.string.validation_error) }
+    fun showRecipientAddressError() {
+        recipient_address_et.error = getString(R.string.validation_error)
+    }
 
-    fun showRecipientNameError() { recipient_name_et.error = getString(R.string.validation_error)  }
+    fun showRecipientNameError() {
+        recipient_name_et.error = getString(R.string.validation_error)
+    }
 
-    fun showRecipientEmailError() { recipient_email_et.error = getString(R.string.validation_error)  }
+    fun showRecipientEmailError() {
+        recipient_email_et.error = getString(R.string.validation_error)
+    }
 
-    fun showRecipientPhoneError() { recipient_phone_et.error = getString(R.string.validation_error)  }
+    fun showRecipientPhoneError() {
+        recipient_phone_et.error = getString(R.string.validation_error)
+    }
 
-    fun showPackageNameError() { package_name_et.error = getString(R.string.validation_error)  }
+    fun showPackageNameError() {
+        package_name_et.error = getString(R.string.validation_error)
+    }
 
-    fun showPackageCommentError() { commentary_et.error = getString(R.string.validation_error)  }
+    fun showPackageCommentError() {
+        commentary_et.error = getString(R.string.validation_error)
+    }
 
     /**
      * Отрисовка отправителя

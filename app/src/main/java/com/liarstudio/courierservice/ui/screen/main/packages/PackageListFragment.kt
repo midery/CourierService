@@ -7,7 +7,7 @@ import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import com.liarstudio.courierservice.R
-import com.liarstudio.courierservice.logic.pack.PackageRepository
+import com.liarstudio.courierservice.logic.pack.PackageRepo
 import com.liarstudio.courierservice.ui.base.screen.view.BaseFragment
 import com.liarstudio.courierservice.ui.base.EXTRA_FIRST
 import com.liarstudio.courierservice.ui.base.screen.LoadState
@@ -23,7 +23,7 @@ class PackageListFragment : BaseFragment<PackageListScreenModel>() {
     lateinit var presenter: PackageListPresenter
 
     //Количество посылок в текущем фрагменте
-    lateinit var packages: PackageRepository
+    lateinit var packages: PackageRepo
     private lateinit var adapter: EasyAdapter
 
     private val packageController = PackageListElementController(

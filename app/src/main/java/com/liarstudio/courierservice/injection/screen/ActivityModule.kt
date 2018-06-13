@@ -5,7 +5,9 @@ import com.liarstudio.courierservice.ui.base.MessageShower
 import dagger.Module
 import dagger.Provides
 
-
+/**
+ * Модуль для [AppCompatActivity]
+ */
 @Module
 class ActivityModule(val activity: AppCompatActivity) {
 

@@ -7,7 +7,7 @@ import com.liarstudio.courierservice.entitiy.pack.Pack
 import com.liarstudio.courierservice.entitiy.pack.PackStatus
 import com.liarstudio.courierservice.entitiy.person.Person
 import com.liarstudio.courierservice.entitiy.person.PersonType
-import com.liarstudio.courierservice.logic.EntityHolder
+import com.liarstudio.courierservice.logic.base.EntityHolder
 
 /**
  * Маппинг-модель посылки

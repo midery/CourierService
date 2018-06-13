@@ -1,13 +1,16 @@
 package com.liarstudio.courierservice.logic.pack
 
 import com.liarstudio.courierservice.entitiy.pack.Pack
+import com.liarstudio.courierservice.logic.base.toEntity
+import com.liarstudio.courierservice.logic.base.toEntityCollection
+import com.liarstudio.courierservice.logic.pack.request.PackageRequest
 import javax.inject.Inject
 
 /**
- * Loader репозитория
+ * Репозиторий посылки [Package]
  */
-class PackageLoader @Inject constructor(
-        private val packageRepo: PackageRepo
+class PackageRepo @Inject constructor(
+        private val packageApi: PackageApi
 ) {
     /**
      * Получение посылки по id
@@ -16,7 +19,7 @@ class PackageLoader @Inject constructor(
      *
      * @return посылка
      */
-    fun getPackage(id: Long) = packageRepo.getPackage(id)
+    fun getPackage(id: Long) = packageApi.getPackage(id).toEntity()
 
     /**
      * Получение всех посылок пользователя
@@ -26,7 +29,8 @@ class PackageLoader @Inject constructor(
      *
      * @return список посылок
      */
-    fun getUserPackages(id: Long, vararg statuses: Int) = packageRepo.getUserPackages(id, *statuses)
+    fun getUserPackages(id: Long, vararg statuses: Int) =
+            packageApi.getUserPackages(id, *statuses).toEntityCollection()
 
     /**
      * Удаление посылки по id
@@ -35,7 +39,7 @@ class PackageLoader @Inject constructor(
      *
      * @return Completable
      */
-    fun delete(id: Long) = packageRepo.delete(id)
+    fun delete(id: Long) = packageApi.delete(id)
 
     /**
      * Добавление или изменение посылки
@@ -44,6 +48,6 @@ class PackageLoader @Inject constructor(
      *
      * @return Completable
      */
-    fun add(p: Pack) = packageRepo.add(p)
+    fun add(p: Pack) = packageApi.add(PackageRequest(p))
 
 }

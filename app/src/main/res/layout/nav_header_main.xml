@@ -10,18 +10,30 @@
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/logo_iv"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
-        app:srcCompat="@drawable/logo" />
-
-    <TextView
-        android:id="@+id/textViewNavHeader"
+        android:background="@drawable/logo" />
+    <LinearLayout
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+    <TextView
+        android:id="@+id/username_tv"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/app_name"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         android:textSize="18sp" />
+    <TextView
+        android:id="@+id/admin_mode_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=" [ADM]"
+        android:textColor="@color/colorAccent"
+        android:visibility="gone"
+        android:textSize="18sp" />
+    </LinearLayout>
 
 </LinearLayout>

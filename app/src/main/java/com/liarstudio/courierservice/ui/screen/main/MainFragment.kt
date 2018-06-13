@@ -170,7 +170,7 @@ class MainFragment : BaseFragment<MainScreenModel>() {
                                 // загружаем список посылок и перезагружаем локальные данные,
 
                                 if (response.body() != null) {
-                                    val pkgList = PackageRepository(response.body()!!)
+                                    val pkgList = PackageRepo(response.body()!!)
                                     pkgList.reloadAll()
                                     adapter.notifyDataSetChanged()
                                 }

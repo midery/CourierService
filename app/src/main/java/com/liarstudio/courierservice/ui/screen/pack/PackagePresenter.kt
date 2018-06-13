@@ -282,7 +282,7 @@ class PackagePresenter @Inject constructor(
         subscribe(packageLoader.getPackage(screenModel.packId),
                 {
                     screenModel.needsFullRender = true
-                    screenModel.pack = it.toEntity()
+                    screenModel.pack = it
                     if (screenModel.isAdmin) {
                         loadCouriers()
                     } else {

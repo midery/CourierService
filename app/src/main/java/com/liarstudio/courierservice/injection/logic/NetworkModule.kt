@@ -2,8 +2,8 @@ package com.liarstudio.courierservice.injection.logic
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import com.liarstudio.courierservice.logic.UrlServer
 import com.liarstudio.courierservice.injection.scope.PerApplication
+import com.liarstudio.courierservice.logic.UrlServer
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
@@ -13,10 +13,17 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
+/**
+ * Модуль для работы с сетью
+ */
 @Module
 class NetworkModule {
-    private val NETWORK_TIMEOUT = 30 //sec
+    private val NETWORK_TIMEOUT = 30 //таймаут 30 секунд
 
+    /**
+     * Метод, предоставляющий экземпляр класса Retrofit в любую точку приложения
+     * Предназначен для выполнения REST-запросов
+     */
     @Provides
     @PerApplication
     internal fun provideRetrofit(okHttpClient: OkHttpClient,
@@ -30,6 +37,10 @@ class NetworkModule {
                 .build()
     }
 
+    /**
+     * Метод, предоставляющий OkHttpClient в любую точку приложения
+     * Предназначен для упрощения работы с сетью
+     */
     @Provides
     @PerApplication
     internal fun provideOkHttpClient(httpLoggingInterceptor: HttpLoggingInterceptor): OkHttpClient {
@@ -42,6 +53,10 @@ class NetworkModule {
         return okHttpClientBuilder.build()
     }
 
+    /**
+     * Метод, предоставляющий экземпляр класса Gson по всему приложению
+     * Предназначен для сериализации
+     */
     @Provides
     @PerApplication
     internal fun provideGson(): Gson {
@@ -49,6 +64,10 @@ class NetworkModule {
                 .create()
     }
 
+    /**
+     * Метод, предоставляющий экземпляр класса HttpLoggingInterceptor всему приложению
+     * Предназначен для логгирования
+     */
     @Provides
     @PerApplication
     internal fun provideHttpLoggingInterceptor(): HttpLoggingInterceptor =

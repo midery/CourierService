@@ -1,7 +1,9 @@
 package com.liarstudio.courierservice.ui.screen.pack
 
+/**
+ * Перечисление для определения действия с посылкой при открытии экрана
+ */
 enum class PackageAction {
-    ADD,
-    EDIT,
-    READ_ONLY
+    ADD, //Добавление
+    EDIT //Редактирование
 }

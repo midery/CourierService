@@ -11,26 +11,47 @@ import retrofit2.http.*
 
 interface PackageApi {
 
-    //Получаем список всех посылок
-    @GET(UrlPackage.GET_PACKAGES)
-    fun getPackages(): Observable<List<PackResponse>>
-
-    //Получаем одну посылку по id
+    /**
+     * Получение посылки по id
+     *
+     * @param id идентификатор посылки
+     *
+     * @return Observable с посылкой
+     */
     @GET(UrlPackage.GET_PACKAGE)
     fun getPackage(@Path("package_id") id: Long): Observable<PackResponse>
 
-    //Получаем все посылки по id курьера и статусу(либо новая, либо нет)
+    /**
+     * Получение всех посылок пользователя
+     *
+     * @param id идентификатор пользователя
+     * @param statuses статусы посылок, которые необходимо получить
+     *
+     * @return Observable со списком посылок
+     */
     @GET(GET_USER_PACKAGES)
     fun getUserPackages(
             @Path("user_id") id: Long,
             @Query("status") vararg statuses: Int
     ): Observable<List<PackResponse>>
 
-    //Удаляем посылку
+    /**
+     * Удаление посылки по id
+     *
+     * @param id идентификатор посылки
+     *
+     * @return Completable
+     */
     @DELETE(UrlPackage.BASE_PACKAGE_URL)
     fun delete(@Path("package_id") id: Long): Completable
 
-    //Добавляем посылку
+    /**
+     * Добавление или изменение посылки
+     *
+     * @param packageRequest маппинг-модель посылки
+     *
+     * @return Completable
+     */
     @POST(UrlPackage.BASE_PACKAGE_URL)
     fun add(@Body packageRequest: PackageRequest): Completable
 }

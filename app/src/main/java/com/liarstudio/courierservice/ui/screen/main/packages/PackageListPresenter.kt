@@ -74,9 +74,8 @@ class PackageListPresenter @Inject constructor(
                 *model.statuses.toIntArray()),
                 {
                     model.loadState = LoadState.NONE
-                    model.packages = it.map { it.toEntity() }
+                    model.packages = it
                     view.render(model)
-                    messageShower.show("Данные загружены корректно.")
                 },
                 {
                     model.loadState = LoadState.ERROR
